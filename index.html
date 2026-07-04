@@ -15,12 +15,59 @@
 <title>PDF'e Çevir — Ücretsiz, Kayıtsız, Anında</title>
 <meta name="google-site-verification" content="VC6Hr3UEY6x0026GjkkP92sGBIrSvi3I23_B3Sd47dU" />
 <meta name="description" content="Resimlerinizi saniyeler içinde PDF'e dönüştürün. Kayıt gerekmez, dosyalarınız sunucuya yüklenmez, her şey tarayıcınızda gerçekleşir.">
+<meta name="robots" content="index, follow">
+<meta name="language" content="Turkish">
+<meta name="author" content="pdfcevir">
+<link rel="canonical" href="https://pdfcevir.vercel.app/">
+
+<!-- Favicon -->
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/icon-180.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#14213D">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://pdfcevir.vercel.app/">
+<meta property="og:title" content="PDF'e Çevir — Ücretsiz, Kayıtsız, Anında">
+<meta property="og:description" content="Resimlerini saniyeler içinde PDF'e dönüştür. Kayıt gerekmez, dosyaların sunucuya yüklenmez, her şey tarayıcında gerçekleşir.">
+<meta property="og:image" content="https://pdfcevir.vercel.app/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="tr_TR">
+<meta property="og:site_name" content="pdfcevir">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="PDF'e Çevir — Ücretsiz, Kayıtsız, Anında">
+<meta name="twitter:description" content="Resimlerini saniyeler içinde PDF'e dönüştür. Kayıt gerekmez, her şey tarayıcında gerçekleşir.">
+<meta name="twitter:image" content="https://pdfcevir.vercel.app/og-image.png">
+
+<!-- JSON-LD structured data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "pdfcevir",
+  "url": "https://pdfcevir.vercel.app/",
+  "description": "Resimleri saniyeler içinde PDF'e dönüştüren, kayıt gerektirmeyen, tamamen tarayıcıda çalışan ücretsiz araç.",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TRY"
+  },
+  "inLanguage": "tr"
+}
+</script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 
 <style>
   :root{
@@ -429,7 +476,7 @@
       li.className = 'file-row';
       li.innerHTML = `
         <span class="file-num">${String(i+1).padStart(2,'0')}</span>
-        <img class="file-thumb" src="${f.url}" alt="">
+        <img class="file-thumb" src="${f.url}" alt="${f.file.name} önizlemesi">
         <span class="file-name">${f.file.name}</span>
         <span class="file-size">${formatSize(f.file.size)}</span>
         <button class="file-remove" data-id="${f.id}" aria-label="Kaldır">✕</button>
