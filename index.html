@@ -12,9 +12,9 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PDF'e Çevir — Ücretsiz, Kayıtsız, Anında</title>
+<title>PDF Araçları — Dönüştür, Sıkıştır, Word'e Çevir | pdfcevir</title>
 <meta name="google-site-verification" content="VC6Hr3UEY6x0026GjkkP92sGBIrSvi3I23_B3Sd47dU" />
-<meta name="description" content="Resimlerinizi saniyeler içinde PDF'e dönüştürün. Kayıt gerekmez, dosyalarınız sunucuya yüklenmez, her şey tarayıcınızda gerçekleşir.">
+<meta name="description" content="Resimlerini PDF'e çevir, PDF'ini sıkıştır ya da Word'e dönüştür. Kayıt gerekmez, dosyaların sunucuya yüklenmez, her şey tarayıcında gerçekleşir.">
 <meta name="robots" content="index, follow">
 <meta name="language" content="Turkish">
 <meta name="author" content="pdfcevir">
@@ -30,8 +30,8 @@
 <!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://pdfcevir.vercel.app/">
-<meta property="og:title" content="PDF'e Çevir — Ücretsiz, Kayıtsız, Anında">
-<meta property="og:description" content="Resimlerini saniyeler içinde PDF'e dönüştür. Kayıt gerekmez, dosyaların sunucuya yüklenmez, her şey tarayıcında gerçekleşir.">
+<meta property="og:title" content="PDF Araçları — Dönüştür, Sıkıştır, Word'e Çevir">
+<meta property="og:description" content="Resimlerini PDF'e çevir, PDF'ini sıkıştır ya da Word'e dönüştür. Kayıt gerekmez, dosyaların sunucuya yüklenmez, her şey tarayıcında gerçekleşir.">
 <meta property="og:image" content="https://pdfcevir.vercel.app/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -40,8 +40,8 @@
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="PDF'e Çevir — Ücretsiz, Kayıtsız, Anında">
-<meta name="twitter:description" content="Resimlerini saniyeler içinde PDF'e dönüştür. Kayıt gerekmez, her şey tarayıcında gerçekleşir.">
+<meta name="twitter:title" content="PDF Araçları — Dönüştür, Sıkıştır, Word'e Çevir">
+<meta name="twitter:description" content="Resimlerini PDF'e çevir, PDF'ini sıkıştır ya da Word'e dönüştür. Her şey tarayıcında, kayıtsız gerçekleşir.">
 <meta name="twitter:image" content="https://pdfcevir.vercel.app/og-image.png">
 
 <!-- JSON-LD structured data -->
@@ -51,9 +51,10 @@
   "@type": "WebApplication",
   "name": "pdfcevir",
   "url": "https://pdfcevir.vercel.app/",
-  "description": "Resimleri saniyeler içinde PDF'e dönüştüren, kayıt gerektirmeyen, tamamen tarayıcıda çalışan ücretsiz araç.",
+  "description": "Resimleri PDF'e çeviren, PDF'leri sıkıştıran ve Word'e dönüştüren, kayıt gerektirmeyen, tamamen tarayıcıda çalışan ücretsiz araç seti.",
   "applicationCategory": "UtilityApplication",
   "operatingSystem": "Any",
+  "featureList": "JPG/PNG'den PDF oluşturma, PDF sıkıştırma, PDF'den Word'e metin çevirme",
   "offers": {
     "@type": "Offer",
     "price": "0",
@@ -68,6 +69,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
 <style>
   :root{
@@ -134,6 +137,33 @@
     max-width: 480px;
     margin: 0 auto;
     line-height: 1.55;
+  }
+
+  /* Tab bar */
+  .tabs{
+    display:flex;
+    justify-content:center;
+    gap: 6px;
+    margin: 32px 0 0;
+    flex-wrap: wrap;
+  }
+  .tab{
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: rgba(245,241,232,0.6);
+    background: rgba(245,241,232,0.06);
+    border: 1px solid rgba(245,241,232,0.14);
+    padding: 10px 18px;
+    border-radius: 3px 3px 0 0;
+    cursor: pointer;
+    transition: background .15s ease, color .15s ease;
+  }
+  .tab:hover{ color: var(--paper); background: rgba(245,241,232,0.1); }
+  .tab.active{
+    color: var(--ink);
+    background: var(--paper-card);
+    border-color: var(--paper-card);
   }
 
   /* Document sheet — the main card */
@@ -342,6 +372,83 @@
   }
   .privacy-note svg{ flex-shrink:0; margin-top:1px; }
 
+  /* Quality options (compress tool) */
+  .quality-label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--text-muted);
+    margin: 24px 0 10px;
+  }
+  .quality-options{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  @media (max-width: 560px){ .quality-options{ grid-template-columns: 1fr; } }
+  .quality-option{
+    border: 1.5px solid var(--line);
+    border-radius: var(--radius);
+    padding: 12px 10px;
+    text-align:center;
+    cursor:pointer;
+    background: var(--paper);
+    transition: border-color .15s ease, background .15s ease;
+  }
+  .quality-option strong{ display:block; font-size: 13.5px; color: var(--ink); margin-bottom:2px; }
+  .quality-option span{ font-size: 11.5px; color: var(--text-muted); }
+  .quality-option.selected{ border-color: var(--stamp); background: rgba(179,55,44,0.05); }
+  .quality-option.selected strong{ color: var(--stamp); }
+
+  .size-compare{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap: 14px;
+    margin-bottom: 16px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 13px;
+  }
+  .size-compare .old-size{ color: var(--text-muted); text-decoration: line-through; }
+  .size-compare .arrow{ color: var(--gold); }
+  .size-compare .new-size{ color: var(--stamp); font-weight:600; }
+  .size-saved{
+    display:inline-block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 11.5px;
+    color: var(--gold);
+    margin-bottom: 14px;
+  }
+
+  .note-box{
+    display:flex;
+    gap: 10px;
+    align-items:flex-start;
+    background: rgba(169,129,46,0.08);
+    border: 1px solid rgba(169,129,46,0.3);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    font-size: 12.5px;
+    color: #5B4A22;
+    line-height:1.5;
+    margin-top: 20px;
+  }
+  .note-box svg{ flex-shrink:0; margin-top:1px; }
+
+  .single-file-name{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding: 10px 12px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    margin-top: 24px;
+    font-size: 13.5px;
+  }
+  .single-file-name .file-size{ margin-left:auto; }
+
   /* Footer / how-to */
   .how-to{
     max-width: 640px;
@@ -392,82 +499,299 @@
 
 <div class="wrap">
   <header>
-    <p class="eyebrow">Belge Masası</p>
-    <h1>Resimlerini <em>PDF'e</em><br>çevir, hazır.</h1>
-    <p class="sub">Kayıt yok, yükleme yok, bekleme yok. Dosyaların hiçbir zaman cihazından çıkmaz — her şey tarayıcında, anında gerçekleşir.</p>
+    <p class="eyebrow" id="eyebrow">Belge Masası</p>
+    <h1 id="mainHeading">Resimlerini <em>PDF'e</em><br>çevir, hazır.</h1>
+    <p class="sub" id="subText">Kayıt yok, yükleme yok, bekleme yok. Dosyaların hiçbir zaman cihazından çıkmaz — her şey tarayıcında, anında gerçekleşir.</p>
   </header>
 
-  <div class="sheet">
-    <div class="sheet-inner">
+  <div class="tabs" role="tablist">
+    <button class="tab active" data-tool="jpg" role="tab" aria-selected="true">Görsel → PDF</button>
+    <button class="tab" data-tool="compress" role="tab" aria-selected="false">PDF Sıkıştır</button>
+    <button class="tab" data-tool="word" role="tab" aria-selected="false">PDF → Word</button>
+  </div>
 
-      <div class="drop" id="drop" tabindex="0" role="button" aria-label="Resim yüklemek için tıkla veya sürükle bırak">
-        <div class="drop-icon">
-          <svg viewBox="0 0 42 54" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M4 2H27L38 13V50C38 51.6569 36.6569 53 35 53H4C2.34315 53 1 51.6569 1 50V5C1 3.34315 2.34315 2 4 2Z" stroke="#B3372C" stroke-width="1.6"/>
-            <path d="M27 2V11C27 12.1046 27.8954 13 29 13H38" stroke="#B3372C" stroke-width="1.6"/>
-            <path d="M12 33L16.5 27L21 32L26 24L31 33" stroke="#B3372C" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            <circle cx="13" cy="21" r="2" fill="#B3372C"/>
-          </svg>
+  <!-- PANEL 1: Görsel -> PDF -->
+  <div class="tool-panel" id="panel-jpg">
+    <div class="sheet">
+      <div class="sheet-inner">
+
+        <div class="drop" id="drop-jpg" tabindex="0" role="button" aria-label="Resim yüklemek için tıkla veya sürükle bırak">
+          <div class="drop-icon">
+            <svg viewBox="0 0 42 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 2H27L38 13V50C38 51.6569 36.6569 53 35 53H4C2.34315 53 1 51.6569 1 50V5C1 3.34315 2.34315 2 4 2Z" stroke="#B3372C" stroke-width="1.6"/>
+              <path d="M27 2V11C27 12.1046 27.8954 13 29 13H38" stroke="#B3372C" stroke-width="1.6"/>
+              <path d="M12 33L16.5 27L21 32L26 24L31 33" stroke="#B3372C" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="13" cy="21" r="2" fill="#B3372C"/>
+            </svg>
+          </div>
+          <p class="drop-title">Resimleri buraya bırak</p>
+          <p class="drop-hint">ya da <b>cihazından seç</b> — JPG, PNG desteklenir</p>
+          <input type="file" id="fileInput-jpg" accept="image/jpeg,image/png,image/webp" multiple>
         </div>
-        <p class="drop-title">Resimleri buraya bırak</p>
-        <p class="drop-hint">ya da <b>cihazından seç</b> — JPG, PNG desteklenir</p>
-        <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" multiple>
+
+        <ul class="filelist" id="fileList-jpg"></ul>
+
+        <div class="actions" id="actionsRow-jpg" style="display:none;">
+          <span class="count-label" id="countLabel-jpg">0 dosya seçildi</span>
+          <button class="btn btn-primary" id="convertBtn-jpg">PDF Oluştur</button>
+        </div>
+
+        <div class="result" id="result-jpg">
+          <span class="stamp-badge">✓ PDF HAZIR</span>
+          <span class="result-name" id="resultName-jpg">belge.pdf</span>
+          <button class="btn btn-download" id="downloadBtn-jpg">PDF'i İndir</button>
+        </div>
+
+        <div class="privacy-note">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 2L4 5V11C4 16 7.5 20.5 12 22C16.5 20.5 20 16 20 11V5L12 2Z" stroke="#5B5B52" stroke-width="1.5"/><path d="M9 12L11 14L15 10" stroke="#5B5B52" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Dosyaların hiçbir sunucuya yüklenmez. Dönüştürme işlemi tamamen kendi tarayıcında, cihazında gerçekleşir.</span>
+        </div>
+
       </div>
+    </div>
 
-      <ul class="filelist" id="fileList"></ul>
-
-      <div class="actions" id="actionsRow" style="display:none;">
-        <span class="count-label" id="countLabel">0 dosya seçildi</span>
-        <button class="btn btn-primary" id="convertBtn">PDF Oluştur</button>
-      </div>
-
-      <div class="result" id="result">
-        <span class="stamp-badge">✓ PDF HAZIR</span>
-        <span class="result-name" id="resultName">belge.pdf</span>
-        <button class="btn btn-download" id="downloadBtn">PDF'i İndir</button>
-      </div>
-
-      <div class="privacy-note">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 2L4 5V11C4 16 7.5 20.5 12 22C16.5 20.5 20 16 20 11V5L12 2Z" stroke="#5B5B52" stroke-width="1.5"/><path d="M9 12L11 14L15 10" stroke="#5B5B52" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <span>Dosyaların hiçbir sunucuya yüklenmez. Dönüştürme işlemi tamamen kendi tarayıcında, cihazında gerçekleşir.</span>
-      </div>
-
+    <div class="how-to">
+      <h2>Nasıl çalışır</h2>
+      <ul class="steps">
+        <li><span class="step-num">01</span><p>Bir veya birden fazla resim seç ya da sürükle bırak.</p></li>
+        <li><span class="step-num">02</span><p>Sırayı istersen düzenle, "PDF Oluştur"a bas.</p></li>
+        <li><span class="step-num">03</span><p>Hazır olan PDF'i tek tıkla indir, kullanmaya başla.</p></li>
+      </ul>
     </div>
   </div>
 
-  <div class="how-to">
-    <h2>Nasıl çalışır</h2>
-    <ul class="steps">
-      <li><span class="step-num">01</span><p>Bir veya birden fazla resim seç ya da sürükle bırak.</p></li>
-      <li><span class="step-num">02</span><p>Sırayı istersen düzenle, "PDF Oluştur"a bas.</p></li>
-      <li><span class="step-num">03</span><p>Hazır olan PDF'i tek tıkla indir, kullanmaya başla.</p></li>
-    </ul>
+  <!-- PANEL 2: PDF Sıkıştır -->
+  <div class="tool-panel" id="panel-compress" style="display:none;">
+    <div class="sheet">
+      <div class="sheet-inner">
+
+        <div class="drop" id="drop-compress" tabindex="0" role="button" aria-label="PDF yüklemek için tıkla veya sürükle bırak">
+          <div class="drop-icon">
+            <svg viewBox="0 0 42 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 2H27L38 13V50C38 51.6569 36.6569 53 35 53H4C2.34315 53 1 51.6569 1 50V5C1 3.34315 2.34315 2 4 2Z" stroke="#B3372C" stroke-width="1.6"/>
+              <path d="M27 2V11C27 12.1046 27.8954 13 29 13H38" stroke="#B3372C" stroke-width="1.6"/>
+              <path d="M15 40L15 26M15 26L10 31M15 26L20 31" stroke="#B3372C" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M27 40L27 26M27 26L22 31M27 26L32 31" stroke="#B3372C" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/>
+            </svg>
+          </div>
+          <p class="drop-title">PDF'ini buraya bırak</p>
+          <p class="drop-hint">ya da <b>cihazından seç</b> — tek PDF dosyası</p>
+          <input type="file" id="fileInput-compress" accept="application/pdf">
+        </div>
+
+        <div class="single-file-name" id="singleFile-compress" style="display:none;">
+          <span id="singleFileName-compress">belge.pdf</span>
+          <span class="file-size" id="singleFileSize-compress"></span>
+          <button class="file-remove" id="singleFileRemove-compress" aria-label="Kaldır">✕</button>
+        </div>
+
+        <div id="qualityBlock-compress" style="display:none;">
+          <p class="quality-label">Sıkıştırma seviyesi</p>
+          <div class="quality-options">
+            <div class="quality-option" data-level="high">
+              <strong>Hafif</strong>
+              <span>Az küçülür, kalite yüksek</span>
+            </div>
+            <div class="quality-option selected" data-level="medium">
+              <strong>Dengeli</strong>
+              <span>Önerilen seçenek</span>
+            </div>
+            <div class="quality-option" data-level="max">
+              <strong>Maksimum</strong>
+              <span>En küçük boyut</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions" id="actionsRow-compress" style="display:none;">
+          <span class="count-label" id="countLabel-compress">1 dosya seçildi</span>
+          <button class="btn btn-primary" id="convertBtn-compress">PDF'i Sıkıştır</button>
+        </div>
+
+        <div class="result" id="result-compress">
+          <span class="stamp-badge">✓ PDF HAZIR</span>
+          <span class="result-name" id="resultName-compress">belge.pdf</span>
+          <div class="size-compare">
+            <span class="old-size" id="oldSize-compress">2.4 MB</span>
+            <span class="arrow">→</span>
+            <span class="new-size" id="newSize-compress">0.8 MB</span>
+          </div>
+          <span class="size-saved" id="savedPercent-compress">%67 küçüldü</span>
+          <div>
+            <button class="btn btn-download" id="downloadBtn-compress">PDF'i İndir</button>
+          </div>
+        </div>
+
+        <div class="note-box">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 9V13M12 17H12.01M10.29 3.86L1.82 18A2 2 0 003.54 21H20.46A2 2 0 0022.18 18L13.71 3.86A2 2 0 0010.29 3.86Z" stroke="#A9812E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Sıkıştırma, sayfaları görüntüye çevirerek boyutu küçültür — bu yüzden metin artık seçilip kopyalanamaz. Taranmış belgeler ve resim ağırlıklı PDF'ler için en iyi sonucu verir.</span>
+        </div>
+
+        <div class="privacy-note">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 2L4 5V11C4 16 7.5 20.5 12 22C16.5 20.5 20 16 20 11V5L12 2Z" stroke="#5B5B52" stroke-width="1.5"/><path d="M9 12L11 14L15 10" stroke="#5B5B52" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Dosyaların hiçbir sunucuya yüklenmez. Sıkıştırma işlemi tamamen kendi tarayıcında, cihazında gerçekleşir.</span>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="how-to">
+      <h2>Nasıl çalışır</h2>
+      <ul class="steps">
+        <li><span class="step-num">01</span><p>PDF dosyanı seç ya da sürükle bırak.</p></li>
+        <li><span class="step-num">02</span><p>Sıkıştırma seviyesini seç, "PDF'i Sıkıştır"a bas.</p></li>
+        <li><span class="step-num">03</span><p>Yeni, küçülmüş boyutu gör ve indir.</p></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PANEL 3: PDF -> Word -->
+  <div class="tool-panel" id="panel-word" style="display:none;">
+    <div class="sheet">
+      <div class="sheet-inner">
+
+        <div class="drop" id="drop-word" tabindex="0" role="button" aria-label="PDF yüklemek için tıkla veya sürükle bırak">
+          <div class="drop-icon">
+            <svg viewBox="0 0 42 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 2H27L38 13V50C38 51.6569 36.6569 53 35 53H4C2.34315 53 1 51.6569 1 50V5C1 3.34315 2.34315 2 4 2Z" stroke="#B3372C" stroke-width="1.6"/>
+              <path d="M27 2V11C27 12.1046 27.8954 13 29 13H38" stroke="#B3372C" stroke-width="1.6"/>
+              <path d="M10 30H32M10 36H32M10 42H24" stroke="#B3372C" stroke-width="1.6" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <p class="drop-title">PDF'ini buraya bırak</p>
+          <p class="drop-hint">ya da <b>cihazından seç</b> — tek PDF dosyası</p>
+          <input type="file" id="fileInput-word" accept="application/pdf">
+        </div>
+
+        <div class="single-file-name" id="singleFile-word" style="display:none;">
+          <span id="singleFileName-word">belge.pdf</span>
+          <span class="file-size" id="singleFileSize-word"></span>
+          <button class="file-remove" id="singleFileRemove-word" aria-label="Kaldır">✕</button>
+        </div>
+
+        <div class="actions" id="actionsRow-word" style="display:none;">
+          <span class="count-label" id="countLabel-word">1 dosya seçildi</span>
+          <button class="btn btn-primary" id="convertBtn-word">Word'e Çevir</button>
+        </div>
+
+        <div class="result" id="result-word">
+          <span class="stamp-badge">✓ WORD HAZIR</span>
+          <span class="result-name" id="resultName-word">belge.docx</span>
+          <button class="btn btn-download" id="downloadBtn-word">.docx İndir</button>
+        </div>
+
+        <div class="note-box">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 9V13M12 17H12.01M10.29 3.86L1.82 18A2 2 0 003.54 21H20.46A2 2 0 0022.18 18L13.71 3.86A2 2 0 0010.29 3.86Z" stroke="#A9812E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Bu araç PDF içindeki metni çıkarıp düzenlenebilir bir Word dosyasına aktarır. Tablolar, görseller ve sayfa tasarımı korunmaz — sadece düz metin elde edersin.</span>
+        </div>
+
+        <div class="privacy-note">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 2L4 5V11C4 16 7.5 20.5 12 22C16.5 20.5 20 16 20 11V5L12 2Z" stroke="#5B5B52" stroke-width="1.5"/><path d="M9 12L11 14L15 10" stroke="#5B5B52" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Dosyaların hiçbir sunucuya yüklenmez. Metin çıkarma işlemi tamamen kendi tarayıcında, cihazında gerçekleşir.</span>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="how-to">
+      <h2>Nasıl çalışır</h2>
+      <ul class="steps">
+        <li><span class="step-num">01</span><p>PDF dosyanı seç ya da sürükle bırak.</p></li>
+        <li><span class="step-num">02</span><p>"Word'e Çevir"e bas, metin çıkarılsın.</p></li>
+        <li><span class="step-num">03</span><p>.docx dosyasını indir, Word'de düzenlemeye başla.</p></li>
+      </ul>
+    </div>
   </div>
 
   <footer>pdfcevir — kayıtsız, ücretsiz, sunucusuz.</footer>
 </div>
 
 <script>
-(function(){
-  const drop = document.getElementById('drop');
-  const fileInput = document.getElementById('fileInput');
-  const fileListEl = document.getElementById('fileList');
-  const actionsRow = document.getElementById('actionsRow');
-  const countLabel = document.getElementById('countLabel');
-  const convertBtn = document.getElementById('convertBtn');
-  const result = document.getElementById('result');
-  const resultName = document.getElementById('resultName');
-  const downloadBtn = document.getElementById('downloadBtn');
+/* ===================== Ortak yardımcılar ===================== */
+function formatSize(bytes){
+  if(bytes < 1024) return bytes + ' B';
+  if(bytes < 1024*1024) return (bytes/1024).toFixed(0) + ' KB';
+  return (bytes/(1024*1024)).toFixed(1) + ' MB';
+}
 
-  let files = []; // {file, url, id}
+function pdfjsReady(){
+  return new Promise(resolve => {
+    (function check(){
+      if(window.pdfjsLib){
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        resolve();
+      } else {
+        setTimeout(check, 60);
+      }
+    })();
+  });
+}
+function libReady(name){
+  return new Promise(resolve => {
+    (function check(){
+      if(window[name]) resolve(); else setTimeout(check, 60);
+    })();
+  });
+}
+
+/* ===================== Tab sistemi ===================== */
+(function(){
+  const tabs = document.querySelectorAll('.tab');
+  const panels = {
+    jpg: document.getElementById('panel-jpg'),
+    compress: document.getElementById('panel-compress'),
+    word: document.getElementById('panel-word')
+  };
+  const meta = {
+    jpg: {
+      eyebrow: 'Belge Masası',
+      heading: 'Resimlerini <em>PDF\'e</em><br>çevir, hazır.',
+      sub: 'Kayıt yok, yükleme yok, bekleme yok. Dosyaların hiçbir zaman cihazından çıkmaz — her şey tarayıcında, anında gerçekleşir.'
+    },
+    compress: {
+      eyebrow: 'Belge Masası',
+      heading: 'PDF\'ini <em>küçült</em>,<br>yerinden çıkmasın.',
+      sub: 'Büyük PDF\'ler e-postadan, formlardan geri döner. Boyutunu küçült, göndermesi kolaylaşsın.'
+    },
+    word: {
+      eyebrow: 'Belge Masası',
+      heading: 'PDF\'ini <em>Word\'e</em><br>aktar, düzenle.',
+      sub: 'Metni PDF\'in içinden çıkar, düzenlenebilir bir belgeye dönüştür. Kayıt yok, sunucu yok.'
+    }
+  };
+
+  const eyebrowEl = document.getElementById('eyebrow');
+  const headingEl = document.getElementById('mainHeading');
+  const subEl = document.getElementById('subText');
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const tool = tab.dataset.tool;
+      tabs.forEach(t => { t.classList.toggle('active', t === tab); t.setAttribute('aria-selected', t === tab ? 'true' : 'false'); });
+      Object.keys(panels).forEach(key => { panels[key].style.display = key === tool ? '' : 'none'; });
+      eyebrowEl.textContent = meta[tool].eyebrow;
+      headingEl.innerHTML = meta[tool].heading;
+      subEl.textContent = meta[tool].sub;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+})();
+
+/* ===================== ARAÇ 1: Görsel -> PDF ===================== */
+(function(){
+  const drop = document.getElementById('drop-jpg');
+  const fileInput = document.getElementById('fileInput-jpg');
+  const fileListEl = document.getElementById('fileList-jpg');
+  const actionsRow = document.getElementById('actionsRow-jpg');
+  const countLabel = document.getElementById('countLabel-jpg');
+  const convertBtn = document.getElementById('convertBtn-jpg');
+  const result = document.getElementById('result-jpg');
+  const resultName = document.getElementById('resultName-jpg');
+  const downloadBtn = document.getElementById('downloadBtn-jpg');
+
+  let files = [];
   let pdfBlobUrl = null;
   let idCounter = 0;
-
-  function formatSize(bytes){
-    if(bytes < 1024) return bytes + ' B';
-    if(bytes < 1024*1024) return (bytes/1024).toFixed(0) + ' KB';
-    return (bytes/(1024*1024)).toFixed(1) + ' MB';
-  }
 
   function render(){
     fileListEl.innerHTML = '';
@@ -483,14 +807,10 @@
       `;
       fileListEl.appendChild(li);
     });
-
     actionsRow.style.display = files.length ? 'flex' : 'none';
     countLabel.textContent = files.length + ' dosya seçildi';
     convertBtn.disabled = files.length === 0;
-
-    if(files.length === 0){
-      result.classList.remove('show');
-    }
+    if(files.length === 0) result.classList.remove('show');
   }
 
   function addFiles(fileArr){
@@ -505,44 +825,39 @@
   drop.addEventListener('click', () => fileInput.click());
   drop.addEventListener('keydown', e => { if(e.key === 'Enter' || e.key === ' ') fileInput.click(); });
   fileInput.addEventListener('change', e => addFiles(e.target.files));
-
-  ['dragenter','dragover'].forEach(evt => {
-    drop.addEventListener(evt, e => { e.preventDefault(); drop.classList.add('dragover'); });
-  });
-  ['dragleave','drop'].forEach(evt => {
-    drop.addEventListener(evt, e => { e.preventDefault(); drop.classList.remove('dragover'); });
-  });
+  ['dragenter','dragover'].forEach(evt => drop.addEventListener(evt, e => { e.preventDefault(); drop.classList.add('dragover'); }));
+  ['dragleave','drop'].forEach(evt => drop.addEventListener(evt, e => { e.preventDefault(); drop.classList.remove('dragover'); }));
   drop.addEventListener('drop', e => addFiles(e.dataTransfer.files));
 
   fileListEl.addEventListener('click', e => {
     const btn = e.target.closest('.file-remove');
     if(!btn) return;
-    const id = Number(btn.dataset.id);
-    files = files.filter(f => f.id !== id);
+    files = files.filter(f => f.id !== Number(btn.dataset.id));
     render();
   });
 
   async function imageToPdfPage(pdfDoc, file){
     const bytes = await file.arrayBuffer();
-    let img;
-    if(file.type === 'image/png'){
-      img = await pdfDoc.embedPng(bytes);
-    } else {
-      img = await pdfDoc.embedJpg(bytes);
-    }
-    const pageW = 595.28, pageH = 841.89; // A4 at 72dpi
+    const img = file.type === 'image/png' ? await pdfDoc.embedPng(bytes) : await pdfDoc.embedJpg(bytes);
+    const pageW = 595.28, pageH = 841.89;
     const page = pdfDoc.addPage([pageW, pageH]);
     const margin = 28;
-    const maxW = pageW - margin*2;
-    const maxH = pageH - margin*2;
-    const scale = Math.min(maxW / img.width, maxH / img.height, 1);
-    const w = img.width * scale;
-    const h = img.height * scale;
-    page.drawImage(img, {
-      x: (pageW - w) / 2,
-      y: (pageH - h) / 2,
-      width: w,
-      height: h
+    const scale = Math.min((pageW-margin*2)/img.width, (pageH-margin*2)/img.height, 1);
+    const w = img.width*scale, h = img.height*scale;
+    page.drawImage(img, { x:(pageW-w)/2, y:(pageH-h)/2, width:w, height:h });
+  }
+
+  function webpToPngBytes(file){
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width; canvas.height = img.height;
+        canvas.getContext('2d').drawImage(img, 0, 0);
+        canvas.toBlob(blob => { blob.arrayBuffer().then(buf => resolve(new Uint8Array(buf))); }, 'image/png');
+      };
+      img.onerror = reject;
+      img.src = URL.createObjectURL(file);
     });
   }
 
@@ -550,13 +865,11 @@
     if(files.length === 0) return;
     convertBtn.disabled = true;
     convertBtn.textContent = 'Oluşturuluyor...';
-
     try{
+      await libReady('PDFLib');
       const { PDFDocument } = PDFLib;
       const pdfDoc = await PDFDocument.create();
-
       for(const f of files){
-        // webp not natively supported by pdf-lib -> convert via canvas to png
         if(f.file.type === 'image/webp'){
           const pngBytes = await webpToPngBytes(f.file);
           const img = await pdfDoc.embedPng(pngBytes);
@@ -570,23 +883,13 @@
           await imageToPdfPage(pdfDoc, f.file);
         }
       }
-
       const pdfBytes = await pdfDoc.save();
       const blob = new Blob([pdfBytes], { type: 'application/pdf' });
       if(pdfBlobUrl) URL.revokeObjectURL(pdfBlobUrl);
       pdfBlobUrl = URL.createObjectURL(blob);
-
-      const name = files.length === 1
-        ? files[0].file.name.replace(/\.[^.]+$/, '') + '.pdf'
-        : 'belge.pdf';
+      const name = files.length === 1 ? files[0].file.name.replace(/\.[^.]+$/, '') + '.pdf' : 'belge.pdf';
       resultName.textContent = name;
-      downloadBtn.onclick = () => {
-        const a = document.createElement('a');
-        a.href = pdfBlobUrl;
-        a.download = name;
-        a.click();
-      };
-
+      downloadBtn.onclick = () => { const a = document.createElement('a'); a.href = pdfBlobUrl; a.download = name; a.click(); };
       result.classList.add('show');
       result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     } catch(err){
@@ -597,23 +900,279 @@
       convertBtn.textContent = 'PDF Oluştur';
     }
   });
+})();
 
-  function webpToPngBytes(file){
-    return new Promise((resolve, reject) => {
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        canvas.width = img.width;
-        canvas.height = img.height;
-        canvas.getContext('2d').drawImage(img, 0, 0);
-        canvas.toBlob(blob => {
-          blob.arrayBuffer().then(buf => resolve(new Uint8Array(buf)));
-        }, 'image/png');
-      };
-      img.onerror = reject;
-      img.src = URL.createObjectURL(file);
-    });
+/* ===================== ARAÇ 2: PDF Sıkıştır ===================== */
+(function(){
+  const drop = document.getElementById('drop-compress');
+  const fileInput = document.getElementById('fileInput-compress');
+  const singleFile = document.getElementById('singleFile-compress');
+  const singleFileName = document.getElementById('singleFileName-compress');
+  const singleFileSize = document.getElementById('singleFileSize-compress');
+  const singleFileRemove = document.getElementById('singleFileRemove-compress');
+  const qualityBlock = document.getElementById('qualityBlock-compress');
+  const qualityOptions = qualityBlock.querySelectorAll('.quality-option');
+  const actionsRow = document.getElementById('actionsRow-compress');
+  const convertBtn = document.getElementById('convertBtn-compress');
+  const result = document.getElementById('result-compress');
+  const resultName = document.getElementById('resultName-compress');
+  const oldSizeEl = document.getElementById('oldSize-compress');
+  const newSizeEl = document.getElementById('newSize-compress');
+  const savedEl = document.getElementById('savedPercent-compress');
+  const downloadBtn = document.getElementById('downloadBtn-compress');
+
+  const LEVELS = {
+    high:   { scale: 1.0,  quality: 0.82 },
+    medium: { scale: 0.85, quality: 0.62 },
+    max:    { scale: 0.6,  quality: 0.4  }
+  };
+
+  let currentFile = null;
+  let selectedLevel = 'medium';
+  let blobUrl = null;
+
+  function reset(){
+    currentFile = null;
+    singleFile.style.display = 'none';
+    qualityBlock.style.display = 'none';
+    actionsRow.style.display = 'none';
+    result.classList.remove('show');
   }
+
+  function setFile(file){
+    if(file.type !== 'application/pdf'){ alert('Lütfen bir PDF dosyası seç.'); return; }
+    currentFile = file;
+    singleFileName.textContent = file.name;
+    singleFileSize.textContent = formatSize(file.size);
+    singleFile.style.display = 'flex';
+    qualityBlock.style.display = 'block';
+    actionsRow.style.display = 'flex';
+    result.classList.remove('show');
+  }
+
+  drop.addEventListener('click', () => fileInput.click());
+  drop.addEventListener('keydown', e => { if(e.key === 'Enter' || e.key === ' ') fileInput.click(); });
+  fileInput.addEventListener('change', e => { if(e.target.files[0]) setFile(e.target.files[0]); });
+  ['dragenter','dragover'].forEach(evt => drop.addEventListener(evt, e => { e.preventDefault(); drop.classList.add('dragover'); }));
+  ['dragleave','drop'].forEach(evt => drop.addEventListener(evt, e => { e.preventDefault(); drop.classList.remove('dragover'); }));
+  drop.addEventListener('drop', e => { if(e.dataTransfer.files[0]) setFile(e.dataTransfer.files[0]); });
+  singleFileRemove.addEventListener('click', reset);
+
+  qualityOptions.forEach(opt => {
+    opt.addEventListener('click', () => {
+      qualityOptions.forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      selectedLevel = opt.dataset.level;
+    });
+  });
+
+  convertBtn.addEventListener('click', async () => {
+    if(!currentFile) return;
+    convertBtn.disabled = true;
+    convertBtn.textContent = 'Sıkıştırılıyor...';
+    try{
+      await Promise.all([pdfjsReady(), libReady('PDFLib')]);
+      const { scale, quality } = LEVELS[selectedLevel];
+      const originalBytes = await currentFile.arrayBuffer();
+      const loadingTask = pdfjsLib.getDocument({ data: originalBytes.slice(0) });
+      const pdf = await loadingTask.promise;
+
+      const { PDFDocument } = PDFLib;
+      const outDoc = await PDFDocument.create();
+
+      for(let i = 1; i <= pdf.numPages; i++){
+        const page = await pdf.getPage(i);
+        const viewport = page.getViewport({ scale });
+        const canvas = document.createElement('canvas');
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+        const ctx = canvas.getContext('2d');
+        await page.render({ canvasContext: ctx, viewport }).promise;
+
+        const jpegDataUrl = canvas.toDataURL('image/jpeg', quality);
+        const jpegBytes = await (await fetch(jpegDataUrl)).arrayBuffer();
+        const embedded = await outDoc.embedJpg(jpegBytes);
+
+        const origViewport = page.getViewport({ scale: 1 });
+        const outPage = outDoc.addPage([origViewport.width, origViewport.height]);
+        outPage.drawImage(embedded, { x: 0, y: 0, width: origViewport.width, height: origViewport.height });
+
+        canvas.width = 0; canvas.height = 0; // serbest bırak
+      }
+
+      const newBytes = await outDoc.save();
+      const blob = new Blob([newBytes], { type: 'application/pdf' });
+      if(blobUrl) URL.revokeObjectURL(blobUrl);
+      blobUrl = URL.createObjectURL(blob);
+
+      const name = currentFile.name.replace(/\.pdf$/i, '') + '-sikistirilmis.pdf';
+      resultName.textContent = name;
+      oldSizeEl.textContent = formatSize(currentFile.size);
+      newSizeEl.textContent = formatSize(newBytes.length);
+      const savedPct = Math.max(0, Math.round((1 - newBytes.length / currentFile.size) * 100));
+      savedEl.textContent = savedPct > 0 ? `%${savedPct} küçüldü` : 'Boyut zaten küçük';
+
+      downloadBtn.onclick = () => { const a = document.createElement('a'); a.href = blobUrl; a.download = name; a.click(); };
+
+      result.classList.add('show');
+      result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    } catch(err){
+      alert('Sıkıştırma sırasında bir şeyler ters gitti. (' + err.message + ')');
+      console.error(err);
+    } finally {
+      convertBtn.disabled = false;
+      convertBtn.textContent = "PDF'i Sıkıştır";
+    }
+  });
+})();
+
+/* ===================== ARAÇ 3: PDF -> Word (metin) ===================== */
+(function(){
+  const drop = document.getElementById('drop-word');
+  const fileInput = document.getElementById('fileInput-word');
+  const singleFile = document.getElementById('singleFile-word');
+  const singleFileName = document.getElementById('singleFileName-word');
+  const singleFileSize = document.getElementById('singleFileSize-word');
+  const singleFileRemove = document.getElementById('singleFileRemove-word');
+  const actionsRow = document.getElementById('actionsRow-word');
+  const convertBtn = document.getElementById('convertBtn-word');
+  const result = document.getElementById('result-word');
+  const resultName = document.getElementById('resultName-word');
+  const downloadBtn = document.getElementById('downloadBtn-word');
+
+  let currentFile = null;
+  let blobUrl = null;
+
+  function reset(){
+    currentFile = null;
+    singleFile.style.display = 'none';
+    actionsRow.style.display = 'none';
+    result.classList.remove('show');
+  }
+
+  function setFile(file){
+    if(file.type !== 'application/pdf'){ alert('Lütfen bir PDF dosyası seç.'); return; }
+    currentFile = file;
+    singleFileName.textContent = file.name;
+    singleFileSize.textContent = formatSize(file.size);
+    singleFile.style.display = 'flex';
+    actionsRow.style.display = 'flex';
+    result.classList.remove('show');
+  }
+
+  drop.addEventListener('click', () => fileInput.click());
+  drop.addEventListener('keydown', e => { if(e.key === 'Enter' || e.key === ' ') fileInput.click(); });
+  fileInput.addEventListener('change', e => { if(e.target.files[0]) setFile(e.target.files[0]); });
+  ['dragenter','dragover'].forEach(evt => drop.addEventListener(evt, e => { e.preventDefault(); drop.classList.add('dragover'); }));
+  ['dragleave','drop'].forEach(evt => drop.addEventListener(evt, e => { e.preventDefault(); drop.classList.remove('dragover'); }));
+  drop.addEventListener('drop', e => { if(e.dataTransfer.files[0]) setFile(e.dataTransfer.files[0]); });
+  singleFileRemove.addEventListener('click', reset);
+
+  function escapeXml(text){
+    return text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  async function extractPagesText(pdf){
+    const pagesLines = [];
+    for(let i = 1; i <= pdf.numPages; i++){
+      const page = await pdf.getPage(i);
+      const content = await page.getTextContent();
+      const lines = [];
+      let currentY = null;
+      let currentLine = [];
+      content.items.forEach(item => {
+        const y = Math.round(item.transform[5]);
+        if(currentY === null || Math.abs(y - currentY) > 4){
+          if(currentLine.length) lines.push(currentLine.join(' '));
+          currentLine = [item.str];
+          currentY = y;
+        } else {
+          currentLine.push(item.str);
+        }
+      });
+      if(currentLine.length) lines.push(currentLine.join(' '));
+      pagesLines.push(lines.filter(l => l.trim().length));
+    }
+    return pagesLines;
+  }
+
+  function buildDocxParagraphs(pagesLines){
+    const parts = [];
+    pagesLines.forEach((lines, pageIdx) => {
+      if(pageIdx > 0){
+        parts.push('<w:p><w:r><w:br w:type="page"/></w:r></w:p>');
+      }
+      if(lines.length === 0){
+        parts.push('<w:p/>');
+      } else {
+        lines.forEach(line => {
+          parts.push(`<w:p><w:r><w:t xml:space="preserve">${escapeXml(line)}</w:t></w:r></w:p>`);
+        });
+      }
+    });
+    return parts.join('');
+  }
+
+  async function buildDocxBlob(pagesLines){
+    const zip = new JSZip();
+    zip.file('[Content_Types].xml',
+`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
+<Default Extension="xml" ContentType="application/xml"/>
+<Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>
+</Types>`);
+
+    zip.folder('_rels').file('.rels',
+`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/>
+</Relationships>`);
+
+    const body = buildDocxParagraphs(pagesLines);
+    zip.folder('word').file('document.xml',
+`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+<w:body>${body}<w:sectPr/></w:body>
+</w:document>`);
+
+    return zip.generateAsync({ type: 'blob', mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+  }
+
+  convertBtn.addEventListener('click', async () => {
+    if(!currentFile) return;
+    convertBtn.disabled = true;
+    convertBtn.textContent = 'Çevriliyor...';
+    try{
+      await Promise.all([pdfjsReady(), libReady('JSZip')]);
+      const bytes = await currentFile.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: bytes }).promise;
+      const pagesLines = await extractPagesText(pdf);
+
+      const hasText = pagesLines.some(lines => lines.length > 0);
+      if(!hasText){
+        alert('Bu PDF içinde çıkarılabilir metin bulunamadı. Taranmış (görüntü) bir PDF olabilir.');
+        return;
+      }
+
+      const blob = await buildDocxBlob(pagesLines);
+      if(blobUrl) URL.revokeObjectURL(blobUrl);
+      blobUrl = URL.createObjectURL(blob);
+
+      const name = currentFile.name.replace(/\.pdf$/i, '') + '.docx';
+      resultName.textContent = name;
+      downloadBtn.onclick = () => { const a = document.createElement('a'); a.href = blobUrl; a.download = name; a.click(); };
+
+      result.classList.add('show');
+      result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    } catch(err){
+      alert('Word\'e çevirirken bir şeyler ters gitti. (' + err.message + ')');
+      console.error(err);
+    } finally {
+      convertBtn.disabled = false;
+      convertBtn.textContent = "Word'e Çevir";
+    }
+  });
 })();
 </script>
 
