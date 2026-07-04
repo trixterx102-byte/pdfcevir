@@ -140,6 +140,36 @@
   }
 
   /* Tab bar */
+  .lang-toggle{
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 50;
+    display: flex;
+    gap: 2px;
+    background: rgba(20,33,61,0.55);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(245,241,232,0.18);
+    border-radius: 20px;
+    padding: 3px;
+  }
+  .lang-toggle button{
+    border: none;
+    background: transparent;
+    color: rgba(245,241,232,0.55);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 5px 11px;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: background .15s ease, color .15s ease;
+  }
+  .lang-toggle button.active{
+    background: var(--stamp);
+    color: var(--paper-card);
+  }
+
   .tabs{
     display:flex;
     justify-content:center;
@@ -497,6 +527,11 @@
 </head>
 <body>
 
+<div class="lang-toggle" id="langToggle">
+  <button data-lang="tr" type="button">TR</button>
+  <button data-lang="en" type="button">EN</button>
+</div>
+
 <div class="wrap">
   <header>
     <p class="eyebrow" id="eyebrow">Belge Masası</p>
@@ -524,8 +559,8 @@
               <circle cx="13" cy="21" r="2" fill="#B3372C"/>
             </svg>
           </div>
-          <p class="drop-title">Resimleri buraya bırak</p>
-          <p class="drop-hint">ya da <b>cihazından seç</b> — JPG, PNG desteklenir</p>
+          <p class="drop-title" id="dropTitle-jpg">Resimleri buraya bırak</p>
+          <p class="drop-hint" id="dropHint-jpg">ya da <b>cihazından seç</b> — JPG, PNG desteklenir</p>
           <input type="file" id="fileInput-jpg" accept="image/jpeg,image/png,image/webp" multiple>
         </div>
 
@@ -537,25 +572,25 @@
         </div>
 
         <div class="result" id="result-jpg">
-          <span class="stamp-badge">✓ PDF HAZIR</span>
+          <span class="stamp-badge" id="stampBadge-jpg">✓ PDF HAZIR</span>
           <span class="result-name" id="resultName-jpg">belge.pdf</span>
           <button class="btn btn-download" id="downloadBtn-jpg">PDF'i İndir</button>
         </div>
 
         <div class="privacy-note">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 2L4 5V11C4 16 7.5 20.5 12 22C16.5 20.5 20 16 20 11V5L12 2Z" stroke="#5B5B52" stroke-width="1.5"/><path d="M9 12L11 14L15 10" stroke="#5B5B52" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <span>Dosyaların hiçbir sunucuya yüklenmez. Dönüştürme işlemi tamamen kendi tarayıcında, cihazında gerçekleşir.</span>
+          <span id="privacyNote-jpg">Dosyaların hiçbir sunucuya yüklenmez. Dönüştürme işlemi tamamen kendi tarayıcında, cihazında gerçekleşir.</span>
         </div>
 
       </div>
     </div>
 
     <div class="how-to">
-      <h2>Nasıl çalışır</h2>
+      <h2 id="howToTitle-jpg">Nasıl çalışır</h2>
       <ul class="steps">
-        <li><span class="step-num">01</span><p>Bir veya birden fazla resim seç ya da sürükle bırak.</p></li>
-        <li><span class="step-num">02</span><p>Sırayı istersen düzenle, "PDF Oluştur"a bas.</p></li>
-        <li><span class="step-num">03</span><p>Hazır olan PDF'i tek tıkla indir, kullanmaya başla.</p></li>
+        <li><span class="step-num">01</span><p id="step1-jpg">Bir veya birden fazla resim seç ya da sürükle bırak.</p></li>
+        <li><span class="step-num">02</span><p id="step2-jpg">Sırayı istersen düzenle, "PDF Oluştur"a bas.</p></li>
+        <li><span class="step-num">03</span><p id="step3-jpg">Hazır olan PDF'i tek tıkla indir, kullanmaya başla.</p></li>
       </ul>
     </div>
   </div>
@@ -574,8 +609,8 @@
               <path d="M27 40L27 26M27 26L22 31M27 26L32 31" stroke="#B3372C" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/>
             </svg>
           </div>
-          <p class="drop-title">PDF'ini buraya bırak</p>
-          <p class="drop-hint">ya da <b>cihazından seç</b> — tek PDF dosyası</p>
+          <p class="drop-title" id="dropTitle-compress">PDF'ini buraya bırak</p>
+          <p class="drop-hint" id="dropHint-compress">ya da <b>cihazından seç</b> — tek PDF dosyası</p>
           <input type="file" id="fileInput-compress" accept="application/pdf">
         </div>
 
@@ -586,19 +621,19 @@
         </div>
 
         <div id="qualityBlock-compress" style="display:none;">
-          <p class="quality-label">Sıkıştırma seviyesi</p>
+          <p class="quality-label" id="qualityLabel-compress">Sıkıştırma seviyesi</p>
           <div class="quality-options">
             <div class="quality-option" data-level="high">
-              <strong>Hafif</strong>
-              <span>Az küçülür, kalite yüksek</span>
+              <strong id="qHighTitle-compress">Hafif</strong>
+              <span id="qHighDesc-compress">Az küçülür, kalite yüksek</span>
             </div>
             <div class="quality-option selected" data-level="medium">
-              <strong>Dengeli</strong>
-              <span>Önerilen seçenek</span>
+              <strong id="qMediumTitle-compress">Dengeli</strong>
+              <span id="qMediumDesc-compress">Önerilen seçenek</span>
             </div>
             <div class="quality-option" data-level="max">
-              <strong>Maksimum</strong>
-              <span>En küçük boyut</span>
+              <strong id="qMaxTitle-compress">Maksimum</strong>
+              <span id="qMaxDesc-compress">En küçük boyut</span>
             </div>
           </div>
         </div>
@@ -609,7 +644,7 @@
         </div>
 
         <div class="result" id="result-compress">
-          <span class="stamp-badge">✓ PDF HAZIR</span>
+          <span class="stamp-badge" id="stampBadge-compress">✓ PDF HAZIR</span>
           <span class="result-name" id="resultName-compress">belge.pdf</span>
           <div class="size-compare">
             <span class="old-size" id="oldSize-compress">2.4 MB</span>
@@ -624,23 +659,23 @@
 
         <div class="note-box">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 9V13M12 17H12.01M10.29 3.86L1.82 18A2 2 0 003.54 21H20.46A2 2 0 0022.18 18L13.71 3.86A2 2 0 0010.29 3.86Z" stroke="#A9812E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <span>Sıkıştırma, sayfaları görüntüye çevirerek boyutu küçültür — bu yüzden metin artık seçilip kopyalanamaz. Taranmış belgeler ve resim ağırlıklı PDF'ler için en iyi sonucu verir.</span>
+          <span id="noteBox-compress">Sıkıştırma, sayfaları görüntüye çevirerek boyutu küçültür — bu yüzden metin artık seçilip kopyalanamaz. Taranmış belgeler ve resim ağırlıklı PDF'ler için en iyi sonucu verir.</span>
         </div>
 
         <div class="privacy-note">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 2L4 5V11C4 16 7.5 20.5 12 22C16.5 20.5 20 16 20 11V5L12 2Z" stroke="#5B5B52" stroke-width="1.5"/><path d="M9 12L11 14L15 10" stroke="#5B5B52" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <span>Dosyaların hiçbir sunucuya yüklenmez. Sıkıştırma işlemi tamamen kendi tarayıcında, cihazında gerçekleşir.</span>
+          <span id="privacyNote-compress">Dosyaların hiçbir sunucuya yüklenmez. Sıkıştırma işlemi tamamen kendi tarayıcında, cihazında gerçekleşir.</span>
         </div>
 
       </div>
     </div>
 
     <div class="how-to">
-      <h2>Nasıl çalışır</h2>
+      <h2 id="howToTitle-compress">Nasıl çalışır</h2>
       <ul class="steps">
-        <li><span class="step-num">01</span><p>PDF dosyanı seç ya da sürükle bırak.</p></li>
-        <li><span class="step-num">02</span><p>Sıkıştırma seviyesini seç, "PDF'i Sıkıştır"a bas.</p></li>
-        <li><span class="step-num">03</span><p>Yeni, küçülmüş boyutu gör ve indir.</p></li>
+        <li><span class="step-num">01</span><p id="step1-compress">PDF dosyanı seç ya da sürükle bırak.</p></li>
+        <li><span class="step-num">02</span><p id="step2-compress">Sıkıştırma seviyesini seç, "PDF'i Sıkıştır"a bas.</p></li>
+        <li><span class="step-num">03</span><p id="step3-compress">Yeni, küçülmüş boyutu gör ve indir.</p></li>
       </ul>
     </div>
   </div>
@@ -658,8 +693,8 @@
               <path d="M10 30H32M10 36H32M10 42H24" stroke="#B3372C" stroke-width="1.6" stroke-linecap="round"/>
             </svg>
           </div>
-          <p class="drop-title">PDF'ini buraya bırak</p>
-          <p class="drop-hint">ya da <b>cihazından seç</b> — tek PDF dosyası</p>
+          <p class="drop-title" id="dropTitle-word">PDF'ini buraya bırak</p>
+          <p class="drop-hint" id="dropHint-word">ya da <b>cihazından seç</b> — tek PDF dosyası</p>
           <input type="file" id="fileInput-word" accept="application/pdf">
         </div>
 
@@ -675,35 +710,35 @@
         </div>
 
         <div class="result" id="result-word">
-          <span class="stamp-badge">✓ WORD HAZIR</span>
+          <span class="stamp-badge" id="stampBadge-word">✓ WORD HAZIR</span>
           <span class="result-name" id="resultName-word">belge.docx</span>
           <button class="btn btn-download" id="downloadBtn-word">.docx İndir</button>
         </div>
 
         <div class="note-box">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 9V13M12 17H12.01M10.29 3.86L1.82 18A2 2 0 003.54 21H20.46A2 2 0 0022.18 18L13.71 3.86A2 2 0 0010.29 3.86Z" stroke="#A9812E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <span>Bu araç PDF içindeki metni çıkarıp düzenlenebilir bir Word dosyasına aktarır. Tablolar, görseller ve sayfa tasarımı korunmaz — sadece düz metin elde edersin.</span>
+          <span id="noteBox-word">Bu araç PDF içindeki metni çıkarıp düzenlenebilir bir Word dosyasına aktarır. Tablolar, görseller ve sayfa tasarımı korunmaz — sadece düz metin elde edersin.</span>
         </div>
 
         <div class="privacy-note">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 2L4 5V11C4 16 7.5 20.5 12 22C16.5 20.5 20 16 20 11V5L12 2Z" stroke="#5B5B52" stroke-width="1.5"/><path d="M9 12L11 14L15 10" stroke="#5B5B52" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <span>Dosyaların hiçbir sunucuya yüklenmez. Metin çıkarma işlemi tamamen kendi tarayıcında, cihazında gerçekleşir.</span>
+          <span id="privacyNote-word">Dosyaların hiçbir sunucuya yüklenmez. Metin çıkarma işlemi tamamen kendi tarayıcında, cihazında gerçekleşir.</span>
         </div>
 
       </div>
     </div>
 
     <div class="how-to">
-      <h2>Nasıl çalışır</h2>
+      <h2 id="howToTitle-word">Nasıl çalışır</h2>
       <ul class="steps">
-        <li><span class="step-num">01</span><p>PDF dosyanı seç ya da sürükle bırak.</p></li>
-        <li><span class="step-num">02</span><p>"Word'e Çevir"e bas, metin çıkarılsın.</p></li>
-        <li><span class="step-num">03</span><p>.docx dosyasını indir, Word'de düzenlemeye başla.</p></li>
+        <li><span class="step-num">01</span><p id="step1-word">PDF dosyanı seç ya da sürükle bırak.</p></li>
+        <li><span class="step-num">02</span><p id="step2-word">"Word'e Çevir"e bas, metin çıkarılsın.</p></li>
+        <li><span class="step-num">03</span><p id="step3-word">.docx dosyasını indir, Word'de düzenlemeye başla.</p></li>
       </ul>
     </div>
   </div>
 
-  <footer>pdfcevir — kayıtsız, ücretsiz, sunucusuz.</footer>
+  <footer id="footerText">pdfcevir — kayıtsız, ücretsiz, sunucusuz.</footer>
 </div>
 
 <script>
@@ -734,6 +769,195 @@ function libReady(name){
   });
 }
 
+/* ===================== Dil sistemi ===================== */
+const LANG = {
+  tr: {
+    tabs: { jpg: "Görsel → PDF", compress: "PDF Sıkıştır", word: "PDF → Word" },
+    header: {
+      jpg: { eyebrow: "Belge Masası", heading: "Resimlerini <em>PDF'e</em><br>çevir, hazır.", sub: "Kayıt yok, yükleme yok, bekleme yok. Dosyaların hiçbir zaman cihazından çıkmaz — her şey tarayıcında, anında gerçekleşir." },
+      compress: { eyebrow: "Belge Masası", heading: "PDF'ini <em>küçült</em>,<br>yerinden çıkmasın.", sub: "Büyük PDF'ler e-postadan, formlardan geri döner. Boyutunu küçült, göndermesi kolaylaşsın." },
+      word: { eyebrow: "Belge Masası", heading: "PDF'ini <em>Word'e</em><br>aktar, düzenle.", sub: "Metni PDF'in içinden çıkar, düzenlenebilir bir belgeye dönüştür. Kayıt yok, sunucu yok." }
+    },
+    jpg: {
+      dropTitle: "Resimleri buraya bırak",
+      dropHint: 'ya da <b>cihazından seç</b> — JPG, PNG desteklenir',
+      count: n => `${n} dosya seçildi`,
+      convertBtn: "PDF Oluştur", convertBtnLoading: "Oluşturuluyor...",
+      stampBadge: "✓ PDF HAZIR", downloadBtn: "PDF'i İndir",
+      privacyNote: "Dosyaların hiçbir sunucuya yüklenmez. Dönüştürme işlemi tamamen kendi tarayıcında, cihazında gerçekleşir.",
+      howToTitle: "Nasıl çalışır",
+      steps: ["Bir veya birden fazla resim seç ya da sürükle bırak.", 'Sırayı istersen düzenle, "PDF Oluştur"a bas.', "Hazır olan PDF'i tek tıkla indir, kullanmaya başla."],
+      errGeneric: "Bir şeyler ters gitti, lütfen tekrar dene."
+    },
+    compress: {
+      dropTitle: "PDF'ini buraya bırak",
+      dropHint: 'ya da <b>cihazından seç</b> — tek PDF dosyası',
+      qualityLabel: "Sıkıştırma seviyesi",
+      qHigh: { t: "Hafif", d: "Az küçülür, kalite yüksek" },
+      qMedium: { t: "Dengeli", d: "Önerilen seçenek" },
+      qMax: { t: "Maksimum", d: "En küçük boyut" },
+      count: () => "1 dosya seçildi",
+      convertBtn: "PDF'i Sıkıştır", convertBtnLoading: "Sıkıştırılıyor...",
+      stampBadge: "✓ PDF HAZIR", downloadBtn: "PDF'i İndir",
+      saved: pct => pct > 0 ? `%${pct} küçüldü` : "Boyut zaten küçük",
+      noteBox: "Sıkıştırma, sayfaları görüntüye çevirerek boyutu küçültür — bu yüzden metin artık seçilip kopyalanamaz. Taranmış belgeler ve resim ağırlıklı PDF'ler için en iyi sonucu verir.",
+      privacyNote: "Dosyaların hiçbir sunucuya yüklenmez. Sıkıştırma işlemi tamamen kendi tarayıcında, cihazında gerçekleşir.",
+      howToTitle: "Nasıl çalışır",
+      steps: ["PDF dosyanı seç ya da sürükle bırak.", 'Sıkıştırma seviyesini seç, "PDF\'i Sıkıştır"a bas.', "Yeni, küçülmüş boyutu gör ve indir."],
+      errPickPdf: "Lütfen bir PDF dosyası seç.",
+      errGeneric: "Sıkıştırma sırasında bir şeyler ters gitti."
+    },
+    word: {
+      dropTitle: "PDF'ini buraya bırak",
+      dropHint: 'ya da <b>cihazından seç</b> — tek PDF dosyası',
+      count: () => "1 dosya seçildi",
+      convertBtn: "Word'e Çevir", convertBtnLoading: "Çevriliyor...",
+      stampBadge: "✓ WORD HAZIR", downloadBtn: ".docx İndir",
+      noteBox: "Bu araç PDF içindeki metni çıkarıp düzenlenebilir bir Word dosyasına aktarır. Tablolar, görseller ve sayfa tasarımı korunmaz — sadece düz metin elde edersin.",
+      privacyNote: "Dosyaların hiçbir sunucuya yüklenmez. Metin çıkarma işlemi tamamen kendi tarayıcında, cihazında gerçekleşir.",
+      howToTitle: "Nasıl çalışır",
+      steps: ["PDF dosyanı seç ya da sürükle bırak.", '"Word\'e Çevir"e bas, metin çıkarılsın.', ".docx dosyasını indir, Word'de düzenlemeye başla."],
+      errPickPdf: "Lütfen bir PDF dosyası seç.",
+      errNoText: "Bu PDF içinde çıkarılabilir metin bulunamadı. Taranmış (görüntü) bir PDF olabilir.",
+      errGeneric: "Word'e çevirirken bir şeyler ters gitti."
+    },
+    footer: "pdfcevir — kayıtsız, ücretsiz, sunucusuz."
+  },
+  en: {
+    tabs: { jpg: "Image → PDF", compress: "Compress PDF", word: "PDF → Word" },
+    header: {
+      jpg: { eyebrow: "Document Desk", heading: "Turn images into <em>PDF</em>,<br>done.", sub: "No sign-up, no upload, no waiting. Your files never leave your device — everything happens instantly in your browser." },
+      compress: { eyebrow: "Document Desk", heading: "<em>Shrink</em> your PDF,<br>keep it moving.", sub: "Big PDFs bounce back from email and forms. Shrink the size, make it easy to send." },
+      word: { eyebrow: "Document Desk", heading: "Turn your PDF into <em>Word</em>,<br>edit it.", sub: "Pull the text out of your PDF into an editable document. No sign-up, no server." }
+    },
+    jpg: {
+      dropTitle: "Drop your images here",
+      dropHint: 'or <b>choose from your device</b> — JPG, PNG supported',
+      count: n => `${n} file${n === 1 ? '' : 's'} selected`,
+      convertBtn: "Create PDF", convertBtnLoading: "Creating...",
+      stampBadge: "✓ PDF READY", downloadBtn: "Download PDF",
+      privacyNote: "Your files are never uploaded to a server. Conversion happens entirely in your own browser, on your device.",
+      howToTitle: "How it works",
+      steps: ["Choose one or more images, or drag and drop.", 'Reorder if you like, then hit "Create PDF".', "Download the finished PDF in one tap and you're set."],
+      errGeneric: "Something went wrong, please try again."
+    },
+    compress: {
+      dropTitle: "Drop your PDF here",
+      dropHint: 'or <b>choose from your device</b> — a single PDF file',
+      qualityLabel: "Compression level",
+      qHigh: { t: "Light", d: "Shrinks less, keeps quality" },
+      qMedium: { t: "Balanced", d: "Recommended option" },
+      qMax: { t: "Maximum", d: "Smallest file size" },
+      count: () => "1 file selected",
+      convertBtn: "Compress PDF", convertBtnLoading: "Compressing...",
+      stampBadge: "✓ PDF READY", downloadBtn: "Download PDF",
+      saved: pct => pct > 0 ? `${pct}% smaller` : "Already small",
+      noteBox: "Compression works by turning pages into images — so text can no longer be selected or copied. Works best for scanned documents and image-heavy PDFs.",
+      privacyNote: "Your files are never uploaded to a server. Compression happens entirely in your own browser, on your device.",
+      howToTitle: "How it works",
+      steps: ["Choose your PDF or drag and drop.", 'Pick a compression level, then hit "Compress PDF".', "See the new, smaller size and download it."],
+      errPickPdf: "Please choose a PDF file.",
+      errGeneric: "Something went wrong while compressing."
+    },
+    word: {
+      dropTitle: "Drop your PDF here",
+      dropHint: 'or <b>choose from your device</b> — a single PDF file',
+      count: () => "1 file selected",
+      convertBtn: "Convert to Word", convertBtnLoading: "Converting...",
+      stampBadge: "✓ WORD READY", downloadBtn: "Download .docx",
+      noteBox: "This tool extracts the text inside your PDF into an editable Word file. Tables, images, and page layout are not preserved — you get plain text only.",
+      privacyNote: "Your files are never uploaded to a server. Text extraction happens entirely in your own browser, on your device.",
+      howToTitle: "How it works",
+      steps: ["Choose your PDF or drag and drop.", 'Hit "Convert to Word" to extract the text.', "Download the .docx file and start editing in Word."],
+      errPickPdf: "Please choose a PDF file.",
+      errNoText: "No extractable text was found in this PDF. It might be a scanned (image-based) PDF.",
+      errGeneric: "Something went wrong while converting to Word."
+    },
+    footer: "pdfcevir — no sign-up, free, serverless."
+  }
+};
+
+window.currentLang = (navigator.language || 'tr').toLowerCase().startsWith('tr') ? 'tr' : 'en';
+window.currentTool = 'jpg';
+
+function applyLanguage(lang){
+  window.currentLang = lang;
+  const L = LANG[lang];
+  document.documentElement.lang = lang;
+
+  document.querySelectorAll('#langToggle button').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+
+  const tabButtons = document.querySelectorAll('.tab');
+  tabButtons.forEach(t => { t.textContent = L.tabs[t.dataset.tool]; });
+
+  const h = L.header[window.currentTool];
+  document.getElementById('eyebrow').textContent = h.eyebrow;
+  document.getElementById('mainHeading').innerHTML = h.heading;
+  document.getElementById('subText').textContent = h.sub;
+
+  // JPG
+  document.getElementById('dropTitle-jpg').textContent = L.jpg.dropTitle;
+  document.getElementById('dropHint-jpg').innerHTML = L.jpg.dropHint;
+  document.getElementById('convertBtn-jpg').textContent = L.jpg.convertBtn;
+  document.getElementById('stampBadge-jpg').textContent = L.jpg.stampBadge;
+  document.getElementById('downloadBtn-jpg').textContent = L.jpg.downloadBtn;
+  document.getElementById('privacyNote-jpg').textContent = L.jpg.privacyNote;
+  document.getElementById('howToTitle-jpg').textContent = L.jpg.howToTitle;
+  document.getElementById('step1-jpg').textContent = L.jpg.steps[0];
+  document.getElementById('step2-jpg').textContent = L.jpg.steps[1];
+  document.getElementById('step3-jpg').textContent = L.jpg.steps[2];
+
+  // Compress
+  document.getElementById('dropTitle-compress').textContent = L.compress.dropTitle;
+  document.getElementById('dropHint-compress').innerHTML = L.compress.dropHint;
+  document.getElementById('qualityLabel-compress').textContent = L.compress.qualityLabel;
+  document.getElementById('qHighTitle-compress').textContent = L.compress.qHigh.t;
+  document.getElementById('qHighDesc-compress').textContent = L.compress.qHigh.d;
+  document.getElementById('qMediumTitle-compress').textContent = L.compress.qMedium.t;
+  document.getElementById('qMediumDesc-compress').textContent = L.compress.qMedium.d;
+  document.getElementById('qMaxTitle-compress').textContent = L.compress.qMax.t;
+  document.getElementById('qMaxDesc-compress').textContent = L.compress.qMax.d;
+  document.getElementById('convertBtn-compress').textContent = L.compress.convertBtn;
+  document.getElementById('stampBadge-compress').textContent = L.compress.stampBadge;
+  document.getElementById('downloadBtn-compress').textContent = L.compress.downloadBtn;
+  document.getElementById('noteBox-compress').textContent = L.compress.noteBox;
+  document.getElementById('privacyNote-compress').textContent = L.compress.privacyNote;
+  document.getElementById('howToTitle-compress').textContent = L.compress.howToTitle;
+  document.getElementById('step1-compress').textContent = L.compress.steps[0];
+  document.getElementById('step2-compress').textContent = L.compress.steps[1];
+  document.getElementById('step3-compress').textContent = L.compress.steps[2];
+  const countCompressEl = document.getElementById('countLabel-compress');
+  if(countCompressEl) countCompressEl.textContent = L.compress.count();
+
+  // Word
+  document.getElementById('dropTitle-word').textContent = L.word.dropTitle;
+  document.getElementById('dropHint-word').innerHTML = L.word.dropHint;
+  document.getElementById('convertBtn-word').textContent = L.word.convertBtn;
+  document.getElementById('stampBadge-word').textContent = L.word.stampBadge;
+  document.getElementById('downloadBtn-word').textContent = L.word.downloadBtn;
+  document.getElementById('noteBox-word').textContent = L.word.noteBox;
+  document.getElementById('privacyNote-word').textContent = L.word.privacyNote;
+  document.getElementById('howToTitle-word').textContent = L.word.howToTitle;
+  document.getElementById('step1-word').textContent = L.word.steps[0];
+  document.getElementById('step2-word').textContent = L.word.steps[1];
+  document.getElementById('step3-word').textContent = L.word.steps[2];
+  const countWordEl = document.getElementById('countLabel-word');
+  if(countWordEl) countWordEl.textContent = L.word.count();
+
+  document.getElementById('footerText').textContent = L.footer;
+
+  // JPG file-count label (dynamic, depends on current file count)
+  const jpgList = document.getElementById('fileList-jpg');
+  const countJpgEl = document.getElementById('countLabel-jpg');
+  if(countJpgEl && jpgList) countJpgEl.textContent = L.jpg.count(jpgList.children.length);
+}
+
+document.getElementById('langToggle').addEventListener('click', e => {
+  const btn = e.target.closest('button[data-lang]');
+  if(!btn) return;
+  applyLanguage(btn.dataset.lang);
+});
+
 /* ===================== Tab sistemi ===================== */
 (function(){
   const tabs = document.querySelectorAll('.tab');
@@ -742,39 +966,22 @@ function libReady(name){
     compress: document.getElementById('panel-compress'),
     word: document.getElementById('panel-word')
   };
-  const meta = {
-    jpg: {
-      eyebrow: 'Belge Masası',
-      heading: 'Resimlerini <em>PDF\'e</em><br>çevir, hazır.',
-      sub: 'Kayıt yok, yükleme yok, bekleme yok. Dosyaların hiçbir zaman cihazından çıkmaz — her şey tarayıcında, anında gerçekleşir.'
-    },
-    compress: {
-      eyebrow: 'Belge Masası',
-      heading: 'PDF\'ini <em>küçült</em>,<br>yerinden çıkmasın.',
-      sub: 'Büyük PDF\'ler e-postadan, formlardan geri döner. Boyutunu küçült, göndermesi kolaylaşsın.'
-    },
-    word: {
-      eyebrow: 'Belge Masası',
-      heading: 'PDF\'ini <em>Word\'e</em><br>aktar, düzenle.',
-      sub: 'Metni PDF\'in içinden çıkar, düzenlenebilir bir belgeye dönüştür. Kayıt yok, sunucu yok.'
-    }
-  };
-
-  const eyebrowEl = document.getElementById('eyebrow');
-  const headingEl = document.getElementById('mainHeading');
-  const subEl = document.getElementById('subText');
 
   tabs.forEach(tab => {
     tab.addEventListener('click', () => {
       const tool = tab.dataset.tool;
+      window.currentTool = tool;
       tabs.forEach(t => { t.classList.toggle('active', t === tab); t.setAttribute('aria-selected', t === tab ? 'true' : 'false'); });
       Object.keys(panels).forEach(key => { panels[key].style.display = key === tool ? '' : 'none'; });
-      eyebrowEl.textContent = meta[tool].eyebrow;
-      headingEl.innerHTML = meta[tool].heading;
-      subEl.textContent = meta[tool].sub;
+      const h = LANG[window.currentLang].header[tool];
+      document.getElementById('eyebrow').textContent = h.eyebrow;
+      document.getElementById('mainHeading').innerHTML = h.heading;
+      document.getElementById('subText').textContent = h.sub;
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   });
+
+  applyLanguage(window.currentLang);
 })();
 
 /* ===================== ARAÇ 1: Görsel -> PDF ===================== */
@@ -808,7 +1015,7 @@ function libReady(name){
       fileListEl.appendChild(li);
     });
     actionsRow.style.display = files.length ? 'flex' : 'none';
-    countLabel.textContent = files.length + ' dosya seçildi';
+    countLabel.textContent = LANG[window.currentLang].jpg.count(files.length);
     convertBtn.disabled = files.length === 0;
     if(files.length === 0) result.classList.remove('show');
   }
@@ -863,8 +1070,9 @@ function libReady(name){
 
   convertBtn.addEventListener('click', async () => {
     if(files.length === 0) return;
+    const t = LANG[window.currentLang].jpg;
     convertBtn.disabled = true;
-    convertBtn.textContent = 'Oluşturuluyor...';
+    convertBtn.textContent = t.convertBtnLoading;
     try{
       await libReady('PDFLib');
       const { PDFDocument } = PDFLib;
@@ -893,11 +1101,11 @@ function libReady(name){
       result.classList.add('show');
       result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     } catch(err){
-      alert('Bir şeyler ters gitti, lütfen tekrar dene. (' + err.message + ')');
+      alert(t.errGeneric + ' (' + err.message + ')');
       console.error(err);
     } finally {
       convertBtn.disabled = false;
-      convertBtn.textContent = 'PDF Oluştur';
+      convertBtn.textContent = t.convertBtn;
     }
   });
 })();
@@ -940,7 +1148,7 @@ function libReady(name){
   }
 
   function setFile(file){
-    if(file.type !== 'application/pdf'){ alert('Lütfen bir PDF dosyası seç.'); return; }
+    if(file.type !== 'application/pdf'){ alert(LANG[window.currentLang].compress.errPickPdf); return; }
     currentFile = file;
     singleFileName.textContent = file.name;
     singleFileSize.textContent = formatSize(file.size);
@@ -968,8 +1176,9 @@ function libReady(name){
 
   convertBtn.addEventListener('click', async () => {
     if(!currentFile) return;
+    const t = LANG[window.currentLang].compress;
     convertBtn.disabled = true;
-    convertBtn.textContent = 'Sıkıştırılıyor...';
+    convertBtn.textContent = t.convertBtnLoading;
     try{
       await Promise.all([pdfjsReady(), libReady('PDFLib')]);
       const { scale, quality } = LEVELS[selectedLevel];
@@ -1009,23 +1218,23 @@ function libReady(name){
       if(blobUrl) URL.revokeObjectURL(blobUrl);
       blobUrl = URL.createObjectURL(blob);
 
-      const name = currentFile.name.replace(/\.pdf$/i, '') + '-sikistirilmis.pdf';
+      const name = currentFile.name.replace(/\.pdf$/i, '') + '-compressed.pdf';
       resultName.textContent = name;
       oldSizeEl.textContent = formatSize(currentFile.size);
       newSizeEl.textContent = formatSize(newBytes.length);
       const savedPct = Math.max(0, Math.round((1 - newBytes.length / currentFile.size) * 100));
-      savedEl.textContent = savedPct > 0 ? `%${savedPct} küçüldü` : 'Boyut zaten küçük';
+      savedEl.textContent = t.saved(savedPct);
 
       downloadBtn.onclick = () => { const a = document.createElement('a'); a.href = blobUrl; a.download = name; a.click(); };
 
       result.classList.add('show');
       result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     } catch(err){
-      alert('Sıkıştırma sırasında bir şeyler ters gitti. (' + err.message + ')');
+      alert(t.errGeneric + ' (' + err.message + ')');
       console.error(err);
     } finally {
       convertBtn.disabled = false;
-      convertBtn.textContent = "PDF'i Sıkıştır";
+      convertBtn.textContent = t.convertBtn;
     }
   });
 })();
@@ -1055,7 +1264,7 @@ function libReady(name){
   }
 
   function setFile(file){
-    if(file.type !== 'application/pdf'){ alert('Lütfen bir PDF dosyası seç.'); return; }
+    if(file.type !== 'application/pdf'){ alert(LANG[window.currentLang].word.errPickPdf); return; }
     currentFile = file;
     singleFileName.textContent = file.name;
     singleFileSize.textContent = formatSize(file.size);
@@ -1145,8 +1354,9 @@ function libReady(name){
 
   convertBtn.addEventListener('click', async () => {
     if(!currentFile) return;
+    const t = LANG[window.currentLang].word;
     convertBtn.disabled = true;
-    convertBtn.textContent = 'Çevriliyor...';
+    convertBtn.textContent = t.convertBtnLoading;
     try{
       await Promise.all([pdfjsReady(), libReady('JSZip')]);
       const bytes = await currentFile.arrayBuffer();
@@ -1155,7 +1365,7 @@ function libReady(name){
 
       const hasText = pagesLines.some(lines => lines.length > 0);
       if(!hasText){
-        alert('Bu PDF içinde çıkarılabilir metin bulunamadı. Taranmış (görüntü) bir PDF olabilir.');
+        alert(t.errNoText);
         return;
       }
 
@@ -1170,11 +1380,11 @@ function libReady(name){
       result.classList.add('show');
       result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     } catch(err){
-      alert('Word\'e çevirirken bir şeyler ters gitti. (' + err.message + ')');
+      alert(t.errGeneric + ' (' + err.message + ')');
       console.error(err);
     } finally {
       convertBtn.disabled = false;
-      convertBtn.textContent = "Word'e Çevir";
+      convertBtn.textContent = t.convertBtn;
     }
   });
 })();
