@@ -989,8 +989,12 @@ function libReady(name){
         const ctx = canvas.getContext('2d');
         await page.render({ canvasContext: ctx, viewport }).promise;
 
-        const jpegDataUrl = canvas.toDataURL('image/jpeg', quality);
-        const jpegBytes = await (await fetch(jpegDataUrl)).arrayBuffer();
+        const jpegBytes = await new Promise((resolve, reject) => {
+          canvas.toBlob(blob => {
+            if(!blob){ reject(new Error('Canvas boş döndü')); return; }
+            blob.arrayBuffer().then(resolve).catch(reject);
+          }, 'image/jpeg', quality);
+        });
         const embedded = await outDoc.embedJpg(jpegBytes);
 
         const origViewport = page.getViewport({ scale: 1 });
