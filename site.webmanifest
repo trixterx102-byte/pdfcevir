@@ -1,0 +1,14 @@
+{
+  "name": "PDF'e Çevir — Ücretsiz Belge Masası",
+  "short_name": "PDF'e Çevir",
+  "description": "Resimlerini saniyeler içinde PDF'e dönüştür. Kayıt yok, yükleme yok, tamamen tarayıcında çalışır.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#14213D",
+  "theme_color": "#14213D",
+  "lang": "tr",
+  "icons": [
+    { "src": "/icon-180.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
