@@ -604,6 +604,12 @@
     font-size: 12px;
     color: rgba(245,241,232,0.4);
   }
+  footer a{
+    color: rgba(245,241,232,0.6);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  footer a:hover{ color: var(--paper); }
 </style>
 </head>
 <body>
@@ -846,7 +852,11 @@
     </div>
   </div>
 
-  <footer id="footerText">pdfcevir — kayıtsız, ücretsiz, sunucusuz.</footer>
+  <footer>
+    <span id="footerText">pdfcevir — kayıtsız, ücretsiz, sunucusuz.</span>
+    <span style="opacity:.5"> · </span>
+    <a href="/privacy.html" id="privacyLink">Gizlilik Politikası</a>
+  </footer>
 </div>
 
 <script>
@@ -930,7 +940,8 @@ const LANG = {
       errGeneric: "Word'e çevirirken bir şeyler ters gitti."
     },
     footer: "pdfcevir — kayıtsız, ücretsiz, sunucusuz.",
-    trust: ["100% Gizli", "Kayıt Yok", "Anında Çalışır", "Sonsuza Kadar Ücretsiz"]
+    trust: ["100% Gizli", "Kayıt Yok", "Anında Çalışır", "Sonsuza Kadar Ücretsiz"],
+    privacyLink: "Gizlilik Politikası"
   },
   en: {
     tabs: { jpg: "Image → PDF", compress: "Compress PDF", word: "PDF → Word" },
@@ -983,7 +994,8 @@ const LANG = {
       errGeneric: "Something went wrong while converting to Word."
     },
     footer: "pdfcevir — no sign-up, free, serverless.",
-    trust: ["100% Private", "No Sign-up", "Instant", "Free Forever"]
+    trust: ["100% Private", "No Sign-up", "Instant", "Free Forever"],
+    privacyLink: "Privacy Policy"
   }
 };
 
@@ -1059,6 +1071,8 @@ function applyLanguage(lang){
   document.getElementById('trust2').textContent = L.trust[1];
   document.getElementById('trust3').textContent = L.trust[2];
   document.getElementById('trust4').textContent = L.trust[3];
+  const privacyLinkEl = document.getElementById('privacyLink');
+  if(privacyLinkEl) privacyLinkEl.textContent = L.privacyLink;
 
   // JPG file-count label (dynamic, depends on current file count)
   const jpgList = document.getElementById('fileList-jpg');
