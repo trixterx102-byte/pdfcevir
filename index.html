@@ -99,16 +99,92 @@
     color: var(--text);
     font-family: 'IBM Plex Sans', sans-serif;
     -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    position: relative;
   }
 
+  /* Decorative floating background shapes */
+  .bg-decor{
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .bg-decor span{
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(2px);
+    opacity: 0.5;
+    animation: floatShape 22s ease-in-out infinite;
+  }
+  .bg-decor span.s1{ width:5px; height:5px; background: var(--gold); top: 18%; left: 8%; animation-duration: 18s; }
+  .bg-decor span.s2{ width:3px; height:3px; background: var(--stamp); top: 32%; left: 88%; animation-duration: 24s; animation-delay: -4s; }
+  .bg-decor span.s3{ width:4px; height:4px; background: var(--gold); top: 68%; left: 12%; animation-duration: 20s; animation-delay: -9s; }
+  .bg-decor span.s4{ width:6px; height:6px; background: var(--stamp); top: 78%; left: 82%; animation-duration: 26s; animation-delay: -13s; }
+  .bg-decor span.s5{ width:3px; height:3px; background: var(--gold); top: 48%; left: 50%; animation-duration: 19s; animation-delay: -6s; }
+  @keyframes floatShape{
+    0%, 100%{ transform: translate(0,0); opacity: 0.35; }
+    50%{ transform: translate(14px,-22px); opacity: 0.75; }
+  }
   @media (prefers-reduced-motion: reduce){
-    *{ animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    .bg-decor{ display:none; }
   }
 
-  .wrap{ max-width: 880px; margin: 0 auto; padding: 0 24px; }
+  .wrap{ max-width: 880px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+  @keyframes fadeUp{
+    from{ opacity:0; transform: translateY(14px); }
+    to{ opacity:1; transform: translateY(0); }
+  }
+  .fade-in{ animation: fadeUp .7s cubic-bezier(.2,.7,.3,1) both; }
+
+  /* Brand mark */
+  .brand{
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: rgba(245,241,232,0.75);
+    background: rgba(20,33,61,0.55);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(245,241,232,0.18);
+    border-radius: 20px;
+    padding: 7px 14px 7px 10px;
+  }
+  .brand svg{ display:block; }
+
+  /* Trust badges */
+  .trust-row{
+    display:flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 22px;
+  }
+  .trust-badge{
+    display:flex;
+    align-items:center;
+    gap: 5px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: rgba(245,241,232,0.6);
+    background: rgba(245,241,232,0.05);
+    border: 1px solid rgba(245,241,232,0.12);
+    border-radius: 20px;
+    padding: 5px 12px;
+  }
+  .trust-badge svg{ flex-shrink:0; }
 
   /* Header */
-  header{ padding: 56px 0 28px; text-align:center; }
+  header{ padding: 64px 0 8px; text-align:center; }
   .eyebrow{
     font-family:'IBM Plex Mono', monospace;
     font-size: 12px;
@@ -178,6 +254,9 @@
     flex-wrap: wrap;
   }
   .tab{
+    display: flex;
+    align-items: center;
+    gap: 7px;
     font-family: 'IBM Plex Sans', sans-serif;
     font-size: 13.5px;
     font-weight: 500;
@@ -187,14 +266,16 @@
     padding: 10px 18px;
     border-radius: 3px 3px 0 0;
     cursor: pointer;
-    transition: background .15s ease, color .15s ease;
+    transition: background .15s ease, color .15s ease, transform .15s ease;
   }
-  .tab:hover{ color: var(--paper); background: rgba(245,241,232,0.1); }
+  .tab svg{ flex-shrink: 0; opacity: 0.75; }
+  .tab:hover{ color: var(--paper); background: rgba(245,241,232,0.1); transform: translateY(-1px); }
   .tab.active{
     color: var(--ink);
     background: var(--paper-card);
     border-color: var(--paper-card);
   }
+  .tab.active svg{ opacity: 1; }
 
   /* Document sheet — the main card */
   .sheet{
@@ -527,6 +608,18 @@
 </head>
 <body>
 
+<div class="bg-decor" aria-hidden="true">
+  <span class="s1"></span><span class="s2"></span><span class="s3"></span><span class="s4"></span><span class="s5"></span>
+</div>
+
+<div class="brand">
+  <svg width="16" height="18" viewBox="0 0 42 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M4 2H27L38 13V50C38 51.6569 36.6569 53 35 53H4C2.34315 53 1 51.6569 1 50V5C1 3.34315 2.34315 2 4 2Z" stroke="#B3372C" stroke-width="2.2"/>
+    <path d="M27 2V11C27 12.1046 27.8954 13 29 13H38" stroke="#B3372C" stroke-width="2.2"/>
+  </svg>
+  pdfcevir
+</div>
+
 <div class="lang-toggle" id="langToggle">
   <button data-lang="tr" type="button">TR</button>
   <button data-lang="en" type="button">EN</button>
@@ -534,20 +627,35 @@
 
 <div class="wrap">
   <header>
-    <p class="eyebrow" id="eyebrow">Belge Masası</p>
-    <h1 id="mainHeading">Resimlerini <em>PDF'e</em><br>çevir, hazır.</h1>
-    <p class="sub" id="subText">Kayıt yok, yükleme yok, bekleme yok. Dosyaların hiçbir zaman cihazından çıkmaz — her şey tarayıcında, anında gerçekleşir.</p>
+    <p class="eyebrow fade-in" id="eyebrow">Belge Masası</p>
+    <h1 class="fade-in" id="mainHeading" style="animation-delay:.08s">Resimlerini <em>PDF'e</em><br>çevir, hazır.</h1>
+    <p class="sub fade-in" id="subText" style="animation-delay:.16s">Kayıt yok, yükleme yok, bekleme yok. Dosyaların hiçbir zaman cihazından çıkmaz — her şey tarayıcında, anında gerçekleşir.</p>
+    <div class="trust-row fade-in" id="trustRow" style="animation-delay:.24s">
+      <span class="trust-badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M12 2L4 5V11C4 16 7.5 20.5 12 22C16.5 20.5 20 16 20 11V5L12 2Z" stroke="currentColor" stroke-width="1.6"/></svg><span id="trust1">100% Gizli</span></span>
+      <span class="trust-badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M12 8V13M12 16H12.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/></svg><span id="trust2">Kayıt Yok</span></span>
+      <span class="trust-badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M13 2L4 14H11L10 22L19 10H12L13 2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><span id="trust3">Anında Çalışır</span></span>
+      <span class="trust-badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M9 12L11 14L15 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span id="trust4">Sonsuza Kadar Ücretsiz</span></span>
+    </div>
   </header>
 
-  <div class="tabs" role="tablist">
-    <button class="tab active" data-tool="jpg" role="tab" aria-selected="true">Görsel → PDF</button>
-    <button class="tab" data-tool="compress" role="tab" aria-selected="false">PDF Sıkıştır</button>
-    <button class="tab" data-tool="word" role="tab" aria-selected="false">PDF → Word</button>
+  <div class="tabs fade-in" role="tablist" style="animation-delay:.3s">
+    <button class="tab active" data-tool="jpg" role="tab" aria-selected="true">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="2" stroke="currentColor" stroke-width="1.6"/><circle cx="9" cy="10" r="1.3" fill="currentColor"/><path d="M5 16L9.5 12L13 15L16 12.5L19 16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="tab-label">Görsel → PDF</span>
+    </button>
+    <button class="tab" data-tool="compress" role="tab" aria-selected="false">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M8 4V10M8 10L5 7.5M8 10L11 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 20V14M16 14L13 16.5M16 14L19 16.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="tab-label">PDF Sıkıştır</span>
+    </button>
+    <button class="tab" data-tool="word" role="tab" aria-selected="false">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="4" y="3" width="16" height="18" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 9H16M8 13H16M8 17H12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <span class="tab-label">PDF → Word</span>
+    </button>
   </div>
 
   <!-- PANEL 1: Görsel -> PDF -->
   <div class="tool-panel" id="panel-jpg">
-    <div class="sheet">
+    <div class="sheet fade-in">
       <div class="sheet-inner">
 
         <div class="drop" id="drop-jpg" tabindex="0" role="button" aria-label="Resim yüklemek için tıkla veya sürükle bırak">
@@ -585,7 +693,7 @@
       </div>
     </div>
 
-    <div class="how-to">
+    <div class="how-to fade-in">
       <h2 id="howToTitle-jpg">Nasıl çalışır</h2>
       <ul class="steps">
         <li><span class="step-num">01</span><p id="step1-jpg">Bir veya birden fazla resim seç ya da sürükle bırak.</p></li>
@@ -597,7 +705,7 @@
 
   <!-- PANEL 2: PDF Sıkıştır -->
   <div class="tool-panel" id="panel-compress" style="display:none;">
-    <div class="sheet">
+    <div class="sheet fade-in">
       <div class="sheet-inner">
 
         <div class="drop" id="drop-compress" tabindex="0" role="button" aria-label="PDF yüklemek için tıkla veya sürükle bırak">
@@ -670,7 +778,7 @@
       </div>
     </div>
 
-    <div class="how-to">
+    <div class="how-to fade-in">
       <h2 id="howToTitle-compress">Nasıl çalışır</h2>
       <ul class="steps">
         <li><span class="step-num">01</span><p id="step1-compress">PDF dosyanı seç ya da sürükle bırak.</p></li>
@@ -682,7 +790,7 @@
 
   <!-- PANEL 3: PDF -> Word -->
   <div class="tool-panel" id="panel-word" style="display:none;">
-    <div class="sheet">
+    <div class="sheet fade-in">
       <div class="sheet-inner">
 
         <div class="drop" id="drop-word" tabindex="0" role="button" aria-label="PDF yüklemek için tıkla veya sürükle bırak">
@@ -728,7 +836,7 @@
       </div>
     </div>
 
-    <div class="how-to">
+    <div class="how-to fade-in">
       <h2 id="howToTitle-word">Nasıl çalışır</h2>
       <ul class="steps">
         <li><span class="step-num">01</span><p id="step1-word">PDF dosyanı seç ya da sürükle bırak.</p></li>
@@ -821,7 +929,8 @@ const LANG = {
       errNoText: "Bu PDF içinde çıkarılabilir metin bulunamadı. Taranmış (görüntü) bir PDF olabilir.",
       errGeneric: "Word'e çevirirken bir şeyler ters gitti."
     },
-    footer: "pdfcevir — kayıtsız, ücretsiz, sunucusuz."
+    footer: "pdfcevir — kayıtsız, ücretsiz, sunucusuz.",
+    trust: ["100% Gizli", "Kayıt Yok", "Anında Çalışır", "Sonsuza Kadar Ücretsiz"]
   },
   en: {
     tabs: { jpg: "Image → PDF", compress: "Compress PDF", word: "PDF → Word" },
@@ -873,7 +982,8 @@ const LANG = {
       errNoText: "No extractable text was found in this PDF. It might be a scanned (image-based) PDF.",
       errGeneric: "Something went wrong while converting to Word."
     },
-    footer: "pdfcevir — no sign-up, free, serverless."
+    footer: "pdfcevir — no sign-up, free, serverless.",
+    trust: ["100% Private", "No Sign-up", "Instant", "Free Forever"]
   }
 };
 
@@ -888,7 +998,7 @@ function applyLanguage(lang){
   document.querySelectorAll('#langToggle button').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
 
   const tabButtons = document.querySelectorAll('.tab');
-  tabButtons.forEach(t => { t.textContent = L.tabs[t.dataset.tool]; });
+  tabButtons.forEach(t => { const lbl = t.querySelector('.tab-label'); if(lbl) lbl.textContent = L.tabs[t.dataset.tool]; });
 
   const h = L.header[window.currentTool];
   document.getElementById('eyebrow').textContent = h.eyebrow;
@@ -945,6 +1055,10 @@ function applyLanguage(lang){
   if(countWordEl) countWordEl.textContent = L.word.count();
 
   document.getElementById('footerText').textContent = L.footer;
+  document.getElementById('trust1').textContent = L.trust[0];
+  document.getElementById('trust2').textContent = L.trust[1];
+  document.getElementById('trust3').textContent = L.trust[2];
+  document.getElementById('trust4').textContent = L.trust[3];
 
   // JPG file-count label (dynamic, depends on current file count)
   const jpgList = document.getElementById('fileList-jpg');
