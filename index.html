@@ -659,6 +659,30 @@
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="4" y="3" width="16" height="18" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 9H16M8 13H16M8 17H12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
       <span class="tab-label">PDF → Word</span>
     </button>
+    <button class="tab" data-tool="merge" role="tab" aria-selected="false">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="10" height="13" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="11" y="7" width="10" height="13" rx="1.5" stroke="currentColor" stroke-width="1.6"/></svg>
+      <span class="tab-label">PDF Birleştir</span>
+    </button>
+    <button class="tab" data-tool="split" role="tab" aria-selected="false">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="4" y="3" width="7" height="18" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="13" y="3" width="7" height="18" rx="1.5" stroke="currentColor" stroke-width="1.6"/></svg>
+      <span class="tab-label">PDF Böl</span>
+    </button>
+    <button class="tab" data-tool="rotate" role="tab" aria-selected="false">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 12a8 8 0 1 1 3 6.2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M4 17v-5h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="tab-label">PDF Döndür</span>
+    </button>
+    <button class="tab" data-tool="pagenum" role="tab" aria-selected="false">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="4" y="3" width="16" height="18" rx="2" stroke="currentColor" stroke-width="1.6"/><text x="12" y="16" font-size="8" fill="currentColor" text-anchor="middle" font-family="monospace">1</text></svg>
+      <span class="tab-label">Sayfa Numarası</span>
+    </button>
+    <button class="tab" data-tool="topng" role="tab" aria-selected="false">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="2" stroke="currentColor" stroke-width="1.6"/><circle cx="9" cy="10" r="1.3" fill="currentColor"/><path d="M5 16L9.5 12L13 15L16 12.5L19 16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="tab-label">PDF → Görsel</span>
+    </button>
+    <button class="tab" data-tool="watermark" role="tab" aria-selected="false">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="4" y="3" width="16" height="18" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M7 17L17 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="1 2.2"/></svg>
+      <span class="tab-label">Filigran Ekle</span>
+    </button>
   </div>
 
   <!-- PANEL 1: Görsel -> PDF -->
@@ -854,6 +878,399 @@
     </div>
   </div>
 
+  <!-- PANEL 4: PDF Birleştir -->
+  <div class="tool-panel" id="panel-merge" style="display:none;">
+    <div class="sheet fade-in">
+      <div class="sheet-inner">
+
+        <div class="drop" id="drop-merge" tabindex="0" role="button" aria-label="PDF'leri yüklemek için tıkla veya sürükle bırak">
+          <div class="drop-icon">
+            <svg viewBox="0 0 42 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 2H27L38 13V50C38 51.6569 36.6569 53 35 53H4C2.34315 53 1 51.6569 1 50V5C1 3.34315 2.34315 2 4 2Z" stroke="#B3372C" stroke-width="1.6"/>
+              <path d="M27 2V11C27 12.1046 27.8954 13 29 13H38" stroke="#B3372C" stroke-width="1.6"/>
+            </svg>
+          </div>
+          <p class="drop-title" id="dropTitle-merge">PDF'leri buraya bırak</p>
+          <p class="drop-hint" id="dropHint-merge">ya da <b>cihazından seç</b> — birden fazla PDF seçebilirsin</p>
+          <input type="file" id="fileInput-merge" accept="application/pdf" multiple>
+        </div>
+
+        <ul class="filelist" id="fileList-merge"></ul>
+
+        <div class="actions" id="actionsRow-merge" style="display:none;">
+          <span class="count-label" id="countLabel-merge">0 dosya seçildi</span>
+          <button class="btn btn-primary" id="convertBtn-merge" disabled>PDF'leri Birleştir</button>
+        </div>
+
+        <div class="result" id="result-merge">
+          <span class="stamp-badge" id="stampBadge-merge">✓ PDF HAZIR</span>
+          <span class="result-name" id="resultName-merge">birlesik.pdf</span>
+          <button class="btn btn-download" id="downloadBtn-merge">PDF'i İndir</button>
+        </div>
+
+        <div class="note-box">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 9V13M12 17H12.01M10.29 3.86L1.82 18A2 2 0 003.54 21H20.46A2 2 0 0022.18 18L13.71 3.86A2 2 0 0010.29 3.86Z" stroke="#A9812E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span id="noteBox-merge">Dosyalar, listedeki sıraya göre birleştirilir. Sırayı değiştirmek için bir dosyayı kaldırıp tekrar ekleyebilirsin.</span>
+        </div>
+
+        <div class="privacy-note">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 2L4 5V11C4 16 7.5 20.5 12 22C16.5 20.5 20 16 20 11V5L12 2Z" stroke="#5B5B52" stroke-width="1.5"/><path d="M9 12L11 14L15 10" stroke="#5B5B52" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span id="privacyNote-merge">Dosyaların hiçbir sunucuya yüklenmez. Birleştirme işlemi tamamen kendi tarayıcında, cihazında gerçekleşir.</span>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="how-to fade-in">
+      <h2 id="howToTitle-merge">Nasıl çalışır</h2>
+      <ul class="steps">
+        <li><span class="step-num">01</span><p id="step1-merge">Birleştirmek istediğin PDF'leri seç ya da sürükle bırak.</p></li>
+        <li><span class="step-num">02</span><p id="step2-merge">Sırayı kontrol et, "PDF'leri Birleştir"e bas.</p></li>
+        <li><span class="step-num">03</span><p id="step3-merge">Tek parça haline gelen PDF'i indir.</p></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PANEL 5: PDF Böl -->
+  <div class="tool-panel" id="panel-split" style="display:none;">
+    <div class="sheet fade-in">
+      <div class="sheet-inner">
+
+        <div class="drop" id="drop-split" tabindex="0" role="button" aria-label="PDF yüklemek için tıkla veya sürükle bırak">
+          <div class="drop-icon">
+            <svg viewBox="0 0 42 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 2H27L38 13V50C38 51.6569 36.6569 53 35 53H4C2.34315 53 1 51.6569 1 50V5C1 3.34315 2.34315 2 4 2Z" stroke="#B3372C" stroke-width="1.6"/>
+              <path d="M27 2V11C27 12.1046 27.8954 13 29 13H38" stroke="#B3372C" stroke-width="1.6"/>
+            </svg>
+          </div>
+          <p class="drop-title" id="dropTitle-split">PDF'ini buraya bırak</p>
+          <p class="drop-hint" id="dropHint-split">ya da <b>cihazından seç</b> — tek PDF dosyası</p>
+          <input type="file" id="fileInput-split" accept="application/pdf">
+        </div>
+
+        <div class="single-file-name" id="singleFile-split" style="display:none;">
+          <span id="singleFileName-split">belge.pdf</span>
+          <span class="file-size" id="singleFileSize-split"></span>
+          <button class="file-remove" id="singleFileRemove-split" aria-label="Kaldır">✕</button>
+        </div>
+
+        <div id="rangeBlock-split" style="display:none;">
+          <p class="quality-label" id="rangeLabel-split">Sayfa aralığı (boş bırakırsan her sayfa ayrılır)</p>
+          <input type="text" id="rangeInput-split" placeholder="ör. 1-3, 4, 5-8" style="width:100%; padding:12px 14px; border:1.5px solid var(--line); border-radius:var(--radius); font-family:'IBM Plex Mono',monospace; font-size:13px; background:var(--paper); color:var(--text);">
+        </div>
+
+        <div class="actions" id="actionsRow-split" style="display:none;">
+          <span class="count-label" id="countLabel-split" style="visibility:hidden;">·</span>
+          <button class="btn btn-primary" id="convertBtn-split">PDF'i Böl</button>
+        </div>
+
+        <div class="result" id="result-split">
+          <span class="stamp-badge" id="stampBadge-split">✓ HAZIR</span>
+          <span class="result-name" id="resultName-split">parcalar.zip</span>
+          <button class="btn btn-download" id="downloadBtn-split">ZIP İndir</button>
+        </div>
+
+        <div class="note-box">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 9V13M12 17H12.01M10.29 3.86L1.82 18A2 2 0 003.54 21H20.46A2 2 0 0022.18 18L13.71 3.86A2 2 0 0010.29 3.86Z" stroke="#A9812E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span id="noteBox-split">Birden fazla parça oluştuğunda hepsi tek bir ZIP dosyasında indirilir.</span>
+        </div>
+
+        <div class="privacy-note">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 2L4 5V11C4 16 7.5 20.5 12 22C16.5 20.5 20 16 20 11V5L12 2Z" stroke="#5B5B52" stroke-width="1.5"/><path d="M9 12L11 14L15 10" stroke="#5B5B52" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span id="privacyNote-split">Dosyaların hiçbir sunucuya yüklenmez. Bölme işlemi tamamen kendi tarayıcında, cihazında gerçekleşir.</span>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="how-to fade-in">
+      <h2 id="howToTitle-split">Nasıl çalışır</h2>
+      <ul class="steps">
+        <li><span class="step-num">01</span><p id="step1-split">PDF dosyanı seç ya da sürükle bırak.</p></li>
+        <li><span class="step-num">02</span><p id="step2-split">İstersen sayfa aralığı yaz, "PDF'i Böl"e bas.</p></li>
+        <li><span class="step-num">03</span><p id="step3-split">Oluşan parçaları ZIP olarak indir.</p></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PANEL 6: PDF Döndür -->
+  <div class="tool-panel" id="panel-rotate" style="display:none;">
+    <div class="sheet fade-in">
+      <div class="sheet-inner">
+
+        <div class="drop" id="drop-rotate" tabindex="0" role="button" aria-label="PDF yüklemek için tıkla veya sürükle bırak">
+          <div class="drop-icon">
+            <svg viewBox="0 0 42 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 2H27L38 13V50C38 51.6569 36.6569 53 35 53H4C2.34315 53 1 51.6569 1 50V5C1 3.34315 2.34315 2 4 2Z" stroke="#B3372C" stroke-width="1.6"/>
+              <path d="M27 2V11C27 12.1046 27.8954 13 29 13H38" stroke="#B3372C" stroke-width="1.6"/>
+            </svg>
+          </div>
+          <p class="drop-title" id="dropTitle-rotate">PDF'ini buraya bırak</p>
+          <p class="drop-hint" id="dropHint-rotate">ya da <b>cihazından seç</b> — tek PDF dosyası</p>
+          <input type="file" id="fileInput-rotate" accept="application/pdf">
+        </div>
+
+        <div class="single-file-name" id="singleFile-rotate" style="display:none;">
+          <span id="singleFileName-rotate">belge.pdf</span>
+          <span class="file-size" id="singleFileSize-rotate"></span>
+          <button class="file-remove" id="singleFileRemove-rotate" aria-label="Kaldır">✕</button>
+        </div>
+
+        <div id="angleBlock-rotate" style="display:none;">
+          <p class="quality-label" id="angleLabel-rotate">Döndürme yönü</p>
+          <div class="quality-options">
+            <div class="quality-option" data-angle="90">
+              <strong>90°</strong>
+              <span id="angleRightDesc-rotate">Sağa döndür</span>
+            </div>
+            <div class="quality-option selected" data-angle="180">
+              <strong>180°</strong>
+              <span id="angleFlipDesc-rotate">Ters çevir</span>
+            </div>
+            <div class="quality-option" data-angle="270">
+              <strong>270°</strong>
+              <span id="angleLeftDesc-rotate">Sola döndür</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions" id="actionsRow-rotate" style="display:none;">
+          <span class="count-label" id="countLabel-rotate" style="visibility:hidden;">·</span>
+          <button class="btn btn-primary" id="convertBtn-rotate">PDF'i Döndür</button>
+        </div>
+
+        <div class="result" id="result-rotate">
+          <span class="stamp-badge" id="stampBadge-rotate">✓ PDF HAZIR</span>
+          <span class="result-name" id="resultName-rotate">belge-donduruldu.pdf</span>
+          <button class="btn btn-download" id="downloadBtn-rotate">PDF'i İndir</button>
+        </div>
+
+        <div class="privacy-note">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 2L4 5V11C4 16 7.5 20.5 12 22C16.5 20.5 20 16 20 11V5L12 2Z" stroke="#5B5B52" stroke-width="1.5"/><path d="M9 12L11 14L15 10" stroke="#5B5B52" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span id="privacyNote-rotate">Dosyaların hiçbir sunucuya yüklenmez. Döndürme işlemi tamamen kendi tarayıcında, cihazında gerçekleşir.</span>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="how-to fade-in">
+      <h2 id="howToTitle-rotate">Nasıl çalışır</h2>
+      <ul class="steps">
+        <li><span class="step-num">01</span><p id="step1-rotate">PDF dosyanı seç ya da sürükle bırak.</p></li>
+        <li><span class="step-num">02</span><p id="step2-rotate">Döndürme açısını seç, "PDF'i Döndür"e bas.</p></li>
+        <li><span class="step-num">03</span><p id="step3-rotate">Döndürülmüş PDF'i indir.</p></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PANEL 7: Sayfa Numarası Ekle -->
+  <div class="tool-panel" id="panel-pagenum" style="display:none;">
+    <div class="sheet fade-in">
+      <div class="sheet-inner">
+
+        <div class="drop" id="drop-pagenum" tabindex="0" role="button" aria-label="PDF yüklemek için tıkla veya sürükle bırak">
+          <div class="drop-icon">
+            <svg viewBox="0 0 42 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 2H27L38 13V50C38 51.6569 36.6569 53 35 53H4C2.34315 53 1 51.6569 1 50V5C1 3.34315 2.34315 2 4 2Z" stroke="#B3372C" stroke-width="1.6"/>
+              <path d="M27 2V11C27 12.1046 27.8954 13 29 13H38" stroke="#B3372C" stroke-width="1.6"/>
+            </svg>
+          </div>
+          <p class="drop-title" id="dropTitle-pagenum">PDF'ini buraya bırak</p>
+          <p class="drop-hint" id="dropHint-pagenum">ya da <b>cihazından seç</b> — tek PDF dosyası</p>
+          <input type="file" id="fileInput-pagenum" accept="application/pdf">
+        </div>
+
+        <div class="single-file-name" id="singleFile-pagenum" style="display:none;">
+          <span id="singleFileName-pagenum">belge.pdf</span>
+          <span class="file-size" id="singleFileSize-pagenum"></span>
+          <button class="file-remove" id="singleFileRemove-pagenum" aria-label="Kaldır">✕</button>
+        </div>
+
+        <div id="posBlock-pagenum" style="display:none;">
+          <p class="quality-label" id="posLabel-pagenum">Konum</p>
+          <div class="quality-options">
+            <div class="quality-option" data-pos="left">
+              <strong id="posLeftTitle-pagenum">Sol alt</strong>
+            </div>
+            <div class="quality-option selected" data-pos="center">
+              <strong id="posCenterTitle-pagenum">Orta alt</strong>
+            </div>
+            <div class="quality-option" data-pos="right">
+              <strong id="posRightTitle-pagenum">Sağ alt</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions" id="actionsRow-pagenum" style="display:none;">
+          <span class="count-label" id="countLabel-pagenum" style="visibility:hidden;">·</span>
+          <button class="btn btn-primary" id="convertBtn-pagenum">Numara Ekle</button>
+        </div>
+
+        <div class="result" id="result-pagenum">
+          <span class="stamp-badge" id="stampBadge-pagenum">✓ PDF HAZIR</span>
+          <span class="result-name" id="resultName-pagenum">belge-numarali.pdf</span>
+          <button class="btn btn-download" id="downloadBtn-pagenum">PDF'i İndir</button>
+        </div>
+
+        <div class="privacy-note">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 2L4 5V11C4 16 7.5 20.5 12 22C16.5 20.5 20 16 20 11V5L12 2Z" stroke="#5B5B52" stroke-width="1.5"/><path d="M9 12L11 14L15 10" stroke="#5B5B52" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span id="privacyNote-pagenum">Dosyaların hiçbir sunucuya yüklenmez. Numaralandırma işlemi tamamen kendi tarayıcında, cihazında gerçekleşir.</span>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="how-to fade-in">
+      <h2 id="howToTitle-pagenum">Nasıl çalışır</h2>
+      <ul class="steps">
+        <li><span class="step-num">01</span><p id="step1-pagenum">PDF dosyanı seç ya da sürükle bırak.</p></li>
+        <li><span class="step-num">02</span><p id="step2-pagenum">Numara konumunu seç, "Numara Ekle"ye bas.</p></li>
+        <li><span class="step-num">03</span><p id="step3-pagenum">Sayfa numaralı PDF'i indir.</p></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PANEL 8: PDF'i Görsele Çevir -->
+  <div class="tool-panel" id="panel-topng" style="display:none;">
+    <div class="sheet fade-in">
+      <div class="sheet-inner">
+
+        <div class="drop" id="drop-topng" tabindex="0" role="button" aria-label="PDF yüklemek için tıkla veya sürükle bırak">
+          <div class="drop-icon">
+            <svg viewBox="0 0 42 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 2H27L38 13V50C38 51.6569 36.6569 53 35 53H4C2.34315 53 1 51.6569 1 50V5C1 3.34315 2.34315 2 4 2Z" stroke="#B3372C" stroke-width="1.6"/>
+              <path d="M27 2V11C27 12.1046 27.8954 13 29 13H38" stroke="#B3372C" stroke-width="1.6"/>
+            </svg>
+          </div>
+          <p class="drop-title" id="dropTitle-topng">PDF'ini buraya bırak</p>
+          <p class="drop-hint" id="dropHint-topng">ya da <b>cihazından seç</b> — tek PDF dosyası</p>
+          <input type="file" id="fileInput-topng" accept="application/pdf">
+        </div>
+
+        <div class="single-file-name" id="singleFile-topng" style="display:none;">
+          <span id="singleFileName-topng">belge.pdf</span>
+          <span class="file-size" id="singleFileSize-topng"></span>
+          <button class="file-remove" id="singleFileRemove-topng" aria-label="Kaldır">✕</button>
+        </div>
+
+        <div id="fmtBlock-topng" style="display:none;">
+          <p class="quality-label" id="fmtLabel-topng">Görsel formatı</p>
+          <div class="quality-options">
+            <div class="quality-option selected" data-fmt="png">
+              <strong>PNG</strong>
+              <span id="fmtPngDesc-topng">Kayıpsız, daha büyük dosya</span>
+            </div>
+            <div class="quality-option" data-fmt="jpg">
+              <strong>JPG</strong>
+              <span id="fmtJpgDesc-topng">Daha küçük dosya</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions" id="actionsRow-topng" style="display:none;">
+          <span class="count-label" id="countLabel-topng" style="visibility:hidden;">·</span>
+          <button class="btn btn-primary" id="convertBtn-topng">Görsele Çevir</button>
+        </div>
+
+        <div class="result" id="result-topng">
+          <span class="stamp-badge" id="stampBadge-topng">✓ HAZIR</span>
+          <span class="result-name" id="resultName-topng">belge-gorseller.zip</span>
+          <button class="btn btn-download" id="downloadBtn-topng">İndir</button>
+        </div>
+
+        <div class="note-box">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 9V13M12 17H12.01M10.29 3.86L1.82 18A2 2 0 003.54 21H20.46A2 2 0 0022.18 18L13.71 3.86A2 2 0 0010.29 3.86Z" stroke="#A9812E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span id="noteBox-topng">Tek sayfalı PDF'lerde doğrudan görsel indirilir, birden fazla sayfada tüm görseller ZIP içinde gelir.</span>
+        </div>
+
+        <div class="privacy-note">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 2L4 5V11C4 16 7.5 20.5 12 22C16.5 20.5 20 16 20 11V5L12 2Z" stroke="#5B5B52" stroke-width="1.5"/><path d="M9 12L11 14L15 10" stroke="#5B5B52" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span id="privacyNote-topng">Dosyaların hiçbir sunucuya yüklenmez. Dönüştürme işlemi tamamen kendi tarayıcında, cihazında gerçekleşir.</span>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="how-to fade-in">
+      <h2 id="howToTitle-topng">Nasıl çalışır</h2>
+      <ul class="steps">
+        <li><span class="step-num">01</span><p id="step1-topng">PDF dosyanı seç ya da sürükle bırak.</p></li>
+        <li><span class="step-num">02</span><p id="step2-topng">Görsel formatını seç, "Görsele Çevir"e bas.</p></li>
+        <li><span class="step-num">03</span><p id="step3-topng">Görselleri (ya da ZIP'i) indir.</p></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PANEL 9: Filigran Ekle -->
+  <div class="tool-panel" id="panel-watermark" style="display:none;">
+    <div class="sheet fade-in">
+      <div class="sheet-inner">
+
+        <div class="drop" id="drop-watermark" tabindex="0" role="button" aria-label="PDF yüklemek için tıkla veya sürükle bırak">
+          <div class="drop-icon">
+            <svg viewBox="0 0 42 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 2H27L38 13V50C38 51.6569 36.6569 53 35 53H4C2.34315 53 1 51.6569 1 50V5C1 3.34315 2.34315 2 4 2Z" stroke="#B3372C" stroke-width="1.6"/>
+              <path d="M27 2V11C27 12.1046 27.8954 13 29 13H38" stroke="#B3372C" stroke-width="1.6"/>
+            </svg>
+          </div>
+          <p class="drop-title" id="dropTitle-watermark">PDF'ini buraya bırak</p>
+          <p class="drop-hint" id="dropHint-watermark">ya da <b>cihazından seç</b> — tek PDF dosyası</p>
+          <input type="file" id="fileInput-watermark" accept="application/pdf">
+        </div>
+
+        <div class="single-file-name" id="singleFile-watermark" style="display:none;">
+          <span id="singleFileName-watermark">belge.pdf</span>
+          <span class="file-size" id="singleFileSize-watermark"></span>
+          <button class="file-remove" id="singleFileRemove-watermark" aria-label="Kaldır">✕</button>
+        </div>
+
+        <div id="textBlock-watermark" style="display:none;">
+          <p class="quality-label" id="textLabel-watermark">Filigran metni</p>
+          <input type="text" id="textInput-watermark" value="TASLAK" maxlength="40" style="width:100%; padding:12px 14px; border:1.5px solid var(--line); border-radius:var(--radius); font-family:'IBM Plex Sans',sans-serif; font-size:14px; background:var(--paper); color:var(--text); margin-bottom:16px;">
+
+          <p class="quality-label" id="opacityLabel-watermark">Saydamlık</p>
+          <div class="quality-options">
+            <div class="quality-option" data-opacity="0.15">
+              <strong id="opLightTitle-watermark">Açık</strong>
+            </div>
+            <div class="quality-option selected" data-opacity="0.3">
+              <strong id="opMediumTitle-watermark">Orta</strong>
+            </div>
+            <div class="quality-option" data-opacity="0.5">
+              <strong id="opStrongTitle-watermark">Belirgin</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions" id="actionsRow-watermark" style="display:none;">
+          <span class="count-label" id="countLabel-watermark" style="visibility:hidden;">·</span>
+          <button class="btn btn-primary" id="convertBtn-watermark">Filigran Ekle</button>
+        </div>
+
+        <div class="result" id="result-watermark">
+          <span class="stamp-badge" id="stampBadge-watermark">✓ PDF HAZIR</span>
+          <span class="result-name" id="resultName-watermark">belge-filigranli.pdf</span>
+          <button class="btn btn-download" id="downloadBtn-watermark">PDF'i İndir</button>
+        </div>
+
+        <div class="privacy-note">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 2L4 5V11C4 16 7.5 20.5 12 22C16.5 20.5 20 16 20 11V5L12 2Z" stroke="#5B5B52" stroke-width="1.5"/><path d="M9 12L11 14L15 10" stroke="#5B5B52" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span id="privacyNote-watermark">Dosyaların hiçbir sunucuya yüklenmez. Filigran ekleme işlemi tamamen kendi tarayıcında, cihazında gerçekleşir.</span>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="how-to fade-in">
+      <h2 id="howToTitle-watermark">Nasıl çalışır</h2>
+      <ul class="steps">
+        <li><span class="step-num">01</span><p id="step1-watermark">PDF dosyanı seç ya da sürükle bırak.</p></li>
+        <li><span class="step-num">02</span><p id="step2-watermark">Metni ve saydamlığı ayarla, "Filigran Ekle"ye bas.</p></li>
+        <li><span class="step-num">03</span><p id="step3-watermark">Filigranlı PDF'i indir.</p></li>
+      </ul>
+    </div>
+  </div>
+
   <footer>
     <span id="footerText">pdfcevir — kayıtsız, ücretsiz, sunucusuz.</span>
     <span style="opacity:.5"> · </span>
@@ -892,11 +1309,17 @@ function libReady(name){
 /* ===================== Dil sistemi ===================== */
 const LANG = {
   tr: {
-    tabs: { jpg: "Görsel → PDF", compress: "PDF Sıkıştır", word: "PDF → Word" },
+    tabs: { jpg: "Görsel → PDF", compress: "PDF Sıkıştır", word: "PDF → Word", merge: "PDF Birleştir", split: "PDF Böl", rotate: "PDF Döndür", pagenum: "Sayfa Numarası", topng: "PDF → Görsel", watermark: "Filigran Ekle" },
     header: {
       jpg: { eyebrow: "Belge Masası", heading: "Resimlerini <em>PDF'e</em><br>çevir, hazır.", sub: "Kayıt yok, yükleme yok, bekleme yok. Dosyaların hiçbir zaman cihazından çıkmaz — her şey tarayıcında, anında gerçekleşir." },
       compress: { eyebrow: "Belge Masası", heading: "PDF'ini <em>küçült</em>,<br>yerinden çıkmasın.", sub: "Büyük PDF'ler e-postadan, formlardan geri döner. Boyutunu küçült, göndermesi kolaylaşsın." },
-      word: { eyebrow: "Belge Masası", heading: "PDF'ini <em>Word'e</em><br>aktar, düzenle.", sub: "Metni PDF'in içinden çıkar, düzenlenebilir bir belgeye dönüştür. Kayıt yok, sunucu yok." }
+      word: { eyebrow: "Belge Masası", heading: "PDF'ini <em>Word'e</em><br>aktar, düzenle.", sub: "Metni PDF'in içinden çıkar, düzenlenebilir bir belgeye dönüştür. Kayıt yok, sunucu yok." },
+      merge: { eyebrow: "Belge Masası", heading: "PDF'lerini <em>birleştir</em>,<br>tek parça yap.", sub: "Birden fazla PDF'i istediğin sırayla tek dosyada topla. Kayıt yok, sunucu yok." },
+      split: { eyebrow: "Belge Masası", heading: "PDF'ini <em>böl</em>,<br>parçalara ayır.", sub: "Sayfaları tek tek ya da aralıklarla ayrı dosyalara böl. Kayıt yok, sunucu yok." },
+      rotate: { eyebrow: "Belge Masası", heading: "PDF'ini <em>döndür</em>,<br>doğru yöne çevir.", sub: "Ters taranmış sayfaları tek tıkla düzelt. Kayıt yok, sunucu yok." },
+      pagenum: { eyebrow: "Belge Masası", heading: "Sayfalarına <em>numara</em><br>ekle.", sub: "Belgeni düzenli göster, her sayfaya otomatik numara bas. Kayıt yok, sunucu yok." },
+      topng: { eyebrow: "Belge Masası", heading: "PDF'ini <em>görsele</em><br>çevir.", sub: "Her sayfayı yüksek kaliteli PNG ya da JPG olarak dışa aktar. Kayıt yok, sunucu yok." },
+      watermark: { eyebrow: "Belge Masası", heading: "PDF'ine <em>filigran</em><br>ekle.", sub: "Belgeni kendi metninle işaretle, izinsiz kullanımı zorlaştır. Kayıt yok, sunucu yok." }
     },
     jpg: {
       dropTitle: "Resimleri buraya bırak",
@@ -941,16 +1364,103 @@ const LANG = {
       errNoText: "Bu PDF içinde çıkarılabilir metin bulunamadı. Taranmış (görüntü) bir PDF olabilir.",
       errGeneric: "Word'e çevirirken bir şeyler ters gitti."
     },
+    merge: {
+      dropTitle: "PDF'leri buraya bırak",
+      dropHint: 'ya da <b>cihazından seç</b> — birden fazla PDF seçebilirsin',
+      count: n => `${n} dosya seçildi`,
+      convertBtn: "PDF'leri Birleştir", convertBtnLoading: "Birleştiriliyor...",
+      stampBadge: "✓ PDF HAZIR", downloadBtn: "PDF'i İndir",
+      noteBox: "Dosyalar, listedeki sıraya göre birleştirilir. Sırayı değiştirmek için bir dosyayı kaldırıp tekrar ekleyebilirsin.",
+      privacyNote: "Dosyaların hiçbir sunucuya yüklenmez. Birleştirme işlemi tamamen kendi tarayıcında, cihazında gerçekleşir.",
+      howToTitle: "Nasıl çalışır",
+      steps: ["Birleştirmek istediğin PDF'leri seç ya da sürükle bırak.", 'Sırayı kontrol et, "PDF\'leri Birleştir"e bas.', "Tek parça haline gelen PDF'i indir."],
+      errPickPdf: "Lütfen sadece PDF dosyaları seç.",
+      errNeedTwo: "Birleştirmek için en az 2 PDF seçmelisin.",
+      errGeneric: "Birleştirirken bir şeyler ters gitti."
+    },
+    split: {
+      dropTitle: "PDF'ini buraya bırak",
+      dropHint: 'ya da <b>cihazından seç</b> — tek PDF dosyası',
+      rangeLabel: "Sayfa aralığı (boş bırakırsan her sayfa ayrılır)",
+      rangePlaceholder: "ör. 1-3, 4, 5-8",
+      convertBtn: "PDF'i Böl", convertBtnLoading: "Bölünüyor...",
+      stampBadge: "✓ HAZIR", downloadBtn: "ZIP İndir", downloadBtnSingle: "PDF'i İndir",
+      noteBox: "Birden fazla parça oluştuğunda hepsi tek bir ZIP dosyasında indirilir.",
+      privacyNote: "Dosyaların hiçbir sunucuya yüklenmez. Bölme işlemi tamamen kendi tarayıcında, cihazında gerçekleşir.",
+      howToTitle: "Nasıl çalışır",
+      steps: ["PDF dosyanı seç ya da sürükle bırak.", 'İstersen sayfa aralığı yaz, "PDF\'i Böl"e bas.', "Oluşan parçaları ZIP olarak indir."],
+      errPickPdf: "Lütfen bir PDF dosyası seç.",
+      errRange: "Sayfa aralığı geçersiz. Örnek: 1-3, 4, 5-8",
+      errGeneric: "Bölerken bir şeyler ters gitti."
+    },
+    rotate: {
+      dropTitle: "PDF'ini buraya bırak",
+      dropHint: 'ya da <b>cihazından seç</b> — tek PDF dosyası',
+      angleLabel: "Döndürme yönü",
+      angleRightDesc: "Sağa döndür", angleFlipDesc: "Ters çevir", angleLeftDesc: "Sola döndür",
+      convertBtn: "PDF'i Döndür", convertBtnLoading: "Döndürülüyor...",
+      stampBadge: "✓ PDF HAZIR", downloadBtn: "PDF'i İndir",
+      privacyNote: "Dosyaların hiçbir sunucuya yüklenmez. Döndürme işlemi tamamen kendi tarayıcında, cihazında gerçekleşir.",
+      howToTitle: "Nasıl çalışır",
+      steps: ["PDF dosyanı seç ya da sürükle bırak.", 'Döndürme açısını seç, "PDF\'i Döndür"e bas.', "Döndürülmüş PDF'i indir."],
+      errPickPdf: "Lütfen bir PDF dosyası seç.",
+      errGeneric: "Döndürürken bir şeyler ters gitti."
+    },
+    pagenum: {
+      dropTitle: "PDF'ini buraya bırak",
+      dropHint: 'ya da <b>cihazından seç</b> — tek PDF dosyası',
+      posLabel: "Konum", posLeft: "Sol alt", posCenter: "Orta alt", posRight: "Sağ alt",
+      convertBtn: "Numara Ekle", convertBtnLoading: "Ekleniyor...",
+      stampBadge: "✓ PDF HAZIR", downloadBtn: "PDF'i İndir",
+      privacyNote: "Dosyaların hiçbir sunucuya yüklenmez. Numaralandırma işlemi tamamen kendi tarayıcında, cihazında gerçekleşir.",
+      howToTitle: "Nasıl çalışır",
+      steps: ["PDF dosyanı seç ya da sürükle bırak.", 'Numara konumunu seç, "Numara Ekle"ye bas.', "Sayfa numaralı PDF'i indir."],
+      errPickPdf: "Lütfen bir PDF dosyası seç.",
+      errGeneric: "Numara eklerken bir şeyler ters gitti."
+    },
+    topng: {
+      dropTitle: "PDF'ini buraya bırak",
+      dropHint: 'ya da <b>cihazından seç</b> — tek PDF dosyası',
+      fmtLabel: "Görsel formatı", fmtPngDesc: "Kayıpsız, daha büyük dosya", fmtJpgDesc: "Daha küçük dosya",
+      convertBtn: "Görsele Çevir", convertBtnLoading: "Çevriliyor...",
+      stampBadge: "✓ HAZIR", downloadBtn: "İndir",
+      noteBox: "Tek sayfalı PDF'lerde doğrudan görsel indirilir, birden fazla sayfada tüm görseller ZIP içinde gelir.",
+      privacyNote: "Dosyaların hiçbir sunucuya yüklenmez. Dönüştürme işlemi tamamen kendi tarayıcında, cihazında gerçekleşir.",
+      howToTitle: "Nasıl çalışır",
+      steps: ["PDF dosyanı seç ya da sürükle bırak.", 'Görsel formatını seç, "Görsele Çevir"e bas.', "Görselleri (ya da ZIP'i) indir."],
+      errPickPdf: "Lütfen bir PDF dosyası seç.",
+      errGeneric: "Görsele çevirirken bir şeyler ters gitti."
+    },
+    watermark: {
+      dropTitle: "PDF'ini buraya bırak",
+      dropHint: 'ya da <b>cihazından seç</b> — tek PDF dosyası',
+      textLabel: "Filigran metni",
+      opacityLabel: "Saydamlık", opLight: "Açık", opMedium: "Orta", opStrong: "Belirgin",
+      convertBtn: "Filigran Ekle", convertBtnLoading: "Ekleniyor...",
+      stampBadge: "✓ PDF HAZIR", downloadBtn: "PDF'i İndir",
+      privacyNote: "Dosyaların hiçbir sunucuya yüklenmez. Filigran ekleme işlemi tamamen kendi tarayıcında, cihazında gerçekleşir.",
+      howToTitle: "Nasıl çalışır",
+      steps: ["PDF dosyanı seç ya da sürükle bırak.", 'Metni ve saydamlığı ayarla, "Filigran Ekle"ye bas.', "Filigranlı PDF'i indir."],
+      errPickPdf: "Lütfen bir PDF dosyası seç.",
+      errEmptyText: "Lütfen bir filigran metni yaz.",
+      errGeneric: "Filigran eklerken bir şeyler ters gitti."
+    },
     footer: "pdfcevir — kayıtsız, ücretsiz, sunucusuz.",
     trust: ["100% Gizli", "Kayıt Yok", "Anında Çalışır", "Sonsuza Kadar Ücretsiz"],
     privacyLink: "Gizlilik Politikası"
   },
   en: {
-    tabs: { jpg: "Image → PDF", compress: "Compress PDF", word: "PDF → Word" },
+    tabs: { jpg: "Image → PDF", compress: "Compress PDF", word: "PDF → Word", merge: "Merge PDF", split: "Split PDF", rotate: "Rotate PDF", pagenum: "Page Numbers", topng: "PDF → Image", watermark: "Add Watermark" },
     header: {
       jpg: { eyebrow: "Document Desk", heading: "Turn images into <em>PDF</em>,<br>done.", sub: "No sign-up, no upload, no waiting. Your files never leave your device — everything happens instantly in your browser." },
       compress: { eyebrow: "Document Desk", heading: "<em>Shrink</em> your PDF,<br>keep it moving.", sub: "Big PDFs bounce back from email and forms. Shrink the size, make it easy to send." },
-      word: { eyebrow: "Document Desk", heading: "Turn your PDF into <em>Word</em>,<br>edit it.", sub: "Pull the text out of your PDF into an editable document. No sign-up, no server." }
+      word: { eyebrow: "Document Desk", heading: "Turn your PDF into <em>Word</em>,<br>edit it.", sub: "Pull the text out of your PDF into an editable document. No sign-up, no server." },
+      merge: { eyebrow: "Document Desk", heading: "<em>Merge</em> your PDFs,<br>into one.", sub: "Combine several PDFs into a single file, in the order you choose. No sign-up, no server." },
+      split: { eyebrow: "Document Desk", heading: "<em>Split</em> your PDF,<br>into pieces.", sub: "Break pages apart individually or by range into separate files. No sign-up, no server." },
+      rotate: { eyebrow: "Document Desk", heading: "<em>Rotate</em> your PDF,<br>face the right way.", sub: "Fix upside-down or sideways scans in one click. No sign-up, no server." },
+      pagenum: { eyebrow: "Document Desk", heading: "Add <em>page numbers</em><br>to your pages.", sub: "Keep your document organized with automatic numbering on every page. No sign-up, no server." },
+      topng: { eyebrow: "Document Desk", heading: "Turn your PDF into <em>images</em>,<br>page by page.", sub: "Export every page as a high-quality PNG or JPG. No sign-up, no server." },
+      watermark: { eyebrow: "Document Desk", heading: "Add a <em>watermark</em><br>to your PDF.", sub: "Mark your document with your own text to discourage unauthorized use. No sign-up, no server." }
     },
     jpg: {
       dropTitle: "Drop your images here",
@@ -994,6 +1504,87 @@ const LANG = {
       errPickPdf: "Please choose a PDF file.",
       errNoText: "No extractable text was found in this PDF. It might be a scanned (image-based) PDF.",
       errGeneric: "Something went wrong while converting to Word."
+    },
+    merge: {
+      dropTitle: "Drop your PDFs here",
+      dropHint: 'or <b>choose from your device</b> — select multiple PDFs',
+      count: n => `${n} file${n === 1 ? '' : 's'} selected`,
+      convertBtn: "Merge PDFs", convertBtnLoading: "Merging...",
+      stampBadge: "✓ PDF READY", downloadBtn: "Download PDF",
+      noteBox: "Files are merged in the order shown in the list. Remove and re-add a file to change its position.",
+      privacyNote: "Your files are never uploaded to a server. Merging happens entirely in your own browser, on your device.",
+      howToTitle: "How it works",
+      steps: ["Choose the PDFs you want to merge, or drag and drop.", 'Check the order, then hit "Merge PDFs".', "Download the combined PDF."],
+      errPickPdf: "Please choose PDF files only.",
+      errNeedTwo: "You need at least 2 PDFs to merge.",
+      errGeneric: "Something went wrong while merging."
+    },
+    split: {
+      dropTitle: "Drop your PDF here",
+      dropHint: 'or <b>choose from your device</b> — a single PDF file',
+      rangeLabel: "Page range (leave blank to split every page)",
+      rangePlaceholder: "e.g. 1-3, 4, 5-8",
+      convertBtn: "Split PDF", convertBtnLoading: "Splitting...",
+      stampBadge: "✓ READY", downloadBtn: "Download ZIP", downloadBtnSingle: "Download PDF",
+      noteBox: "When more than one piece is created, they're all downloaded together in a single ZIP file.",
+      privacyNote: "Your files are never uploaded to a server. Splitting happens entirely in your own browser, on your device.",
+      howToTitle: "How it works",
+      steps: ["Choose your PDF or drag and drop.", 'Optionally type a page range, then hit "Split PDF".', "Download the resulting pieces as a ZIP."],
+      errPickPdf: "Please choose a PDF file.",
+      errRange: "Invalid page range. Example: 1-3, 4, 5-8",
+      errGeneric: "Something went wrong while splitting."
+    },
+    rotate: {
+      dropTitle: "Drop your PDF here",
+      dropHint: 'or <b>choose from your device</b> — a single PDF file',
+      angleLabel: "Rotation direction",
+      angleRightDesc: "Rotate right", angleFlipDesc: "Flip upside down", angleLeftDesc: "Rotate left",
+      convertBtn: "Rotate PDF", convertBtnLoading: "Rotating...",
+      stampBadge: "✓ PDF READY", downloadBtn: "Download PDF",
+      privacyNote: "Your files are never uploaded to a server. Rotation happens entirely in your own browser, on your device.",
+      howToTitle: "How it works",
+      steps: ["Choose your PDF or drag and drop.", 'Pick a rotation angle, then hit "Rotate PDF".', "Download the rotated PDF."],
+      errPickPdf: "Please choose a PDF file.",
+      errGeneric: "Something went wrong while rotating."
+    },
+    pagenum: {
+      dropTitle: "Drop your PDF here",
+      dropHint: 'or <b>choose from your device</b> — a single PDF file',
+      posLabel: "Position", posLeft: "Bottom left", posCenter: "Bottom center", posRight: "Bottom right",
+      convertBtn: "Add Numbers", convertBtnLoading: "Adding...",
+      stampBadge: "✓ PDF READY", downloadBtn: "Download PDF",
+      privacyNote: "Your files are never uploaded to a server. Numbering happens entirely in your own browser, on your device.",
+      howToTitle: "How it works",
+      steps: ["Choose your PDF or drag and drop.", 'Pick a position, then hit "Add Numbers".', "Download the numbered PDF."],
+      errPickPdf: "Please choose a PDF file.",
+      errGeneric: "Something went wrong while adding page numbers."
+    },
+    topng: {
+      dropTitle: "Drop your PDF here",
+      dropHint: 'or <b>choose from your device</b> — a single PDF file',
+      fmtLabel: "Image format", fmtPngDesc: "Lossless, larger file", fmtJpgDesc: "Smaller file",
+      convertBtn: "Convert to Image", convertBtnLoading: "Converting...",
+      stampBadge: "✓ READY", downloadBtn: "Download",
+      noteBox: "Single-page PDFs download directly as an image; multi-page PDFs come bundled as a ZIP.",
+      privacyNote: "Your files are never uploaded to a server. Conversion happens entirely in your own browser, on your device.",
+      howToTitle: "How it works",
+      steps: ["Choose your PDF or drag and drop.", 'Pick an image format, then hit "Convert to Image".', "Download the images (or the ZIP)."],
+      errPickPdf: "Please choose a PDF file.",
+      errGeneric: "Something went wrong while converting to image."
+    },
+    watermark: {
+      dropTitle: "Drop your PDF here",
+      dropHint: 'or <b>choose from your device</b> — a single PDF file',
+      textLabel: "Watermark text",
+      opacityLabel: "Opacity", opLight: "Light", opMedium: "Medium", opStrong: "Strong",
+      convertBtn: "Add Watermark", convertBtnLoading: "Adding...",
+      stampBadge: "✓ PDF READY", downloadBtn: "Download PDF",
+      privacyNote: "Your files are never uploaded to a server. Watermarking happens entirely in your own browser, on your device.",
+      howToTitle: "How it works",
+      steps: ["Choose your PDF or drag and drop.", 'Set the text and opacity, then hit "Add Watermark".', "Download the watermarked PDF."],
+      errPickPdf: "Please choose a PDF file.",
+      errEmptyText: "Please enter a watermark text.",
+      errGeneric: "Something went wrong while adding the watermark."
     },
     footer: "pdfcevir — no sign-up, free, serverless.",
     trust: ["100% Private", "No Sign-up", "Instant", "Free Forever"],
@@ -1068,6 +1659,100 @@ function applyLanguage(lang){
   const countWordEl = document.getElementById('countLabel-word');
   if(countWordEl) countWordEl.textContent = L.word.count();
 
+  // Merge
+  document.getElementById('dropTitle-merge').textContent = L.merge.dropTitle;
+  document.getElementById('dropHint-merge').innerHTML = L.merge.dropHint;
+  document.getElementById('convertBtn-merge').textContent = L.merge.convertBtn;
+  document.getElementById('stampBadge-merge').textContent = L.merge.stampBadge;
+  document.getElementById('downloadBtn-merge').textContent = L.merge.downloadBtn;
+  document.getElementById('noteBox-merge').textContent = L.merge.noteBox;
+  document.getElementById('privacyNote-merge').textContent = L.merge.privacyNote;
+  document.getElementById('howToTitle-merge').textContent = L.merge.howToTitle;
+  document.getElementById('step1-merge').textContent = L.merge.steps[0];
+  document.getElementById('step2-merge').textContent = L.merge.steps[1];
+  document.getElementById('step3-merge').textContent = L.merge.steps[2];
+  const mergeList = document.getElementById('fileList-merge');
+  const countMergeEl = document.getElementById('countLabel-merge');
+  if(countMergeEl && mergeList) countMergeEl.textContent = L.merge.count(mergeList.children.length);
+
+  // Split
+  document.getElementById('dropTitle-split').textContent = L.split.dropTitle;
+  document.getElementById('dropHint-split').innerHTML = L.split.dropHint;
+  document.getElementById('rangeLabel-split').textContent = L.split.rangeLabel;
+  document.getElementById('rangeInput-split').placeholder = L.split.rangePlaceholder;
+  document.getElementById('convertBtn-split').textContent = L.split.convertBtn;
+  document.getElementById('stampBadge-split').textContent = L.split.stampBadge;
+  document.getElementById('noteBox-split').textContent = L.split.noteBox;
+  document.getElementById('privacyNote-split').textContent = L.split.privacyNote;
+  document.getElementById('howToTitle-split').textContent = L.split.howToTitle;
+  document.getElementById('step1-split').textContent = L.split.steps[0];
+  document.getElementById('step2-split').textContent = L.split.steps[1];
+  document.getElementById('step3-split').textContent = L.split.steps[2];
+
+  // Rotate
+  document.getElementById('dropTitle-rotate').textContent = L.rotate.dropTitle;
+  document.getElementById('dropHint-rotate').innerHTML = L.rotate.dropHint;
+  document.getElementById('angleLabel-rotate').textContent = L.rotate.angleLabel;
+  document.getElementById('angleRightDesc-rotate').textContent = L.rotate.angleRightDesc;
+  document.getElementById('angleFlipDesc-rotate').textContent = L.rotate.angleFlipDesc;
+  document.getElementById('angleLeftDesc-rotate').textContent = L.rotate.angleLeftDesc;
+  document.getElementById('convertBtn-rotate').textContent = L.rotate.convertBtn;
+  document.getElementById('stampBadge-rotate').textContent = L.rotate.stampBadge;
+  document.getElementById('downloadBtn-rotate').textContent = L.rotate.downloadBtn;
+  document.getElementById('privacyNote-rotate').textContent = L.rotate.privacyNote;
+  document.getElementById('howToTitle-rotate').textContent = L.rotate.howToTitle;
+  document.getElementById('step1-rotate').textContent = L.rotate.steps[0];
+  document.getElementById('step2-rotate').textContent = L.rotate.steps[1];
+  document.getElementById('step3-rotate').textContent = L.rotate.steps[2];
+
+  // Page numbers
+  document.getElementById('dropTitle-pagenum').textContent = L.pagenum.dropTitle;
+  document.getElementById('dropHint-pagenum').innerHTML = L.pagenum.dropHint;
+  document.getElementById('posLabel-pagenum').textContent = L.pagenum.posLabel;
+  document.getElementById('posLeftTitle-pagenum').textContent = L.pagenum.posLeft;
+  document.getElementById('posCenterTitle-pagenum').textContent = L.pagenum.posCenter;
+  document.getElementById('posRightTitle-pagenum').textContent = L.pagenum.posRight;
+  document.getElementById('convertBtn-pagenum').textContent = L.pagenum.convertBtn;
+  document.getElementById('stampBadge-pagenum').textContent = L.pagenum.stampBadge;
+  document.getElementById('downloadBtn-pagenum').textContent = L.pagenum.downloadBtn;
+  document.getElementById('privacyNote-pagenum').textContent = L.pagenum.privacyNote;
+  document.getElementById('howToTitle-pagenum').textContent = L.pagenum.howToTitle;
+  document.getElementById('step1-pagenum').textContent = L.pagenum.steps[0];
+  document.getElementById('step2-pagenum').textContent = L.pagenum.steps[1];
+  document.getElementById('step3-pagenum').textContent = L.pagenum.steps[2];
+
+  // PDF to image
+  document.getElementById('dropTitle-topng').textContent = L.topng.dropTitle;
+  document.getElementById('dropHint-topng').innerHTML = L.topng.dropHint;
+  document.getElementById('fmtLabel-topng').textContent = L.topng.fmtLabel;
+  document.getElementById('fmtPngDesc-topng').textContent = L.topng.fmtPngDesc;
+  document.getElementById('fmtJpgDesc-topng').textContent = L.topng.fmtJpgDesc;
+  document.getElementById('convertBtn-topng').textContent = L.topng.convertBtn;
+  document.getElementById('stampBadge-topng').textContent = L.topng.stampBadge;
+  document.getElementById('noteBox-topng').textContent = L.topng.noteBox;
+  document.getElementById('privacyNote-topng').textContent = L.topng.privacyNote;
+  document.getElementById('howToTitle-topng').textContent = L.topng.howToTitle;
+  document.getElementById('step1-topng').textContent = L.topng.steps[0];
+  document.getElementById('step2-topng').textContent = L.topng.steps[1];
+  document.getElementById('step3-topng').textContent = L.topng.steps[2];
+
+  // Watermark
+  document.getElementById('dropTitle-watermark').textContent = L.watermark.dropTitle;
+  document.getElementById('dropHint-watermark').innerHTML = L.watermark.dropHint;
+  document.getElementById('textLabel-watermark').textContent = L.watermark.textLabel;
+  document.getElementById('opacityLabel-watermark').textContent = L.watermark.opacityLabel;
+  document.getElementById('opLightTitle-watermark').textContent = L.watermark.opLight;
+  document.getElementById('opMediumTitle-watermark').textContent = L.watermark.opMedium;
+  document.getElementById('opStrongTitle-watermark').textContent = L.watermark.opStrong;
+  document.getElementById('convertBtn-watermark').textContent = L.watermark.convertBtn;
+  document.getElementById('stampBadge-watermark').textContent = L.watermark.stampBadge;
+  document.getElementById('downloadBtn-watermark').textContent = L.watermark.downloadBtn;
+  document.getElementById('privacyNote-watermark').textContent = L.watermark.privacyNote;
+  document.getElementById('howToTitle-watermark').textContent = L.watermark.howToTitle;
+  document.getElementById('step1-watermark').textContent = L.watermark.steps[0];
+  document.getElementById('step2-watermark').textContent = L.watermark.steps[1];
+  document.getElementById('step3-watermark').textContent = L.watermark.steps[2];
+
   document.getElementById('footerText').textContent = L.footer;
   document.getElementById('trust1').textContent = L.trust[0];
   document.getElementById('trust2').textContent = L.trust[1];
@@ -1094,7 +1779,13 @@ document.getElementById('langToggle').addEventListener('click', e => {
   const panels = {
     jpg: document.getElementById('panel-jpg'),
     compress: document.getElementById('panel-compress'),
-    word: document.getElementById('panel-word')
+    word: document.getElementById('panel-word'),
+    merge: document.getElementById('panel-merge'),
+    split: document.getElementById('panel-split'),
+    rotate: document.getElementById('panel-rotate'),
+    pagenum: document.getElementById('panel-pagenum'),
+    topng: document.getElementById('panel-topng'),
+    watermark: document.getElementById('panel-watermark')
   };
 
   tabs.forEach(tab => {
@@ -1507,6 +2198,640 @@ document.getElementById('langToggle').addEventListener('click', e => {
       resultName.textContent = name;
       downloadBtn.onclick = () => { const a = document.createElement('a'); a.href = blobUrl; a.download = name; a.click(); };
 
+      result.classList.add('show');
+      result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    } catch(err){
+      alert(t.errGeneric + ' (' + err.message + ')');
+      console.error(err);
+    } finally {
+      convertBtn.disabled = false;
+      convertBtn.textContent = t.convertBtn;
+    }
+  });
+})();
+
+/* ===================== ARAÇ 4: PDF Birleştir ===================== */
+(function(){
+  const drop = document.getElementById('drop-merge');
+  const fileInput = document.getElementById('fileInput-merge');
+  const fileListEl = document.getElementById('fileList-merge');
+  const actionsRow = document.getElementById('actionsRow-merge');
+  const countLabel = document.getElementById('countLabel-merge');
+  const convertBtn = document.getElementById('convertBtn-merge');
+  const result = document.getElementById('result-merge');
+  const resultName = document.getElementById('resultName-merge');
+  const downloadBtn = document.getElementById('downloadBtn-merge');
+
+  let files = [];
+  let blobUrl = null;
+  let idCounter = 0;
+
+  function render(){
+    fileListEl.innerHTML = '';
+    files.forEach((f, i) => {
+      const li = document.createElement('li');
+      li.className = 'file-row';
+      li.innerHTML = `
+        <span class="file-num">${String(i+1).padStart(2,'0')}</span>
+        <span class="file-name">${f.file.name}</span>
+        <span class="file-size">${formatSize(f.file.size)}</span>
+        <button class="file-remove" data-id="${f.id}" aria-label="Kaldır">✕</button>
+      `;
+      fileListEl.appendChild(li);
+    });
+    actionsRow.style.display = files.length ? 'flex' : 'none';
+    countLabel.textContent = LANG[window.currentLang].merge.count(files.length);
+    convertBtn.disabled = files.length < 2;
+    if(files.length === 0) result.classList.remove('show');
+  }
+
+  function addFiles(fileArr){
+    const t = LANG[window.currentLang].merge;
+    let rejected = false;
+    [...fileArr].forEach(file => {
+      if(file.type !== 'application/pdf'){ rejected = true; return; }
+      files.push({ file, id: ++idCounter });
+    });
+    if(rejected) alert(t.errPickPdf);
+    result.classList.remove('show');
+    render();
+  }
+
+  drop.addEventListener('click', () => fileInput.click());
+  drop.addEventListener('keydown', e => { if(e.key === 'Enter' || e.key === ' ') fileInput.click(); });
+  fileInput.addEventListener('change', e => { addFiles(e.target.files); fileInput.value = ''; });
+  ['dragenter','dragover'].forEach(evt => drop.addEventListener(evt, e => { e.preventDefault(); drop.classList.add('dragover'); }));
+  ['dragleave','drop'].forEach(evt => drop.addEventListener(evt, e => { e.preventDefault(); drop.classList.remove('dragover'); }));
+  drop.addEventListener('drop', e => addFiles(e.dataTransfer.files));
+
+  fileListEl.addEventListener('click', e => {
+    const btn = e.target.closest('.file-remove');
+    if(!btn) return;
+    files = files.filter(f => f.id !== Number(btn.dataset.id));
+    render();
+  });
+
+  convertBtn.addEventListener('click', async () => {
+    const t = LANG[window.currentLang].merge;
+    if(files.length < 2){ alert(t.errNeedTwo); return; }
+    convertBtn.disabled = true;
+    convertBtn.textContent = t.convertBtnLoading;
+    try{
+      await libReady('PDFLib');
+      const { PDFDocument } = PDFLib;
+      const outDoc = await PDFDocument.create();
+      for(const f of files){
+        const bytes = await f.file.arrayBuffer();
+        const srcDoc = await PDFDocument.load(bytes);
+        const copiedPages = await outDoc.copyPages(srcDoc, srcDoc.getPageIndices());
+        copiedPages.forEach(p => outDoc.addPage(p));
+      }
+      const pdfBytes = await outDoc.save();
+      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      if(blobUrl) URL.revokeObjectURL(blobUrl);
+      blobUrl = URL.createObjectURL(blob);
+      const name = 'birlesik.pdf';
+      resultName.textContent = name;
+      downloadBtn.onclick = () => { const a = document.createElement('a'); a.href = blobUrl; a.download = name; a.click(); };
+      result.classList.add('show');
+      result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    } catch(err){
+      alert(t.errGeneric + ' (' + err.message + ')');
+      console.error(err);
+    } finally {
+      convertBtn.disabled = false;
+      convertBtn.textContent = t.convertBtn;
+    }
+  });
+})();
+
+/* ===================== ARAÇ 5: PDF Böl ===================== */
+(function(){
+  const drop = document.getElementById('drop-split');
+  const fileInput = document.getElementById('fileInput-split');
+  const singleFile = document.getElementById('singleFile-split');
+  const singleFileName = document.getElementById('singleFileName-split');
+  const singleFileSize = document.getElementById('singleFileSize-split');
+  const singleFileRemove = document.getElementById('singleFileRemove-split');
+  const rangeBlock = document.getElementById('rangeBlock-split');
+  const rangeInput = document.getElementById('rangeInput-split');
+  const actionsRow = document.getElementById('actionsRow-split');
+  const convertBtn = document.getElementById('convertBtn-split');
+  const result = document.getElementById('result-split');
+  const resultName = document.getElementById('resultName-split');
+  const downloadBtn = document.getElementById('downloadBtn-split');
+
+  let currentFile = null;
+  let blobUrl = null;
+
+  function reset(){
+    currentFile = null;
+    singleFile.style.display = 'none';
+    rangeBlock.style.display = 'none';
+    actionsRow.style.display = 'none';
+    result.classList.remove('show');
+  }
+
+  function setFile(file){
+    if(file.type !== 'application/pdf'){ alert(LANG[window.currentLang].split.errPickPdf); return; }
+    currentFile = file;
+    singleFileName.textContent = file.name;
+    singleFileSize.textContent = formatSize(file.size);
+    singleFile.style.display = 'flex';
+    rangeBlock.style.display = 'block';
+    actionsRow.style.display = 'flex';
+    result.classList.remove('show');
+  }
+
+  drop.addEventListener('click', () => fileInput.click());
+  drop.addEventListener('keydown', e => { if(e.key === 'Enter' || e.key === ' ') fileInput.click(); });
+  fileInput.addEventListener('change', e => { if(e.target.files[0]) setFile(e.target.files[0]); });
+  ['dragenter','dragover'].forEach(evt => drop.addEventListener(evt, e => { e.preventDefault(); drop.classList.add('dragover'); }));
+  ['dragleave','drop'].forEach(evt => drop.addEventListener(evt, e => { e.preventDefault(); drop.classList.remove('dragover'); }));
+  drop.addEventListener('drop', e => { if(e.dataTransfer.files[0]) setFile(e.dataTransfer.files[0]); });
+  singleFileRemove.addEventListener('click', reset);
+
+  function parseRanges(str, totalPages){
+    str = str.trim();
+    if(!str){
+      const ranges = [];
+      for(let i = 1; i <= totalPages; i++) ranges.push([i, i]);
+      return ranges;
+    }
+    const parts = str.split(',').map(s => s.trim()).filter(Boolean);
+    const ranges = [];
+    for(const part of parts){
+      const m = part.match(/^(\d+)\s*-\s*(\d+)$/);
+      if(m){
+        let a = parseInt(m[1], 10), b = parseInt(m[2], 10);
+        if(a > b) [a, b] = [b, a];
+        if(a < 1 || b > totalPages) return null;
+        ranges.push([a, b]);
+      } else if(/^\d+$/.test(part)){
+        const n = parseInt(part, 10);
+        if(n < 1 || n > totalPages) return null;
+        ranges.push([n, n]);
+      } else {
+        return null;
+      }
+    }
+    return ranges;
+  }
+
+  convertBtn.addEventListener('click', async () => {
+    if(!currentFile) return;
+    const t = LANG[window.currentLang].split;
+    convertBtn.disabled = true;
+    convertBtn.textContent = t.convertBtnLoading;
+    try{
+      await libReady('PDFLib');
+      const { PDFDocument } = PDFLib;
+      const bytes = await currentFile.arrayBuffer();
+      const srcDoc = await PDFDocument.load(bytes);
+      const totalPages = srcDoc.getPageCount();
+      const ranges = parseRanges(rangeInput.value, totalPages);
+      if(!ranges){ alert(t.errRange); return; }
+
+      const baseName = currentFile.name.replace(/\.pdf$/i, '');
+      const outputs = [];
+      for(const [a, b] of ranges){
+        const outDoc = await PDFDocument.create();
+        const indices = [];
+        for(let p = a; p <= b; p++) indices.push(p - 1);
+        const copied = await outDoc.copyPages(srcDoc, indices);
+        copied.forEach(p => outDoc.addPage(p));
+        const outBytes = await outDoc.save();
+        const label = a === b ? `sayfa-${a}` : `sayfa-${a}-${b}`;
+        outputs.push({ name: `${baseName}-${label}.pdf`, bytes: outBytes });
+      }
+
+      if(blobUrl) URL.revokeObjectURL(blobUrl);
+
+      if(outputs.length === 1){
+        const blob = new Blob([outputs[0].bytes], { type: 'application/pdf' });
+        blobUrl = URL.createObjectURL(blob);
+        resultName.textContent = outputs[0].name;
+        downloadBtn.textContent = t.downloadBtnSingle;
+        downloadBtn.onclick = () => { const a2 = document.createElement('a'); a2.href = blobUrl; a2.download = outputs[0].name; a2.click(); };
+      } else {
+        await libReady('JSZip');
+        const zip = new JSZip();
+        outputs.forEach(o => zip.file(o.name, o.bytes));
+        const zipBlob = await zip.generateAsync({ type: 'blob' });
+        blobUrl = URL.createObjectURL(zipBlob);
+        const zipName = `${baseName}-bolunmus.zip`;
+        resultName.textContent = zipName;
+        downloadBtn.textContent = t.downloadBtn;
+        downloadBtn.onclick = () => { const a2 = document.createElement('a'); a2.href = blobUrl; a2.download = zipName; a2.click(); };
+      }
+
+      result.classList.add('show');
+      result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    } catch(err){
+      alert(t.errGeneric + ' (' + err.message + ')');
+      console.error(err);
+    } finally {
+      convertBtn.disabled = false;
+      convertBtn.textContent = t.convertBtn;
+    }
+  });
+})();
+
+/* ===================== ARAÇ 6: PDF Döndür ===================== */
+(function(){
+  const drop = document.getElementById('drop-rotate');
+  const fileInput = document.getElementById('fileInput-rotate');
+  const singleFile = document.getElementById('singleFile-rotate');
+  const singleFileName = document.getElementById('singleFileName-rotate');
+  const singleFileSize = document.getElementById('singleFileSize-rotate');
+  const singleFileRemove = document.getElementById('singleFileRemove-rotate');
+  const angleBlock = document.getElementById('angleBlock-rotate');
+  const angleOptions = angleBlock.querySelectorAll('.quality-option');
+  const actionsRow = document.getElementById('actionsRow-rotate');
+  const convertBtn = document.getElementById('convertBtn-rotate');
+  const result = document.getElementById('result-rotate');
+  const resultName = document.getElementById('resultName-rotate');
+  const downloadBtn = document.getElementById('downloadBtn-rotate');
+
+  let currentFile = null;
+  let selectedAngle = 180;
+  let blobUrl = null;
+
+  function reset(){
+    currentFile = null;
+    singleFile.style.display = 'none';
+    angleBlock.style.display = 'none';
+    actionsRow.style.display = 'none';
+    result.classList.remove('show');
+  }
+
+  function setFile(file){
+    if(file.type !== 'application/pdf'){ alert(LANG[window.currentLang].rotate.errPickPdf); return; }
+    currentFile = file;
+    singleFileName.textContent = file.name;
+    singleFileSize.textContent = formatSize(file.size);
+    singleFile.style.display = 'flex';
+    angleBlock.style.display = 'block';
+    actionsRow.style.display = 'flex';
+    result.classList.remove('show');
+  }
+
+  drop.addEventListener('click', () => fileInput.click());
+  drop.addEventListener('keydown', e => { if(e.key === 'Enter' || e.key === ' ') fileInput.click(); });
+  fileInput.addEventListener('change', e => { if(e.target.files[0]) setFile(e.target.files[0]); });
+  ['dragenter','dragover'].forEach(evt => drop.addEventListener(evt, e => { e.preventDefault(); drop.classList.add('dragover'); }));
+  ['dragleave','drop'].forEach(evt => drop.addEventListener(evt, e => { e.preventDefault(); drop.classList.remove('dragover'); }));
+  drop.addEventListener('drop', e => { if(e.dataTransfer.files[0]) setFile(e.dataTransfer.files[0]); });
+  singleFileRemove.addEventListener('click', reset);
+
+  angleOptions.forEach(opt => {
+    opt.addEventListener('click', () => {
+      angleOptions.forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      selectedAngle = Number(opt.dataset.angle);
+    });
+  });
+
+  convertBtn.addEventListener('click', async () => {
+    if(!currentFile) return;
+    const t = LANG[window.currentLang].rotate;
+    convertBtn.disabled = true;
+    convertBtn.textContent = t.convertBtnLoading;
+    try{
+      await libReady('PDFLib');
+      const { PDFDocument, degrees } = PDFLib;
+      const bytes = await currentFile.arrayBuffer();
+      const pdfDoc = await PDFDocument.load(bytes);
+      pdfDoc.getPages().forEach(page => {
+        const current = page.getRotation().angle || 0;
+        page.setRotation(degrees((current + selectedAngle) % 360));
+      });
+      const outBytes = await pdfDoc.save();
+      const blob = new Blob([outBytes], { type: 'application/pdf' });
+      if(blobUrl) URL.revokeObjectURL(blobUrl);
+      blobUrl = URL.createObjectURL(blob);
+      const name = currentFile.name.replace(/\.pdf$/i, '') + '-donduruldu.pdf';
+      resultName.textContent = name;
+      downloadBtn.onclick = () => { const a = document.createElement('a'); a.href = blobUrl; a.download = name; a.click(); };
+      result.classList.add('show');
+      result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    } catch(err){
+      alert(t.errGeneric + ' (' + err.message + ')');
+      console.error(err);
+    } finally {
+      convertBtn.disabled = false;
+      convertBtn.textContent = t.convertBtn;
+    }
+  });
+})();
+
+/* ===================== ARAÇ 7: Sayfa Numarası Ekle ===================== */
+(function(){
+  const drop = document.getElementById('drop-pagenum');
+  const fileInput = document.getElementById('fileInput-pagenum');
+  const singleFile = document.getElementById('singleFile-pagenum');
+  const singleFileName = document.getElementById('singleFileName-pagenum');
+  const singleFileSize = document.getElementById('singleFileSize-pagenum');
+  const singleFileRemove = document.getElementById('singleFileRemove-pagenum');
+  const posBlock = document.getElementById('posBlock-pagenum');
+  const posOptions = posBlock.querySelectorAll('.quality-option');
+  const actionsRow = document.getElementById('actionsRow-pagenum');
+  const convertBtn = document.getElementById('convertBtn-pagenum');
+  const result = document.getElementById('result-pagenum');
+  const resultName = document.getElementById('resultName-pagenum');
+  const downloadBtn = document.getElementById('downloadBtn-pagenum');
+
+  let currentFile = null;
+  let selectedPos = 'center';
+  let blobUrl = null;
+
+  function reset(){
+    currentFile = null;
+    singleFile.style.display = 'none';
+    posBlock.style.display = 'none';
+    actionsRow.style.display = 'none';
+    result.classList.remove('show');
+  }
+
+  function setFile(file){
+    if(file.type !== 'application/pdf'){ alert(LANG[window.currentLang].pagenum.errPickPdf); return; }
+    currentFile = file;
+    singleFileName.textContent = file.name;
+    singleFileSize.textContent = formatSize(file.size);
+    singleFile.style.display = 'flex';
+    posBlock.style.display = 'block';
+    actionsRow.style.display = 'flex';
+    result.classList.remove('show');
+  }
+
+  drop.addEventListener('click', () => fileInput.click());
+  drop.addEventListener('keydown', e => { if(e.key === 'Enter' || e.key === ' ') fileInput.click(); });
+  fileInput.addEventListener('change', e => { if(e.target.files[0]) setFile(e.target.files[0]); });
+  ['dragenter','dragover'].forEach(evt => drop.addEventListener(evt, e => { e.preventDefault(); drop.classList.add('dragover'); }));
+  ['dragleave','drop'].forEach(evt => drop.addEventListener(evt, e => { e.preventDefault(); drop.classList.remove('dragover'); }));
+  drop.addEventListener('drop', e => { if(e.dataTransfer.files[0]) setFile(e.dataTransfer.files[0]); });
+  singleFileRemove.addEventListener('click', reset);
+
+  posOptions.forEach(opt => {
+    opt.addEventListener('click', () => {
+      posOptions.forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      selectedPos = opt.dataset.pos;
+    });
+  });
+
+  convertBtn.addEventListener('click', async () => {
+    if(!currentFile) return;
+    const t = LANG[window.currentLang].pagenum;
+    convertBtn.disabled = true;
+    convertBtn.textContent = t.convertBtnLoading;
+    try{
+      await libReady('PDFLib');
+      const { PDFDocument, StandardFonts, rgb } = PDFLib;
+      const bytes = await currentFile.arrayBuffer();
+      const pdfDoc = await PDFDocument.load(bytes);
+      const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+      const pages = pdfDoc.getPages();
+      const total = pages.length;
+      const fontSize = 10;
+      const margin = 28;
+
+      pages.forEach((page, i) => {
+        const { width } = page.getSize();
+        const label = `${i + 1} / ${total}`;
+        const textWidth = font.widthOfTextAtSize(label, fontSize);
+        let x;
+        if(selectedPos === 'left') x = margin;
+        else if(selectedPos === 'right') x = width - margin - textWidth;
+        else x = (width - textWidth) / 2;
+        page.drawText(label, { x, y: 20, size: fontSize, font, color: rgb(0.2, 0.2, 0.2) });
+      });
+
+      const outBytes = await pdfDoc.save();
+      const blob = new Blob([outBytes], { type: 'application/pdf' });
+      if(blobUrl) URL.revokeObjectURL(blobUrl);
+      blobUrl = URL.createObjectURL(blob);
+      const name = currentFile.name.replace(/\.pdf$/i, '') + '-numarali.pdf';
+      resultName.textContent = name;
+      downloadBtn.onclick = () => { const a = document.createElement('a'); a.href = blobUrl; a.download = name; a.click(); };
+      result.classList.add('show');
+      result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    } catch(err){
+      alert(t.errGeneric + ' (' + err.message + ')');
+      console.error(err);
+    } finally {
+      convertBtn.disabled = false;
+      convertBtn.textContent = t.convertBtn;
+    }
+  });
+})();
+
+/* ===================== ARAÇ 8: PDF'i Görsele Çevir ===================== */
+(function(){
+  const drop = document.getElementById('drop-topng');
+  const fileInput = document.getElementById('fileInput-topng');
+  const singleFile = document.getElementById('singleFile-topng');
+  const singleFileName = document.getElementById('singleFileName-topng');
+  const singleFileSize = document.getElementById('singleFileSize-topng');
+  const singleFileRemove = document.getElementById('singleFileRemove-topng');
+  const fmtBlock = document.getElementById('fmtBlock-topng');
+  const fmtOptions = fmtBlock.querySelectorAll('.quality-option');
+  const actionsRow = document.getElementById('actionsRow-topng');
+  const convertBtn = document.getElementById('convertBtn-topng');
+  const result = document.getElementById('result-topng');
+  const resultName = document.getElementById('resultName-topng');
+  const downloadBtn = document.getElementById('downloadBtn-topng');
+
+  let currentFile = null;
+  let selectedFmt = 'png';
+  let blobUrl = null;
+
+  function reset(){
+    currentFile = null;
+    singleFile.style.display = 'none';
+    fmtBlock.style.display = 'none';
+    actionsRow.style.display = 'none';
+    result.classList.remove('show');
+  }
+
+  function setFile(file){
+    if(file.type !== 'application/pdf'){ alert(LANG[window.currentLang].topng.errPickPdf); return; }
+    currentFile = file;
+    singleFileName.textContent = file.name;
+    singleFileSize.textContent = formatSize(file.size);
+    singleFile.style.display = 'flex';
+    fmtBlock.style.display = 'block';
+    actionsRow.style.display = 'flex';
+    result.classList.remove('show');
+  }
+
+  drop.addEventListener('click', () => fileInput.click());
+  drop.addEventListener('keydown', e => { if(e.key === 'Enter' || e.key === ' ') fileInput.click(); });
+  fileInput.addEventListener('change', e => { if(e.target.files[0]) setFile(e.target.files[0]); });
+  ['dragenter','dragover'].forEach(evt => drop.addEventListener(evt, e => { e.preventDefault(); drop.classList.add('dragover'); }));
+  ['dragleave','drop'].forEach(evt => drop.addEventListener(evt, e => { e.preventDefault(); drop.classList.remove('dragover'); }));
+  drop.addEventListener('drop', e => { if(e.dataTransfer.files[0]) setFile(e.dataTransfer.files[0]); });
+  singleFileRemove.addEventListener('click', reset);
+
+  fmtOptions.forEach(opt => {
+    opt.addEventListener('click', () => {
+      fmtOptions.forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      selectedFmt = opt.dataset.fmt;
+    });
+  });
+
+  convertBtn.addEventListener('click', async () => {
+    if(!currentFile) return;
+    const t = LANG[window.currentLang].topng;
+    convertBtn.disabled = true;
+    convertBtn.textContent = t.convertBtnLoading;
+    try{
+      await pdfjsReady();
+      const bytes = await currentFile.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: bytes }).promise;
+      const scale = 2;
+      const mime = selectedFmt === 'jpg' ? 'image/jpeg' : 'image/png';
+      const ext = selectedFmt === 'jpg' ? 'jpg' : 'png';
+      const baseName = currentFile.name.replace(/\.pdf$/i, '');
+      const images = [];
+
+      for(let i = 1; i <= pdf.numPages; i++){
+        const page = await pdf.getPage(i);
+        const viewport = page.getViewport({ scale });
+        const canvas = document.createElement('canvas');
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+        const ctx = canvas.getContext('2d');
+        await page.render({ canvasContext: ctx, viewport }).promise;
+        const imgBlob = await new Promise((resolve, reject) => {
+          canvas.toBlob(b => b ? resolve(b) : reject(new Error('Canvas boş döndü')), mime, 0.92);
+        });
+        images.push({ name: `${baseName}-sayfa-${i}.${ext}`, blob: imgBlob });
+        canvas.width = 0; canvas.height = 0;
+      }
+
+      if(blobUrl) URL.revokeObjectURL(blobUrl);
+
+      if(images.length === 1){
+        blobUrl = URL.createObjectURL(images[0].blob);
+        resultName.textContent = images[0].name;
+        downloadBtn.onclick = () => { const a = document.createElement('a'); a.href = blobUrl; a.download = images[0].name; a.click(); };
+      } else {
+        await libReady('JSZip');
+        const zip = new JSZip();
+        for(const img of images) zip.file(img.name, img.blob);
+        const zipBlob = await zip.generateAsync({ type: 'blob' });
+        blobUrl = URL.createObjectURL(zipBlob);
+        const zipName = `${baseName}-gorseller.zip`;
+        resultName.textContent = zipName;
+        downloadBtn.onclick = () => { const a = document.createElement('a'); a.href = blobUrl; a.download = zipName; a.click(); };
+      }
+
+      result.classList.add('show');
+      result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    } catch(err){
+      alert(t.errGeneric + ' (' + err.message + ')');
+      console.error(err);
+    } finally {
+      convertBtn.disabled = false;
+      convertBtn.textContent = t.convertBtn;
+    }
+  });
+})();
+
+/* ===================== ARAÇ 9: Filigran Ekle ===================== */
+(function(){
+  const drop = document.getElementById('drop-watermark');
+  const fileInput = document.getElementById('fileInput-watermark');
+  const singleFile = document.getElementById('singleFile-watermark');
+  const singleFileName = document.getElementById('singleFileName-watermark');
+  const singleFileSize = document.getElementById('singleFileSize-watermark');
+  const singleFileRemove = document.getElementById('singleFileRemove-watermark');
+  const textBlock = document.getElementById('textBlock-watermark');
+  const textInput = document.getElementById('textInput-watermark');
+  const opacityOptions = textBlock.querySelectorAll('.quality-option');
+  const actionsRow = document.getElementById('actionsRow-watermark');
+  const convertBtn = document.getElementById('convertBtn-watermark');
+  const result = document.getElementById('result-watermark');
+  const resultName = document.getElementById('resultName-watermark');
+  const downloadBtn = document.getElementById('downloadBtn-watermark');
+
+  let currentFile = null;
+  let selectedOpacity = 0.3;
+  let blobUrl = null;
+
+  function reset(){
+    currentFile = null;
+    singleFile.style.display = 'none';
+    textBlock.style.display = 'none';
+    actionsRow.style.display = 'none';
+    result.classList.remove('show');
+  }
+
+  function setFile(file){
+    if(file.type !== 'application/pdf'){ alert(LANG[window.currentLang].watermark.errPickPdf); return; }
+    currentFile = file;
+    singleFileName.textContent = file.name;
+    singleFileSize.textContent = formatSize(file.size);
+    singleFile.style.display = 'flex';
+    textBlock.style.display = 'block';
+    actionsRow.style.display = 'flex';
+    result.classList.remove('show');
+  }
+
+  drop.addEventListener('click', () => fileInput.click());
+  drop.addEventListener('keydown', e => { if(e.key === 'Enter' || e.key === ' ') fileInput.click(); });
+  fileInput.addEventListener('change', e => { if(e.target.files[0]) setFile(e.target.files[0]); });
+  ['dragenter','dragover'].forEach(evt => drop.addEventListener(evt, e => { e.preventDefault(); drop.classList.add('dragover'); }));
+  ['dragleave','drop'].forEach(evt => drop.addEventListener(evt, e => { e.preventDefault(); drop.classList.remove('dragover'); }));
+  drop.addEventListener('drop', e => { if(e.dataTransfer.files[0]) setFile(e.dataTransfer.files[0]); });
+  singleFileRemove.addEventListener('click', reset);
+
+  opacityOptions.forEach(opt => {
+    opt.addEventListener('click', () => {
+      opacityOptions.forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      selectedOpacity = Number(opt.dataset.opacity);
+    });
+  });
+
+  convertBtn.addEventListener('click', async () => {
+    if(!currentFile) return;
+    const t = LANG[window.currentLang].watermark;
+    const text = textInput.value.trim();
+    if(!text){ alert(t.errEmptyText); return; }
+    convertBtn.disabled = true;
+    convertBtn.textContent = t.convertBtnLoading;
+    try{
+      await libReady('PDFLib');
+      const { PDFDocument, StandardFonts, rgb, degrees } = PDFLib;
+      const bytes = await currentFile.arrayBuffer();
+      const pdfDoc = await PDFDocument.load(bytes);
+      const font = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+
+      pdfDoc.getPages().forEach(page => {
+        const { width, height } = page.getSize();
+        const fontSize = Math.max(24, Math.min(width, height) / 8);
+        const textWidth = font.widthOfTextAtSize(text, fontSize);
+        page.drawText(text, {
+          x: (width - textWidth) / 2,
+          y: height / 2,
+          size: fontSize,
+          font,
+          color: rgb(0.4, 0.4, 0.4),
+          opacity: selectedOpacity,
+          rotate: degrees(45)
+        });
+      });
+
+      const outBytes = await pdfDoc.save();
+      const blob = new Blob([outBytes], { type: 'application/pdf' });
+      if(blobUrl) URL.revokeObjectURL(blobUrl);
+      blobUrl = URL.createObjectURL(blob);
+      const name = currentFile.name.replace(/\.pdf$/i, '') + '-filigranli.pdf';
+      resultName.textContent = name;
+      downloadBtn.onclick = () => { const a = document.createElement('a'); a.href = blobUrl; a.download = name; a.click(); };
       result.classList.add('show');
       result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     } catch(err){
