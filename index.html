@@ -359,6 +359,164 @@
     object-fit: cover;
     flex-shrink:0;
     border: 1px solid var(--line);
+    cursor: zoom-in;
+    transition: transform .12s ease;
+  }
+  .file-thumb:hover{ transform: scale(1.15); }
+
+  /* Lightbox — önizleme büyütme */
+  .lightbox-overlay{
+    display:none;
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background: rgba(10,16,32,0.88);
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    cursor: zoom-out;
+    animation: fadeUp .18s ease both;
+  }
+  .lightbox-overlay.show{ display:flex; }
+  .lightbox-overlay img{
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 4px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+  .lightbox-close{
+    position: fixed;
+    top: 20px; right: 20px;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 1px solid rgba(245,241,232,0.3);
+    background: rgba(245,241,232,0.08);
+    color: var(--paper);
+    font-size: 18px;
+    cursor: pointer;
+    display:flex; align-items:center; justify-content:center;
+  }
+
+  /* Son işlemler paneli */
+  .recent-panel{
+    position: fixed;
+    left: 16px;
+    bottom: 16px;
+    z-index: 40;
+    width: 240px;
+    max-width: calc(100vw - 32px);
+    background: rgba(20,33,61,0.68);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(245,241,232,0.16);
+    border-radius: 6px;
+    padding: 12px 14px;
+  }
+  .recent-panel-title{
+    margin: 0 0 8px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    color: rgba(245,241,232,0.5);
+  }
+  .recent-list{
+    list-style:none;
+    margin:0; padding:0;
+    display:flex;
+    flex-direction:column;
+    gap: 6px;
+  }
+  .recent-item{
+    display:flex;
+    align-items:center;
+    gap: 8px;
+    justify-content: space-between;
+  }
+  .recent-name{
+    font-size: 12px;
+    color: rgba(245,241,232,0.85);
+    white-space: nowrap;
+    overflow:hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+    min-width:0;
+  }
+  .recent-download{
+    flex-shrink:0;
+    background: rgba(245,241,232,0.1);
+    border: 1px solid rgba(245,241,232,0.2);
+    color: var(--paper);
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 10.5px;
+    padding: 3px 9px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background .15s ease;
+  }
+  .recent-download:hover{ background: var(--stamp); border-color: var(--stamp); }
+  @media (max-width: 700px){
+    .recent-panel{ display:none !important; }
+  }
+
+  /* Uygulama olarak yükle bildirimi */
+  .install-banner{
+    position: fixed;
+    right: 16px;
+    bottom: 16px;
+    z-index: 41;
+    width: 280px;
+    max-width: calc(100vw - 32px);
+    background: var(--paper-card);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 14px 16px;
+    box-shadow: 0 10px 30px rgba(20,33,61,0.25);
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .install-text{ flex:1; min-width:0; }
+  .install-title{
+    margin:0 0 3px;
+    font-family:'Newsreader', serif;
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .install-desc{
+    margin:0;
+    font-size: 12px;
+    color: var(--ink-soft);
+    line-height:1.4;
+  }
+  .install-actions{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+    gap: 8px;
+    flex-shrink:0;
+  }
+  .install-btn{
+    background: var(--stamp);
+    color: var(--paper-card);
+    border:none;
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 11px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    cursor:pointer;
+  }
+  .install-btn:hover{ background: var(--stamp-dark); }
+  .install-dismiss{
+    background:none;
+    border:none;
+    color: var(--ink-soft);
+    cursor:pointer;
+    font-size: 12px;
+    padding: 2px;
+  }
+  @media (max-width: 700px){
+    .install-banner{ display:none !important; }
   }
   .file-num{
     font-family:'IBM Plex Mono', monospace;
@@ -395,6 +553,24 @@
     outline-offset: 2px;
   }
 
+  .size-warning{
+    display:flex;
+    align-items:center;
+    gap: 8px;
+    margin-top: 8px;
+    padding: 9px 12px;
+    background: rgba(169,129,46,0.1);
+    border: 1px solid rgba(169,129,46,0.35);
+    border-radius: var(--radius);
+    font-size: 12px;
+    color: var(--gold);
+    line-height: 1.4;
+  }
+  .size-warning::before{
+    content: "⚠";
+    flex-shrink:0;
+  }
+
   /* Actions */
   .actions{
     display:flex;
@@ -423,10 +599,23 @@
     background: var(--stamp);
     color: var(--paper-card);
     box-shadow: 0 2px 0 var(--stamp-dark);
+    position: relative;
+    overflow: hidden;
+    --progress: 0%;
+  }
+  .btn-primary::after{
+    content: "";
+    position: absolute;
+    inset: 0;
+    width: var(--progress);
+    background: rgba(255,255,255,0.24);
+    transition: width .25s ease;
+    pointer-events: none;
   }
   .btn-primary:hover:not(:disabled){ transform: translateY(-1px); box-shadow: 0 4px 10px rgba(179,55,44,0.35); }
   .btn-primary:active:not(:disabled){ transform: translateY(1px); box-shadow: 0 1px 0 var(--stamp-dark); }
   .btn-primary:disabled{ background: #C9A7A2; cursor:not-allowed; box-shadow:none; }
+  .btn-primary:disabled::after{ background: rgba(255,255,255,0.35); }
 
   /* Stamp result */
   .result{
@@ -615,6 +804,27 @@
 </style>
 </head>
 <body>
+
+<div class="lightbox-overlay" id="lightboxOverlay">
+  <button class="lightbox-close" id="lightboxClose" aria-label="Kapat">✕</button>
+  <img id="lightboxImg" src="" alt="">
+</div>
+
+<div class="recent-panel" id="recentPanel" style="display:none;">
+  <p class="recent-panel-title" id="recentTitle">Son işlemler</p>
+  <ul class="recent-list" id="recentList"></ul>
+</div>
+
+<div class="install-banner" id="installBanner" style="display:none;">
+  <div class="install-text">
+    <p class="install-title" id="installTitle">Uygulama olarak yükle</p>
+    <p class="install-desc" id="installDesc">pdfcevir'i cihazına ekle, tek tıkla aç.</p>
+  </div>
+  <div class="install-actions">
+    <button class="install-btn" id="installBtn">Yükle</button>
+    <button class="install-dismiss" id="installDismiss" aria-label="Kapat">✕</button>
+  </div>
+</div>
 
 <div class="bg-decor" aria-hidden="true">
   <span class="s1"></span><span class="s2"></span><span class="s3"></span><span class="s4"></span><span class="s5"></span>
@@ -1306,10 +1516,131 @@ function libReady(name){
   });
 }
 
+/* Buton içi ilerleme çubuğu — sayfa/adım bazlı işlemlerde kullanılır */
+function setBtnProgress(btn, current, total){
+  const pct = total > 0 ? Math.max(0, Math.min(100, Math.round((current/total)*100))) : 0;
+  btn.style.setProperty('--progress', pct + '%');
+}
+function resetBtnProgress(btn){
+  btn.style.setProperty('--progress', '0%');
+}
+
+/* Büyük dosya uyarısı — singleFile satırının hemen altına ekler/kaldırır */
+const LARGE_FILE_BYTES = 25 * 1024 * 1024;
+function updateSizeWarning(afterEl, file){
+  const c = LANG[window.currentLang].common;
+  let warn = afterEl.nextElementSibling;
+  const isWarnEl = warn && warn.classList && warn.classList.contains('size-warning');
+  if(file && file.size > LARGE_FILE_BYTES){
+    if(isWarnEl){ warn.textContent = c.largeFileWarning; }
+    else {
+      const div = document.createElement('div');
+      div.className = 'size-warning';
+      div.textContent = c.largeFileWarning;
+      afterEl.insertAdjacentElement('afterend', div);
+    }
+  } else if(isWarnEl){
+    warn.remove();
+  }
+}
+
+/* Teknik hata mesajını kullanıcı dostu bir mesaja çevirir */
+function friendlyErrorMessage(err, fallback){
+  const c = LANG[window.currentLang].common;
+  const msg = (err && err.message || '').toLowerCase();
+  if(msg.includes('encrypt') || msg.includes('password')) return c.errEncrypted;
+  if(msg.includes('invalid') || msg.includes('corrupt') || msg.includes('parse')) return c.errCorrupt;
+  return fallback + ' (' + (err && err.message || err) + ')';
+}
+
+/* Önizleme büyütme (lightbox) */
+function openLightbox(src, alt){
+  const overlay = document.getElementById('lightboxOverlay');
+  const img = document.getElementById('lightboxImg');
+  img.src = src;
+  img.alt = alt || '';
+  overlay.classList.add('show');
+}
+function closeLightbox(){
+  document.getElementById('lightboxOverlay').classList.remove('show');
+}
+
+/* Son işlemler paneli — sekme kapanana kadar son 3 sonucu hatırlar */
+window.recentOps = [];
+function addRecentOperation(toolKey, fileName, url){
+  window.recentOps.unshift({ tool: toolKey, name: fileName, url });
+  window.recentOps = window.recentOps.slice(0, 3);
+  renderRecentOps();
+}
+function renderRecentOps(){
+  const panel = document.getElementById('recentPanel');
+  const list = document.getElementById('recentList');
+  const titleEl = document.getElementById('recentTitle');
+  if(!panel || !list) return;
+  const c = LANG[window.currentLang].common;
+  if(titleEl) titleEl.textContent = c.recentTitle;
+  if(window.recentOps.length === 0){ panel.style.display = 'none'; return; }
+  panel.style.display = 'block';
+  list.innerHTML = window.recentOps.map((op, i) => `
+    <li class="recent-item">
+      <span class="recent-name" title="${op.name}">${op.name}</span>
+      <button class="recent-download" data-idx="${i}">${c.recentDownload}</button>
+    </li>
+  `).join('');
+}
+document.addEventListener('click', e => {
+  const btn = e.target.closest('.recent-download');
+  if(!btn) return;
+  const op = window.recentOps[Number(btn.dataset.idx)];
+  if(!op) return;
+  const a = document.createElement('a');
+  a.href = op.url;
+  a.download = op.name;
+  a.click();
+});
+document.addEventListener('DOMContentLoaded', () => {
+  const overlay = document.getElementById('lightboxOverlay');
+  const closeBtn = document.getElementById('lightboxClose');
+  if(overlay){ overlay.addEventListener('click', closeLightbox); }
+  if(closeBtn){ closeBtn.addEventListener('click', e => { e.stopPropagation(); closeLightbox(); }); }
+});
+
+/* Klavye kısayolları: Enter = dönüştür, Esc = seçili dosyayı kaldır / lightbox'ı kapat */
+document.addEventListener('keydown', e => {
+  const overlay = document.getElementById('lightboxOverlay');
+  if(e.key === 'Escape'){
+    if(overlay && overlay.classList.contains('show')){ closeLightbox(); return; }
+    const removeBtn = document.getElementById('singleFileRemove-' + window.currentTool);
+    if(removeBtn && removeBtn.offsetParent !== null){ removeBtn.click(); }
+    return;
+  }
+  if(e.key === 'Enter'){
+    const tag = (e.target && e.target.tagName || '').toLowerCase();
+    if(tag === 'textarea') return;
+    if(overlay && overlay.classList.contains('show')) return;
+    const btn = document.getElementById('convertBtn-' + window.currentTool);
+    if(btn && !btn.disabled && btn.offsetParent !== null){
+      e.preventDefault();
+      btn.click();
+    }
+  }
+});
+
 /* ===================== Dil sistemi ===================== */
 const LANG = {
   tr: {
     tabs: { jpg: "Görsel → PDF", compress: "PDF Sıkıştır", word: "PDF → Word", merge: "PDF Birleştir", split: "PDF Böl", rotate: "PDF Döndür", pagenum: "Sayfa Numarası", topng: "PDF → Görsel", watermark: "Filigran Ekle" },
+    common: {
+      largeFileWarning: "Bu dosya büyük, işlem tarayıcında biraz sürebilir. Sekmeyi kapatma.",
+      errEncrypted: "Bu PDF şifreli/korumalı görünüyor, önce şifresini kaldırman gerekiyor.",
+      errCorrupt: "Dosya bozuk ya da geçerli bir PDF değil gibi görünüyor.",
+      recentTitle: "Son işlemler",
+      recentEmpty: "Henüz işlem yapılmadı.",
+      recentDownload: "İndir",
+      installTitle: "Uygulama olarak yükle",
+      installDesc: "pdfcevir'i cihazına ekle, tek tıkla aç.",
+      installBtn: "Yükle"
+    },
     header: {
       jpg: { eyebrow: "Belge Masası", heading: "Resimlerini <em>PDF'e</em><br>çevir, hazır.", sub: "Kayıt yok, yükleme yok, bekleme yok. Dosyaların hiçbir zaman cihazından çıkmaz — her şey tarayıcında, anında gerçekleşir." },
       compress: { eyebrow: "Belge Masası", heading: "PDF'ini <em>küçült</em>,<br>yerinden çıkmasın.", sub: "Büyük PDF'ler e-postadan, formlardan geri döner. Boyutunu küçült, göndermesi kolaylaşsın." },
@@ -1451,6 +1782,17 @@ const LANG = {
   },
   en: {
     tabs: { jpg: "Image → PDF", compress: "Compress PDF", word: "PDF → Word", merge: "Merge PDF", split: "Split PDF", rotate: "Rotate PDF", pagenum: "Page Numbers", topng: "PDF → Image", watermark: "Add Watermark" },
+    common: {
+      largeFileWarning: "This file is large, processing may take a moment in your browser. Don't close the tab.",
+      errEncrypted: "This PDF appears to be encrypted/protected — remove the password first.",
+      errCorrupt: "The file looks corrupted or isn't a valid PDF.",
+      recentTitle: "Recent operations",
+      recentEmpty: "No operations yet.",
+      recentDownload: "Download",
+      installTitle: "Install as an app",
+      installDesc: "Add pdfcevir to your device, open it in one tap.",
+      installBtn: "Install"
+    },
     header: {
       jpg: { eyebrow: "Document Desk", heading: "Turn images into <em>PDF</em>,<br>done.", sub: "No sign-up, no upload, no waiting. Your files never leave your device — everything happens instantly in your browser." },
       compress: { eyebrow: "Document Desk", heading: "<em>Shrink</em> your PDF,<br>keep it moving.", sub: "Big PDFs bounce back from email and forms. Shrink the size, make it easy to send." },
@@ -1765,6 +2107,9 @@ function applyLanguage(lang){
   const jpgList = document.getElementById('fileList-jpg');
   const countJpgEl = document.getElementById('countLabel-jpg');
   if(countJpgEl && jpgList) countJpgEl.textContent = L.jpg.count(jpgList.children.length);
+
+  if(typeof renderRecentOps === 'function') renderRecentOps();
+  if(typeof renderInstallPrompt === 'function') renderInstallPrompt();
 }
 
 document.getElementById('langToggle').addEventListener('click', e => {
@@ -1839,6 +2184,8 @@ document.getElementById('langToggle').addEventListener('click', e => {
     countLabel.textContent = LANG[window.currentLang].jpg.count(files.length);
     convertBtn.disabled = files.length === 0;
     if(files.length === 0) result.classList.remove('show');
+    const totalBytes = files.reduce((sum, f) => sum + f.file.size, 0);
+    updateSizeWarning(fileListEl, files.length ? { size: totalBytes } : null);
   }
 
   function addFiles(fileArr){
@@ -1858,6 +2205,8 @@ document.getElementById('langToggle').addEventListener('click', e => {
   drop.addEventListener('drop', e => addFiles(e.dataTransfer.files));
 
   fileListEl.addEventListener('click', e => {
+    const thumb = e.target.closest('.file-thumb');
+    if(thumb){ openLightbox(thumb.src, thumb.alt); return; }
     const btn = e.target.closest('.file-remove');
     if(!btn) return;
     files = files.filter(f => f.id !== Number(btn.dataset.id));
@@ -1898,6 +2247,8 @@ document.getElementById('langToggle').addEventListener('click', e => {
       await libReady('PDFLib');
       const { PDFDocument } = PDFLib;
       const pdfDoc = await PDFDocument.create();
+      resetBtnProgress(convertBtn);
+      let processedCount = 0;
       for(const f of files){
         if(f.file.type === 'image/webp'){
           const pngBytes = await webpToPngBytes(f.file);
@@ -1911,6 +2262,8 @@ document.getElementById('langToggle').addEventListener('click', e => {
         } else {
           await imageToPdfPage(pdfDoc, f.file);
         }
+        processedCount++;
+        setBtnProgress(convertBtn, processedCount, files.length);
       }
       const pdfBytes = await pdfDoc.save();
       const blob = new Blob([pdfBytes], { type: 'application/pdf' });
@@ -1919,14 +2272,16 @@ document.getElementById('langToggle').addEventListener('click', e => {
       const name = files.length === 1 ? files[0].file.name.replace(/\.[^.]+$/, '') + '.pdf' : 'belge.pdf';
       resultName.textContent = name;
       downloadBtn.onclick = () => { const a = document.createElement('a'); a.href = pdfBlobUrl; a.download = name; a.click(); };
+      addRecentOperation('jpg', name, pdfBlobUrl);
       result.classList.add('show');
       result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     } catch(err){
-      alert(t.errGeneric + ' (' + err.message + ')');
+      alert(friendlyErrorMessage(err, t.errGeneric));
       console.error(err);
     } finally {
       convertBtn.disabled = false;
       convertBtn.textContent = t.convertBtn;
+      setTimeout(() => resetBtnProgress(convertBtn), 300);
     }
   });
 })();
@@ -1973,6 +2328,7 @@ document.getElementById('langToggle').addEventListener('click', e => {
     currentFile = file;
     singleFileName.textContent = file.name;
     singleFileSize.textContent = formatSize(file.size);
+    updateSizeWarning(singleFile, file);
     singleFile.style.display = 'flex';
     qualityBlock.style.display = 'block';
     actionsRow.style.display = 'flex';
@@ -2010,6 +2366,7 @@ document.getElementById('langToggle').addEventListener('click', e => {
       const { PDFDocument } = PDFLib;
       const outDoc = await PDFDocument.create();
 
+      resetBtnProgress(convertBtn);
       for(let i = 1; i <= pdf.numPages; i++){
         const page = await pdf.getPage(i);
         const viewport = page.getViewport({ scale });
@@ -2032,6 +2389,7 @@ document.getElementById('langToggle').addEventListener('click', e => {
         outPage.drawImage(embedded, { x: 0, y: 0, width: origViewport.width, height: origViewport.height });
 
         canvas.width = 0; canvas.height = 0; // serbest bırak
+        setBtnProgress(convertBtn, i, pdf.numPages);
       }
 
       const newBytes = await outDoc.save();
@@ -2048,14 +2406,16 @@ document.getElementById('langToggle').addEventListener('click', e => {
 
       downloadBtn.onclick = () => { const a = document.createElement('a'); a.href = blobUrl; a.download = name; a.click(); };
 
+      addRecentOperation('compress', name, blobUrl);
       result.classList.add('show');
       result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     } catch(err){
-      alert(t.errGeneric + ' (' + err.message + ')');
+      alert(friendlyErrorMessage(err, t.errGeneric));
       console.error(err);
     } finally {
       convertBtn.disabled = false;
       convertBtn.textContent = t.convertBtn;
+      setTimeout(() => resetBtnProgress(convertBtn), 300);
     }
   });
 })();
@@ -2089,6 +2449,7 @@ document.getElementById('langToggle').addEventListener('click', e => {
     currentFile = file;
     singleFileName.textContent = file.name;
     singleFileSize.textContent = formatSize(file.size);
+    updateSizeWarning(singleFile, file);
     singleFile.style.display = 'flex';
     actionsRow.style.display = 'flex';
     result.classList.remove('show');
@@ -2106,10 +2467,11 @@ document.getElementById('langToggle').addEventListener('click', e => {
     return text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   }
 
-  async function extractPagesText(pdf){
+  async function extractPagesText(pdf, onProgress){
     const pagesLines = [];
     for(let i = 1; i <= pdf.numPages; i++){
       const page = await pdf.getPage(i);
+      if(onProgress) onProgress(i, pdf.numPages);
       const content = await page.getTextContent();
       const lines = [];
       let currentY = null;
@@ -2182,7 +2544,8 @@ document.getElementById('langToggle').addEventListener('click', e => {
       await Promise.all([pdfjsReady(), libReady('JSZip')]);
       const bytes = await currentFile.arrayBuffer();
       const pdf = await pdfjsLib.getDocument({ data: bytes }).promise;
-      const pagesLines = await extractPagesText(pdf);
+      resetBtnProgress(convertBtn);
+      const pagesLines = await extractPagesText(pdf, (i, total) => setBtnProgress(convertBtn, i, total));
 
       const hasText = pagesLines.some(lines => lines.length > 0);
       if(!hasText){
@@ -2198,14 +2561,16 @@ document.getElementById('langToggle').addEventListener('click', e => {
       resultName.textContent = name;
       downloadBtn.onclick = () => { const a = document.createElement('a'); a.href = blobUrl; a.download = name; a.click(); };
 
+      addRecentOperation('word', name, blobUrl);
       result.classList.add('show');
       result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     } catch(err){
-      alert(t.errGeneric + ' (' + err.message + ')');
+      alert(friendlyErrorMessage(err, t.errGeneric));
       console.error(err);
     } finally {
       convertBtn.disabled = false;
       convertBtn.textContent = t.convertBtn;
+      setTimeout(() => resetBtnProgress(convertBtn), 300);
     }
   });
 })();
@@ -2243,6 +2608,8 @@ document.getElementById('langToggle').addEventListener('click', e => {
     countLabel.textContent = LANG[window.currentLang].merge.count(files.length);
     convertBtn.disabled = files.length < 2;
     if(files.length === 0) result.classList.remove('show');
+    const totalBytes = files.reduce((sum, f) => sum + f.file.size, 0);
+    updateSizeWarning(fileListEl, files.length ? { size: totalBytes } : null);
   }
 
   function addFiles(fileArr){
@@ -2280,11 +2647,15 @@ document.getElementById('langToggle').addEventListener('click', e => {
       await libReady('PDFLib');
       const { PDFDocument } = PDFLib;
       const outDoc = await PDFDocument.create();
+      resetBtnProgress(convertBtn);
+      let mergedCount = 0;
       for(const f of files){
         const bytes = await f.file.arrayBuffer();
         const srcDoc = await PDFDocument.load(bytes);
         const copiedPages = await outDoc.copyPages(srcDoc, srcDoc.getPageIndices());
         copiedPages.forEach(p => outDoc.addPage(p));
+        mergedCount++;
+        setBtnProgress(convertBtn, mergedCount, files.length);
       }
       const pdfBytes = await outDoc.save();
       const blob = new Blob([pdfBytes], { type: 'application/pdf' });
@@ -2293,14 +2664,16 @@ document.getElementById('langToggle').addEventListener('click', e => {
       const name = 'birlesik.pdf';
       resultName.textContent = name;
       downloadBtn.onclick = () => { const a = document.createElement('a'); a.href = blobUrl; a.download = name; a.click(); };
+      addRecentOperation('merge', name, blobUrl);
       result.classList.add('show');
       result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     } catch(err){
-      alert(t.errGeneric + ' (' + err.message + ')');
+      alert(friendlyErrorMessage(err, t.errGeneric));
       console.error(err);
     } finally {
       convertBtn.disabled = false;
       convertBtn.textContent = t.convertBtn;
+      setTimeout(() => resetBtnProgress(convertBtn), 300);
     }
   });
 })();
@@ -2337,6 +2710,7 @@ document.getElementById('langToggle').addEventListener('click', e => {
     currentFile = file;
     singleFileName.textContent = file.name;
     singleFileSize.textContent = formatSize(file.size);
+    updateSizeWarning(singleFile, file);
     singleFile.style.display = 'flex';
     rangeBlock.style.display = 'block';
     actionsRow.style.display = 'flex';
@@ -2394,6 +2768,8 @@ document.getElementById('langToggle').addEventListener('click', e => {
 
       const baseName = currentFile.name.replace(/\.pdf$/i, '');
       const outputs = [];
+      resetBtnProgress(convertBtn);
+      let rangeIdx = 0;
       for(const [a, b] of ranges){
         const outDoc = await PDFDocument.create();
         const indices = [];
@@ -2403,6 +2779,8 @@ document.getElementById('langToggle').addEventListener('click', e => {
         const outBytes = await outDoc.save();
         const label = a === b ? `sayfa-${a}` : `sayfa-${a}-${b}`;
         outputs.push({ name: `${baseName}-${label}.pdf`, bytes: outBytes });
+        rangeIdx++;
+        setBtnProgress(convertBtn, rangeIdx, ranges.length);
       }
 
       if(blobUrl) URL.revokeObjectURL(blobUrl);
@@ -2425,14 +2803,16 @@ document.getElementById('langToggle').addEventListener('click', e => {
         downloadBtn.onclick = () => { const a2 = document.createElement('a'); a2.href = blobUrl; a2.download = zipName; a2.click(); };
       }
 
+      addRecentOperation('split', resultName.textContent, blobUrl);
       result.classList.add('show');
       result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     } catch(err){
-      alert(t.errGeneric + ' (' + err.message + ')');
+      alert(friendlyErrorMessage(err, t.errGeneric));
       console.error(err);
     } finally {
       convertBtn.disabled = false;
       convertBtn.textContent = t.convertBtn;
+      setTimeout(() => resetBtnProgress(convertBtn), 300);
     }
   });
 })();
@@ -2470,6 +2850,7 @@ document.getElementById('langToggle').addEventListener('click', e => {
     currentFile = file;
     singleFileName.textContent = file.name;
     singleFileSize.textContent = formatSize(file.size);
+    updateSizeWarning(singleFile, file);
     singleFile.style.display = 'flex';
     angleBlock.style.display = 'block';
     actionsRow.style.display = 'flex';
@@ -2513,10 +2894,11 @@ document.getElementById('langToggle').addEventListener('click', e => {
       const name = currentFile.name.replace(/\.pdf$/i, '') + '-donduruldu.pdf';
       resultName.textContent = name;
       downloadBtn.onclick = () => { const a = document.createElement('a'); a.href = blobUrl; a.download = name; a.click(); };
+      addRecentOperation('rotate', name, blobUrl);
       result.classList.add('show');
       result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     } catch(err){
-      alert(t.errGeneric + ' (' + err.message + ')');
+      alert(friendlyErrorMessage(err, t.errGeneric));
       console.error(err);
     } finally {
       convertBtn.disabled = false;
@@ -2558,6 +2940,7 @@ document.getElementById('langToggle').addEventListener('click', e => {
     currentFile = file;
     singleFileName.textContent = file.name;
     singleFileSize.textContent = formatSize(file.size);
+    updateSizeWarning(singleFile, file);
     singleFile.style.display = 'flex';
     posBlock.style.display = 'block';
     actionsRow.style.display = 'flex';
@@ -2614,10 +2997,11 @@ document.getElementById('langToggle').addEventListener('click', e => {
       const name = currentFile.name.replace(/\.pdf$/i, '') + '-numarali.pdf';
       resultName.textContent = name;
       downloadBtn.onclick = () => { const a = document.createElement('a'); a.href = blobUrl; a.download = name; a.click(); };
+      addRecentOperation('pagenum', name, blobUrl);
       result.classList.add('show');
       result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     } catch(err){
-      alert(t.errGeneric + ' (' + err.message + ')');
+      alert(friendlyErrorMessage(err, t.errGeneric));
       console.error(err);
     } finally {
       convertBtn.disabled = false;
@@ -2659,6 +3043,7 @@ document.getElementById('langToggle').addEventListener('click', e => {
     currentFile = file;
     singleFileName.textContent = file.name;
     singleFileSize.textContent = formatSize(file.size);
+    updateSizeWarning(singleFile, file);
     singleFile.style.display = 'flex';
     fmtBlock.style.display = 'block';
     actionsRow.style.display = 'flex';
@@ -2696,6 +3081,7 @@ document.getElementById('langToggle').addEventListener('click', e => {
       const baseName = currentFile.name.replace(/\.pdf$/i, '');
       const images = [];
 
+      resetBtnProgress(convertBtn);
       for(let i = 1; i <= pdf.numPages; i++){
         const page = await pdf.getPage(i);
         const viewport = page.getViewport({ scale });
@@ -2709,6 +3095,7 @@ document.getElementById('langToggle').addEventListener('click', e => {
         });
         images.push({ name: `${baseName}-sayfa-${i}.${ext}`, blob: imgBlob });
         canvas.width = 0; canvas.height = 0;
+        setBtnProgress(convertBtn, i, pdf.numPages);
       }
 
       if(blobUrl) URL.revokeObjectURL(blobUrl);
@@ -2728,14 +3115,16 @@ document.getElementById('langToggle').addEventListener('click', e => {
         downloadBtn.onclick = () => { const a = document.createElement('a'); a.href = blobUrl; a.download = zipName; a.click(); };
       }
 
+      addRecentOperation('topng', resultName.textContent, blobUrl);
       result.classList.add('show');
       result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     } catch(err){
-      alert(t.errGeneric + ' (' + err.message + ')');
+      alert(friendlyErrorMessage(err, t.errGeneric));
       console.error(err);
     } finally {
       convertBtn.disabled = false;
       convertBtn.textContent = t.convertBtn;
+      setTimeout(() => resetBtnProgress(convertBtn), 300);
     }
   });
 })();
@@ -2774,6 +3163,7 @@ document.getElementById('langToggle').addEventListener('click', e => {
     currentFile = file;
     singleFileName.textContent = file.name;
     singleFileSize.textContent = formatSize(file.size);
+    updateSizeWarning(singleFile, file);
     singleFile.style.display = 'flex';
     textBlock.style.display = 'block';
     actionsRow.style.display = 'flex';
@@ -2832,10 +3222,11 @@ document.getElementById('langToggle').addEventListener('click', e => {
       const name = currentFile.name.replace(/\.pdf$/i, '') + '-filigranli.pdf';
       resultName.textContent = name;
       downloadBtn.onclick = () => { const a = document.createElement('a'); a.href = blobUrl; a.download = name; a.click(); };
+      addRecentOperation('watermark', name, blobUrl);
       result.classList.add('show');
       result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     } catch(err){
-      alert(t.errGeneric + ' (' + err.message + ')');
+      alert(friendlyErrorMessage(err, t.errGeneric));
       console.error(err);
     } finally {
       convertBtn.disabled = false;
@@ -2843,6 +3234,56 @@ document.getElementById('langToggle').addEventListener('click', e => {
     }
   });
 })();
+</script>
+
+<script>
+/* PWA — Service Worker kaydı ve "Uygulama olarak yükle" bildirimi */
+if('serviceWorker' in navigator){
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  });
+}
+
+let deferredInstallPrompt = null;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  renderInstallPrompt();
+});
+window.addEventListener('appinstalled', () => {
+  deferredInstallPrompt = null;
+  const banner = document.getElementById('installBanner');
+  if(banner) banner.style.display = 'none';
+});
+
+function renderInstallPrompt(){
+  const banner = document.getElementById('installBanner');
+  if(!banner || !deferredInstallPrompt) return;
+  const c = LANG[window.currentLang].common;
+  document.getElementById('installTitle').textContent = c.installTitle;
+  document.getElementById('installDesc').textContent = c.installDesc;
+  document.getElementById('installBtn').textContent = c.installBtn;
+  banner.style.display = 'flex';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const installBtn = document.getElementById('installBtn');
+  const dismissBtn = document.getElementById('installDismiss');
+  if(installBtn){
+    installBtn.addEventListener('click', async () => {
+      if(!deferredInstallPrompt) return;
+      deferredInstallPrompt.prompt();
+      await deferredInstallPrompt.userChoice;
+      deferredInstallPrompt = null;
+      document.getElementById('installBanner').style.display = 'none';
+    });
+  }
+  if(dismissBtn){
+    dismissBtn.addEventListener('click', () => {
+      document.getElementById('installBanner').style.display = 'none';
+    });
+  }
+});
 </script>
 
 </body>
