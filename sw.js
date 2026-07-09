@@ -3,7 +3,7 @@
 // sonra tekrar ziyarette hızlı açılır, internet kesilirse de site yine açılır.
 // Dosyaların kendisi ASLA burada işlenmez/saklanmaz — bu sadece statik dosya önbelleğidir.
 
-const CACHE_VERSION = 'pdfcevir-v1';
+const CACHE_VERSION = 'pdfcevir-v2';
 
 const APP_SHELL = [
   '/',
@@ -11,9 +11,10 @@ const APP_SHELL = [
   '/favicon.svg',
   '/favicon.ico',
   '/site.webmanifest',
-  'https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js',
-  'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js',
-  'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js'
+  '/js/pdf-lib.min.js',
+  '/js/pdf.min.js',
+  '/js/pdf.worker.min.js',
+  '/js/jszip.min.js'
 ];
 
 self.addEventListener('install', event => {
