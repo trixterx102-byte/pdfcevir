@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
+<!-- Erken tema tespiti: yanlış temanın kısa süreliğine görünmesini (FOUC) önler -->
+<script>
+(function(){
+  try{
+    var saved = localStorage.getItem('theme');
+    var theme = saved ? saved : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    if(theme === 'dark'){ document.documentElement.setAttribute('data-theme', 'dark'); }
+  }catch(e){}
+})();
+</script>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-NBJ1WPG3GJ"></script>
 <script>
@@ -87,10 +97,24 @@
     --text: #1B1B1B;
     --text-muted: #5B5B52;
     --radius: 3px;
+
+    /* Kart (sheet) bileşenleri için karanlık mod renkleri.
+       Not: --ink / --paper / --text zaten hem ambient (her zaman koyu) alanlarda
+       hem de kart içinde çift amaçlı kullanıldığından, bunları global olarak
+       değiştirmek ambient alanı bozar. Bu yüzden karanlık modda sadece kart
+       bağlamındaki sınıflar ayrı değişkenlerle geçersiz kılınır. */
+    --dark-card: #1E2740;
+    --dark-card-alt: #262F4C;
+    --dark-text: #F1EDE2;
+    --dark-text-muted: #ACA99C;
+    --dark-line: rgba(245,241,232,0.14);
   }
 
   *{ box-sizing: border-box; }
   html{ scroll-behavior: smooth; }
+
+  html{ color-scheme: light; }
+  html[data-theme="dark"]{ color-scheme: dark; }
 
   body{
     margin:0;
@@ -248,6 +272,34 @@
     color: var(--paper-card);
   }
 
+  /* Tema (açık/koyu) geçiş düğmesi */
+  .theme-toggle{
+    position: fixed;
+    top: 16px;
+    right: 88px;
+    z-index: 50;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(20,33,61,0.55);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(245,241,232,0.18);
+    border-radius: 50%;
+    color: rgba(245,241,232,0.75);
+    cursor: pointer;
+    transition: background .15s ease, color .15s ease, transform .15s ease;
+  }
+  .theme-toggle:hover{ color: var(--paper); background: rgba(245,241,232,0.12); transform: translateY(-1px); }
+  .theme-toggle svg{ width: 15px; height: 15px; }
+  .theme-toggle .icon-sun{ display: none; }
+  html[data-theme="dark"] .theme-toggle .icon-moon{ display: none; }
+  html[data-theme="dark"] .theme-toggle .icon-sun{ display: block; }
+  @media (max-width: 420px){
+    .theme-toggle{ right: 16px; top: 54px; }
+  }
+
   .tabs{
     display:flex;
     justify-content:center;
@@ -292,6 +344,10 @@
     content:"";
     position:absolute; top:0; left:0; right:0; height:4px;
     background: linear-gradient(90deg, var(--gold), var(--stamp) 50%, var(--gold));
+  }
+
+  .sheet, .file-row, .single-file-name, .quality-option, .install-banner, .drop, .result, .note-box{
+    transition: background .2s ease, border-color .2s ease, color .2s ease;
   }
 
   .sheet-inner{ padding: 40px; }
@@ -801,6 +857,85 @@
     text-underline-offset: 2px;
   }
   footer a:hover{ color: var(--paper); }
+
+  /* ===================== Karanlık mod: kart bağlamı geçersiz kılmaları ===================== */
+  html[data-theme="dark"] .sheet{
+    background: var(--dark-card);
+  }
+  html[data-theme="dark"] .tab.active{
+    background: var(--dark-card);
+    border-color: var(--dark-card);
+    color: var(--dark-text);
+  }
+  html[data-theme="dark"] .drop{
+    border-color: var(--dark-line);
+  }
+  html[data-theme="dark"] .drop-title{
+    color: var(--dark-text);
+  }
+  html[data-theme="dark"] .drop-hint{
+    color: var(--dark-text-muted);
+  }
+  html[data-theme="dark"] .file-row,
+  html[data-theme="dark"] .single-file-name,
+  html[data-theme="dark"] .quality-option{
+    background: var(--dark-card-alt);
+    border-color: var(--dark-line);
+  }
+  html[data-theme="dark"] .file-name,
+  html[data-theme="dark"] .single-file-name{
+    color: var(--dark-text);
+  }
+  html[data-theme="dark"] .file-size,
+  html[data-theme="dark"] .file-remove,
+  html[data-theme="dark"] .count-label,
+  html[data-theme="dark"] .privacy-note,
+  html[data-theme="dark"] .quality-option span,
+  html[data-theme="dark"] .size-compare .old-size{
+    color: var(--dark-text-muted);
+  }
+  html[data-theme="dark"] .privacy-note svg path{
+    stroke: var(--dark-text-muted);
+  }
+  html[data-theme="dark"] .file-thumb,
+  html[data-theme="dark"] .result,
+  html[data-theme="dark"] .quality-option{
+    border-color: var(--dark-line);
+  }
+  html[data-theme="dark"] .result{
+    background: repeating-linear-gradient(135deg, transparent, transparent 8px, rgba(245,241,232,0.025) 8px, rgba(245,241,232,0.025) 16px);
+  }
+  html[data-theme="dark"] .result-name{
+    color: var(--dark-text);
+  }
+  html[data-theme="dark"] .quality-option strong{
+    color: var(--dark-text);
+  }
+  html[data-theme="dark"] .quality-option.selected{
+    background: rgba(179,55,44,0.14);
+  }
+  html[data-theme="dark"] .note-box{
+    background: rgba(169,129,46,0.14);
+    border-color: rgba(169,129,46,0.4);
+    color: #E8D9B3;
+  }
+  html[data-theme="dark"] .install-banner{
+    background: var(--dark-card);
+    border-color: var(--dark-line);
+  }
+  html[data-theme="dark"] .install-title{
+    color: var(--dark-text);
+  }
+  html[data-theme="dark"] .install-desc,
+  html[data-theme="dark"] .install-dismiss{
+    color: var(--dark-text-muted);
+  }
+  html[data-theme="dark"] #rangeInput-split,
+  html[data-theme="dark"] #textInput-watermark{
+    background: var(--dark-card-alt) !important;
+    color: var(--dark-text) !important;
+    border-color: var(--dark-line) !important;
+  }
 </style>
 </head>
 <body>
@@ -837,6 +972,11 @@
   </svg>
   pdfcevir
 </div>
+
+<button class="theme-toggle" id="themeToggle" type="button" aria-label="Karanlık/aydınlık mod değiştir">
+  <svg class="icon-moon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  <svg class="icon-sun" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="4.5" stroke="currentColor" stroke-width="1.6"/><path d="M12 2.5V5M12 19V21.5M4.2 4.2L6 6M18 18L19.8 19.8M2.5 12H5M19 12H21.5M4.2 19.8L6 18M18 6L19.8 4.2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+</button>
 
 <div class="lang-toggle" id="langToggle">
   <button data-lang="tr" type="button">TR</button>
@@ -1604,6 +1744,40 @@ document.addEventListener('DOMContentLoaded', () => {
   if(overlay){ overlay.addEventListener('click', closeLightbox); }
   if(closeBtn){ closeBtn.addEventListener('click', e => { e.stopPropagation(); closeLightbox(); }); }
 });
+
+/* ===================== Karanlık / aydınlık mod ===================== */
+(function(){
+  const root = document.documentElement;
+  const toggleBtn = document.getElementById('themeToggle');
+  const metaTheme = document.querySelector('meta[name="theme-color"]');
+
+  function setTheme(theme){
+    if(theme === 'dark'){
+      root.setAttribute('data-theme', 'dark');
+      if(metaTheme) metaTheme.setAttribute('content', '#1E2740');
+    }else{
+      root.removeAttribute('data-theme');
+      if(metaTheme) metaTheme.setAttribute('content', '#14213D');
+    }
+    try{ localStorage.setItem('theme', theme); }catch(e){}
+  }
+
+  if(toggleBtn){
+    toggleBtn.addEventListener('click', () => {
+      const isDark = root.getAttribute('data-theme') === 'dark';
+      setTheme(isDark ? 'light' : 'dark');
+    });
+  }
+
+  // Kullanıcı daha önce elle seçim yapmadıysa sistem tercihi değiştiğinde takip et
+  if(window.matchMedia){
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+      let saved = null;
+      try{ saved = localStorage.getItem('theme'); }catch(err){}
+      if(!saved){ setTheme(e.matches ? 'dark' : 'light'); }
+    });
+  }
+})();
 
 /* Klavye kısayolları: Enter = dönüştür, Esc = seçili dosyayı kaldır / lightbox'ı kapat */
 document.addEventListener('keydown', e => {
