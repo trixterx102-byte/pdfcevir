@@ -807,6 +807,67 @@
   }
   .single-file-name .file-size{ margin-left:auto; }
 
+  /* Sıkıştırma önizleme paneli — kalite seviyesine göre anlık güncellenir */
+  .compress-preview{
+    margin-top: 20px;
+    padding: 14px 14px 16px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+  .compress-preview-row{
+    display:flex;
+    gap: 14px;
+    margin-top: 10px;
+  }
+  @media (max-width: 560px){ .compress-preview-row{ flex-direction: column; } }
+  .compress-preview-col{
+    flex:1;
+    display:flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items:center;
+    min-width: 0;
+  }
+  .compress-preview-tag{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.02em;
+    color: var(--text-muted);
+  }
+  .compress-preview-frame{
+    width:100%;
+    aspect-ratio: 3/4;
+    border-radius: 2px;
+    border: 1px solid var(--line);
+    background: var(--paper-card);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+  }
+  .compress-preview-frame img{
+    max-width:100%;
+    max-height:100%;
+    display:block;
+  }
+  .compress-preview-frame.loading::after{
+    content:'';
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    border: 2px solid var(--line);
+    border-top-color: var(--stamp);
+    animation: spin .8s linear infinite;
+  }
+  @keyframes spin{ to{ transform: rotate(360deg); } }
+  .compress-preview-estimate{
+    margin: 12px 0 0;
+    font-size: 12.5px;
+    color: var(--text-muted);
+    text-align:center;
+  }
+  .compress-preview-estimate strong{ color: var(--stamp); font-weight:600; }
+
   /* Footer / how-to */
   .how-to{
     max-width: 640px;
@@ -878,9 +939,18 @@
   }
   html[data-theme="dark"] .file-row,
   html[data-theme="dark"] .single-file-name,
-  html[data-theme="dark"] .quality-option{
+  html[data-theme="dark"] .quality-option,
+  html[data-theme="dark"] .compress-preview{
     background: var(--dark-card-alt);
     border-color: var(--dark-line);
+  }
+  html[data-theme="dark"] .compress-preview-frame{
+    background: var(--dark-card);
+    border-color: var(--dark-line);
+  }
+  html[data-theme="dark"] .compress-preview-tag,
+  html[data-theme="dark"] .compress-preview-estimate{
+    color: var(--dark-text-muted);
   }
   html[data-theme="dark"] .file-name,
   html[data-theme="dark"] .single-file-name{
@@ -1105,6 +1175,7 @@
         </div>
 
         <div class="single-file-name" id="singleFile-compress" style="display:none;">
+          <img class="file-thumb" id="thumb-compress" style="display:none;" alt="">
           <span id="singleFileName-compress">belge.pdf</span>
           <span class="file-size" id="singleFileSize-compress"></span>
           <button class="file-remove" id="singleFileRemove-compress" aria-label="Kaldır">✕</button>
@@ -1126,6 +1197,25 @@
               <span id="qMaxDesc-compress">En küçük boyut</span>
             </div>
           </div>
+        </div>
+
+        <div class="compress-preview" id="previewBlock-compress" style="display:none;">
+          <p class="quality-label" id="previewLabel-compress">Önizleme (1. sayfa)</p>
+          <div class="compress-preview-row">
+            <div class="compress-preview-col">
+              <span class="compress-preview-tag" id="previewOrigTag-compress">ORİJİNAL</span>
+              <div class="compress-preview-frame" id="previewOrigFrame-compress">
+                <img id="previewOrigImg-compress" alt="">
+              </div>
+            </div>
+            <div class="compress-preview-col">
+              <span class="compress-preview-tag" id="previewCompTag-compress">SIKIŞTIRILMIŞ (TAHMİNİ)</span>
+              <div class="compress-preview-frame" id="previewCompFrame-compress">
+                <img id="previewCompImg-compress" alt="">
+              </div>
+            </div>
+          </div>
+          <p class="compress-preview-estimate" id="previewEstimate-compress"></p>
         </div>
 
         <div class="actions" id="actionsRow-compress" style="display:none;">
@@ -1189,6 +1279,7 @@
         </div>
 
         <div class="single-file-name" id="singleFile-word" style="display:none;">
+          <img class="file-thumb" id="thumb-word" style="display:none;" alt="">
           <span id="singleFileName-word">belge.pdf</span>
           <span class="file-size" id="singleFileSize-word"></span>
           <button class="file-remove" id="singleFileRemove-word" aria-label="Kaldır">✕</button>
@@ -1299,6 +1390,7 @@
         </div>
 
         <div class="single-file-name" id="singleFile-split" style="display:none;">
+          <img class="file-thumb" id="thumb-split" style="display:none;" alt="">
           <span id="singleFileName-split">belge.pdf</span>
           <span class="file-size" id="singleFileSize-split"></span>
           <button class="file-remove" id="singleFileRemove-split" aria-label="Kaldır">✕</button>
@@ -1361,6 +1453,7 @@
         </div>
 
         <div class="single-file-name" id="singleFile-rotate" style="display:none;">
+          <img class="file-thumb" id="thumb-rotate" style="display:none;" alt="">
           <span id="singleFileName-rotate">belge.pdf</span>
           <span class="file-size" id="singleFileSize-rotate"></span>
           <button class="file-remove" id="singleFileRemove-rotate" aria-label="Kaldır">✕</button>
@@ -1431,6 +1524,7 @@
         </div>
 
         <div class="single-file-name" id="singleFile-pagenum" style="display:none;">
+          <img class="file-thumb" id="thumb-pagenum" style="display:none;" alt="">
           <span id="singleFileName-pagenum">belge.pdf</span>
           <span class="file-size" id="singleFileSize-pagenum"></span>
           <button class="file-remove" id="singleFileRemove-pagenum" aria-label="Kaldır">✕</button>
@@ -1498,6 +1592,7 @@
         </div>
 
         <div class="single-file-name" id="singleFile-topng" style="display:none;">
+          <img class="file-thumb" id="thumb-topng" style="display:none;" alt="">
           <span id="singleFileName-topng">belge.pdf</span>
           <span class="file-size" id="singleFileSize-topng"></span>
           <button class="file-remove" id="singleFileRemove-topng" aria-label="Kaldır">✕</button>
@@ -1569,6 +1664,7 @@
         </div>
 
         <div class="single-file-name" id="singleFile-watermark" style="display:none;">
+          <img class="file-thumb" id="thumb-watermark" style="display:none;" alt="">
           <span id="singleFileName-watermark">belge.pdf</span>
           <span class="file-size" id="singleFileSize-watermark"></span>
           <button class="file-remove" id="singleFileRemove-watermark" aria-label="Kaldır">✕</button>
@@ -1691,6 +1787,60 @@ function friendlyErrorMessage(err, fallback){
   if(msg.includes('encrypt') || msg.includes('password')) return c.errEncrypted;
   if(msg.includes('invalid') || msg.includes('corrupt') || msg.includes('parse')) return c.errCorrupt;
   return fallback + ' (' + (err && err.message || err) + ')';
+}
+
+/* PDF ilk sayfasını küçük bir thumbnail'e (data URL) render eder.
+   Şifreli/bozuk PDF gibi durumlarda sessizce null döner — thumbnail olmadan devam edilir. */
+async function renderPdfThumbDataUrl(file, maxDim){
+  if(!file || file.type !== 'application/pdf') return null;
+  try{
+    await pdfjsReady();
+    const bytes = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: bytes }).promise;
+    const page = await pdf.getPage(1);
+    const base = page.getViewport({ scale: 1 });
+    const scale = maxDim / Math.max(base.width, base.height);
+    const viewport = page.getViewport({ scale });
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.max(1, Math.round(viewport.width));
+    canvas.height = Math.max(1, Math.round(viewport.height));
+    const ctx = canvas.getContext('2d');
+    await page.render({ canvasContext: ctx, viewport }).promise;
+    const dataUrl = canvas.toDataURL('image/jpeg', 0.78);
+    canvas.width = 0; canvas.height = 0;
+    return dataUrl;
+  }catch(err){
+    return null;
+  }
+}
+
+/* Tekli dosya kartındaki (singleFile-*) küçük PDF önizlemesini doldurur.
+   Hızlı dosya değişimlerinde eski render'ın geç gelip yeni dosyanın üzerine
+   yazmasını önlemek için elemente bir istek numarası (token) damgalanır. */
+function renderPdfCardThumb(file, imgEl){
+  if(!imgEl) return;
+  imgEl.style.display = 'none';
+  imgEl.removeAttribute('src');
+  imgEl.onclick = null;
+  if(!file) return;
+  const token = (imgEl._thumbToken = (imgEl._thumbToken || 0) + 1);
+  renderPdfThumbDataUrl(file, 90).then(dataUrl => {
+    if(!dataUrl || imgEl._thumbToken !== token) return;
+    imgEl.src = dataUrl;
+    imgEl.alt = file.name;
+    imgEl.style.display = 'block';
+    imgEl.onclick = () => openLightbox(dataUrl, file.name);
+  });
+}
+
+/* Tekli dosya kaldırıldığında/reset'te thumbnail'i gizler ve bekleyen
+   (henüz tamamlanmamış) render isteğini geçersiz kılar. */
+function clearPdfCardThumb(imgEl){
+  if(!imgEl) return;
+  imgEl._thumbToken = (imgEl._thumbToken || 0) + 1;
+  imgEl.style.display = 'none';
+  imgEl.removeAttribute('src');
+  imgEl.onclick = null;
 }
 
 /* Önizleme büyütme (lightbox) */
@@ -1844,6 +1994,11 @@ const LANG = {
       qHigh: { t: "Hafif", d: "Az küçülür, kalite yüksek" },
       qMedium: { t: "Dengeli", d: "Önerilen seçenek" },
       qMax: { t: "Maksimum", d: "En küçük boyut" },
+      previewLabel: "Önizleme (1. sayfa)",
+      previewOrigTag: "ORİJİNAL",
+      previewCompTag: "SIKIŞTIRILMIŞ (TAHMİNİ)",
+      previewLoading: "Önizleme hazırlanıyor...",
+      previewEstimate: pct => pct > 0 ? `Tahmini dosya boyutu <strong>%${pct} küçülecek</strong>. Gerçek sonuç, PDF içeriğine göre değişebilir.` : "Bu belge için ek bir küçülme beklenmiyor.",
       count: () => "1 dosya seçildi",
       convertBtn: "PDF'i Sıkıştır", convertBtnLoading: "Sıkıştırılıyor...",
       stampBadge: "✓ PDF HAZIR", downloadBtn: "PDF'i İndir",
@@ -1996,6 +2151,11 @@ const LANG = {
       qHigh: { t: "Light", d: "Shrinks less, keeps quality" },
       qMedium: { t: "Balanced", d: "Recommended option" },
       qMax: { t: "Maximum", d: "Smallest file size" },
+      previewLabel: "Preview (page 1)",
+      previewOrigTag: "ORIGINAL",
+      previewCompTag: "COMPRESSED (ESTIMATED)",
+      previewLoading: "Preparing preview...",
+      previewEstimate: pct => pct > 0 ? `Estimated file size will <strong>shrink by ${pct}%</strong>. The actual result depends on the PDF's content.` : "No further shrinking is expected for this document.",
       count: () => "1 file selected",
       convertBtn: "Compress PDF", convertBtnLoading: "Compressing...",
       stampBadge: "✓ PDF READY", downloadBtn: "Download PDF",
@@ -2148,6 +2308,9 @@ function applyLanguage(lang){
   document.getElementById('qMediumDesc-compress').textContent = L.compress.qMedium.d;
   document.getElementById('qMaxTitle-compress').textContent = L.compress.qMax.t;
   document.getElementById('qMaxDesc-compress').textContent = L.compress.qMax.d;
+  document.getElementById('previewLabel-compress').textContent = L.compress.previewLabel;
+  document.getElementById('previewOrigTag-compress').textContent = L.compress.previewOrigTag;
+  document.getElementById('previewCompTag-compress').textContent = L.compress.previewCompTag;
   document.getElementById('convertBtn-compress').textContent = L.compress.convertBtn;
   document.getElementById('stampBadge-compress').textContent = L.compress.stampBadge;
   document.getElementById('downloadBtn-compress').textContent = L.compress.downloadBtn;
@@ -2470,6 +2633,12 @@ document.getElementById('langToggle').addEventListener('click', e => {
   const singleFileRemove = document.getElementById('singleFileRemove-compress');
   const qualityBlock = document.getElementById('qualityBlock-compress');
   const qualityOptions = qualityBlock.querySelectorAll('.quality-option');
+  const previewBlock = document.getElementById('previewBlock-compress');
+  const previewOrigFrame = document.getElementById('previewOrigFrame-compress');
+  const previewCompFrame = document.getElementById('previewCompFrame-compress');
+  const previewOrigImg = document.getElementById('previewOrigImg-compress');
+  const previewCompImg = document.getElementById('previewCompImg-compress');
+  const previewEstimate = document.getElementById('previewEstimate-compress');
   const actionsRow = document.getElementById('actionsRow-compress');
   const convertBtn = document.getElementById('convertBtn-compress');
   const result = document.getElementById('result-compress');
@@ -2488,11 +2657,88 @@ document.getElementById('langToggle').addEventListener('click', e => {
   let currentFile = null;
   let selectedLevel = 'medium';
   let blobUrl = null;
+  let previewToken = 0;
+  let previewBlobUrl = null;
+
+  /* Sıkıştırma öncesi, seçili kalite seviyesiyle 1. sayfayı anlık olarak
+     render edip önizleme ve tahmini dosya boyutunu gösterir. Ağır bir işlem
+     değildir çünkü sadece 1 sayfa işlenir, tüm PDF değil. */
+  async function updateCompressPreview(){
+    if(!currentFile) return;
+    const t = LANG[window.currentLang].compress;
+    const token = ++previewToken;
+    previewBlock.style.display = 'block';
+    previewOrigFrame.classList.add('loading');
+    previewCompFrame.classList.add('loading');
+    previewOrigImg.style.display = 'none';
+    previewCompImg.style.display = 'none';
+    previewEstimate.textContent = t.previewLoading;
+    try{
+      await Promise.all([pdfjsReady(), libReady('PDFLib')]);
+      if(token !== previewToken) return;
+      const bytes = await currentFile.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: bytes.slice(0) }).promise;
+      const page = await pdf.getPage(1);
+      if(token !== previewToken) return;
+
+      // Orijinal referans render (scale 1) — boyut tahmini bunun üzerinden hesaplanır
+      const baseViewport = page.getViewport({ scale: 1 });
+      const origCanvas = document.createElement('canvas');
+      origCanvas.width = Math.max(1, Math.round(baseViewport.width));
+      origCanvas.height = Math.max(1, Math.round(baseViewport.height));
+      const origCtx = origCanvas.getContext('2d');
+      await page.render({ canvasContext: origCtx, viewport: baseViewport }).promise;
+      const origRefBytes = await new Promise(resolve => {
+        origCanvas.toBlob(b => resolve(b ? b.size : 0), 'image/png');
+      });
+      const origDisplayUrl = origCanvas.toDataURL('image/jpeg', 0.85);
+      origCanvas.width = 0; origCanvas.height = 0;
+      if(token !== previewToken) return;
+
+      // Seçili kalite seviyesiyle sıkıştırılmış render (gerçek sıkıştırma fonksiyonuyla aynı mantık)
+      const { scale, quality } = LEVELS[selectedLevel];
+      const compViewport = page.getViewport({ scale });
+      const compCanvas = document.createElement('canvas');
+      compCanvas.width = Math.max(1, Math.round(compViewport.width));
+      compCanvas.height = Math.max(1, Math.round(compViewport.height));
+      const compCtx = compCanvas.getContext('2d');
+      await page.render({ canvasContext: compCtx, viewport: compViewport }).promise;
+      const compBlob = await new Promise((resolve, reject) => {
+        compCanvas.toBlob(b => b ? resolve(b) : reject(new Error('Canvas boş döndü')), 'image/jpeg', quality);
+      });
+      compCanvas.width = 0; compCanvas.height = 0;
+      if(token !== previewToken) return;
+
+      if(previewBlobUrl) URL.revokeObjectURL(previewBlobUrl);
+      previewBlobUrl = URL.createObjectURL(compBlob);
+
+      previewOrigImg.src = origDisplayUrl;
+      previewOrigImg.style.display = 'block';
+      previewCompImg.src = previewBlobUrl;
+      previewCompImg.style.display = 'block';
+
+      const ratio = origRefBytes > 0 ? Math.min(1, compBlob.size / origRefBytes) : 1;
+      const estimatedBytes = Math.round(currentFile.size * ratio);
+      const savedPct = Math.max(0, Math.round((1 - ratio) * 100));
+      previewEstimate.innerHTML = t.previewEstimate(savedPct, formatSize(estimatedBytes));
+    } catch(err){
+      if(token === previewToken) previewBlock.style.display = 'none';
+      console.error(err);
+    } finally {
+      if(token === previewToken){
+        previewOrigFrame.classList.remove('loading');
+        previewCompFrame.classList.remove('loading');
+      }
+    }
+  }
 
   function reset(){
     currentFile = null;
+    previewToken++;
+    clearPdfCardThumb(document.getElementById('thumb-compress'));
     singleFile.style.display = 'none';
     qualityBlock.style.display = 'none';
+    previewBlock.style.display = 'none';
     actionsRow.style.display = 'none';
     result.classList.remove('show');
   }
@@ -2504,9 +2750,11 @@ document.getElementById('langToggle').addEventListener('click', e => {
     singleFileSize.textContent = formatSize(file.size);
     updateSizeWarning(singleFile, file);
     singleFile.style.display = 'flex';
+    renderPdfCardThumb(file, document.getElementById('thumb-compress'));
     qualityBlock.style.display = 'block';
     actionsRow.style.display = 'flex';
     result.classList.remove('show');
+    updateCompressPreview();
   }
 
   drop.addEventListener('click', () => fileInput.click());
@@ -2522,6 +2770,7 @@ document.getElementById('langToggle').addEventListener('click', e => {
       qualityOptions.forEach(o => o.classList.remove('selected'));
       opt.classList.add('selected');
       selectedLevel = opt.dataset.level;
+      updateCompressPreview();
     });
   });
 
@@ -2613,6 +2862,7 @@ document.getElementById('langToggle').addEventListener('click', e => {
 
   function reset(){
     currentFile = null;
+    clearPdfCardThumb(document.getElementById('thumb-word'));
     singleFile.style.display = 'none';
     actionsRow.style.display = 'none';
     result.classList.remove('show');
@@ -2625,6 +2875,7 @@ document.getElementById('langToggle').addEventListener('click', e => {
     singleFileSize.textContent = formatSize(file.size);
     updateSizeWarning(singleFile, file);
     singleFile.style.display = 'flex';
+    renderPdfCardThumb(file, document.getElementById('thumb-word'));
     actionsRow.style.display = 'flex';
     result.classList.remove('show');
   }
@@ -2771,12 +3022,31 @@ document.getElementById('langToggle').addEventListener('click', e => {
       const li = document.createElement('li');
       li.className = 'file-row';
       li.innerHTML = `
+        <img class="file-thumb" id="mergeThumb-${f.id}" style="display:none;" alt="">
         <span class="file-num">${String(i+1).padStart(2,'0')}</span>
         <span class="file-name">${f.file.name}</span>
         <span class="file-size">${formatSize(f.file.size)}</span>
         <button class="file-remove" data-id="${f.id}" aria-label="Kaldır">✕</button>
       `;
       fileListEl.appendChild(li);
+      const thumbImg = li.querySelector(`#mergeThumb-${f.id}`);
+      if(f.thumbUrl){
+        thumbImg.src = f.thumbUrl;
+        thumbImg.alt = f.file.name;
+        thumbImg.style.display = 'block';
+        thumbImg.onclick = () => openLightbox(f.thumbUrl, f.file.name);
+      } else {
+        renderPdfThumbDataUrl(f.file, 90).then(dataUrl => {
+          if(!dataUrl) return;
+          f.thumbUrl = dataUrl;
+          const el = document.getElementById(`mergeThumb-${f.id}`);
+          if(!el) return; // liste bu arada değişmiş olabilir
+          el.src = dataUrl;
+          el.alt = f.file.name;
+          el.style.display = 'block';
+          el.onclick = () => openLightbox(dataUrl, f.file.name);
+        });
+      }
     });
     actionsRow.style.display = files.length ? 'flex' : 'none';
     countLabel.textContent = LANG[window.currentLang].merge.count(files.length);
@@ -2873,6 +3143,7 @@ document.getElementById('langToggle').addEventListener('click', e => {
 
   function reset(){
     currentFile = null;
+    clearPdfCardThumb(document.getElementById('thumb-split'));
     singleFile.style.display = 'none';
     rangeBlock.style.display = 'none';
     actionsRow.style.display = 'none';
@@ -2886,6 +3157,7 @@ document.getElementById('langToggle').addEventListener('click', e => {
     singleFileSize.textContent = formatSize(file.size);
     updateSizeWarning(singleFile, file);
     singleFile.style.display = 'flex';
+    renderPdfCardThumb(file, document.getElementById('thumb-split'));
     rangeBlock.style.display = 'block';
     actionsRow.style.display = 'flex';
     result.classList.remove('show');
@@ -3013,6 +3285,7 @@ document.getElementById('langToggle').addEventListener('click', e => {
 
   function reset(){
     currentFile = null;
+    clearPdfCardThumb(document.getElementById('thumb-rotate'));
     singleFile.style.display = 'none';
     angleBlock.style.display = 'none';
     actionsRow.style.display = 'none';
@@ -3026,6 +3299,7 @@ document.getElementById('langToggle').addEventListener('click', e => {
     singleFileSize.textContent = formatSize(file.size);
     updateSizeWarning(singleFile, file);
     singleFile.style.display = 'flex';
+    renderPdfCardThumb(file, document.getElementById('thumb-rotate'));
     angleBlock.style.display = 'block';
     actionsRow.style.display = 'flex';
     result.classList.remove('show');
@@ -3103,6 +3377,7 @@ document.getElementById('langToggle').addEventListener('click', e => {
 
   function reset(){
     currentFile = null;
+    clearPdfCardThumb(document.getElementById('thumb-pagenum'));
     singleFile.style.display = 'none';
     posBlock.style.display = 'none';
     actionsRow.style.display = 'none';
@@ -3116,6 +3391,7 @@ document.getElementById('langToggle').addEventListener('click', e => {
     singleFileSize.textContent = formatSize(file.size);
     updateSizeWarning(singleFile, file);
     singleFile.style.display = 'flex';
+    renderPdfCardThumb(file, document.getElementById('thumb-pagenum'));
     posBlock.style.display = 'block';
     actionsRow.style.display = 'flex';
     result.classList.remove('show');
@@ -3206,6 +3482,7 @@ document.getElementById('langToggle').addEventListener('click', e => {
 
   function reset(){
     currentFile = null;
+    clearPdfCardThumb(document.getElementById('thumb-topng'));
     singleFile.style.display = 'none';
     fmtBlock.style.display = 'none';
     actionsRow.style.display = 'none';
@@ -3219,6 +3496,7 @@ document.getElementById('langToggle').addEventListener('click', e => {
     singleFileSize.textContent = formatSize(file.size);
     updateSizeWarning(singleFile, file);
     singleFile.style.display = 'flex';
+    renderPdfCardThumb(file, document.getElementById('thumb-topng'));
     fmtBlock.style.display = 'block';
     actionsRow.style.display = 'flex';
     result.classList.remove('show');
@@ -3326,6 +3604,7 @@ document.getElementById('langToggle').addEventListener('click', e => {
 
   function reset(){
     currentFile = null;
+    clearPdfCardThumb(document.getElementById('thumb-watermark'));
     singleFile.style.display = 'none';
     textBlock.style.display = 'none';
     actionsRow.style.display = 'none';
@@ -3339,6 +3618,7 @@ document.getElementById('langToggle').addEventListener('click', e => {
     singleFileSize.textContent = formatSize(file.size);
     updateSizeWarning(singleFile, file);
     singleFile.style.display = 'flex';
+    renderPdfCardThumb(file, document.getElementById('thumb-watermark'));
     textBlock.style.display = 'block';
     actionsRow.style.display = 'flex';
     result.classList.remove('show');
