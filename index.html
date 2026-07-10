@@ -609,6 +609,153 @@
     outline-offset: 2px;
   }
 
+  /* ===================== Görsel düzenleme paneli =====================
+     Yüklenen dosyalar / canlı önizleme / önizleme araçları — 3 sütun. */
+  .img-editor{
+    display:grid;
+    grid-template-columns: 1.05fr 1.55fr 1fr;
+    gap: 16px;
+    margin-top: 24px;
+  }
+  @media (max-width: 760px){
+    .img-editor{ grid-template-columns: 1fr; }
+  }
+  .img-editor-col{ min-width:0; }
+  .img-editor-heading{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin: 0 0 10px;
+  }
+  .img-editor-files .filelist{ margin-top:0; max-height: 380px; overflow-y:auto; padding-right: 2px; }
+  .img-editor-files .file-row{ cursor:pointer; transition: border-color .15s ease, background .15s ease; }
+  .img-editor-files .file-row.selected{ border-color: var(--stamp); background: rgba(179,55,44,0.05); }
+
+  .img-editor-preview{
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 14px;
+    display:flex;
+    flex-direction:column;
+  }
+  .img-editor-canvas-wrap{
+    flex:1;
+    min-height: 230px;
+    border-radius: 2px;
+    border: 1px solid var(--line);
+    background: var(--paper-card);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:auto;
+    padding: 10px;
+  }
+  .img-editor-canvas-wrap.page-mode{
+    background: repeating-linear-gradient(135deg, transparent, transparent 8px, rgba(20,33,61,0.025) 8px, rgba(20,33,61,0.025) 16px);
+  }
+  .img-editor-page-frame{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:100%;
+  }
+  .img-editor-page-frame.is-page{
+    aspect-ratio: 595 / 842;
+    background: var(--paper-card);
+    border: 1px solid var(--line);
+    box-shadow: 0 4px 16px rgba(20,33,61,0.12);
+    padding: 6%;
+    width: 200px;
+    flex-shrink:0;
+    overflow:hidden;
+  }
+  .img-editor-canvas-wrap img{
+    max-width:100%;
+    max-height: 260px;
+    display:block;
+    transition: transform .18s ease, filter .15s ease;
+  }
+  .img-editor-page-frame.is-page img{ max-height:none; height:auto; width:100%; }
+  .img-editor-empty{
+    font-size: 12.5px;
+    color: var(--text-muted);
+    text-align:center;
+  }
+
+  .img-editor-quality{ margin-top: 12px; }
+  .img-editor-quality-row{
+    display:flex;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+  .img-editor-quality-row strong{ color: var(--ink); font-weight:600; }
+  .img-editor-quality input[type=range]{
+    width:100%;
+    accent-color: var(--stamp);
+  }
+
+  .img-editor-page-toggle{
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 14px;
+    font-size: 12.5px;
+    color: var(--text-muted);
+  }
+  .switch{ position:relative; width: 36px; height: 20px; flex-shrink:0; }
+  .switch input{ position:absolute; opacity:0; width:0; height:0; }
+  .switch-track{
+    position:absolute; inset:0;
+    background: var(--line);
+    border-radius: 20px;
+    cursor:pointer;
+    transition: background .15s ease;
+  }
+  .switch-track::before{
+    content:'';
+    position:absolute;
+    width:14px; height:14px;
+    left:3px; top:3px;
+    background: var(--paper-card);
+    border-radius:50%;
+    transition: transform .15s ease;
+  }
+  .switch input:checked + .switch-track{ background: var(--stamp); }
+  .switch input:checked + .switch-track::before{ transform: translateX(16px); }
+
+  .img-editor-tools{ display:flex; flex-direction:column; gap: 8px; }
+  .img-editor-tool-btn{
+    display:flex;
+    align-items:center;
+    gap: 8px;
+    width:100%;
+    text-align:left;
+    padding: 10px 12px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size: 13px;
+    color: var(--text);
+    cursor:pointer;
+    transition: border-color .15s ease, background .15s ease;
+  }
+  .img-editor-tool-btn:hover{ border-color: var(--gold); }
+  .img-editor-tool-btn.active{ border-color: var(--stamp); background: rgba(179,55,44,0.06); color: var(--stamp); }
+  .img-editor-tool-btn .tool-value{
+    margin-left:auto;
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
   .size-warning{
     display:flex;
     align-items:center;
@@ -989,6 +1136,28 @@
     border-color: rgba(169,129,46,0.4);
     color: #E8D9B3;
   }
+  html[data-theme="dark"] .img-editor-preview,
+  html[data-theme="dark"] .img-editor-tool-btn{
+    background: var(--dark-card-alt);
+    border-color: var(--dark-line);
+    color: var(--dark-text);
+  }
+  html[data-theme="dark"] .img-editor-canvas-wrap,
+  html[data-theme="dark"] .img-editor-page-frame.is-page{
+    background: var(--dark-card);
+    border-color: var(--dark-line);
+  }
+  html[data-theme="dark"] .img-editor-heading,
+  html[data-theme="dark"] .img-editor-quality-row,
+  html[data-theme="dark"] .img-editor-page-toggle,
+  html[data-theme="dark"] .img-editor-empty{
+    color: var(--dark-text-muted);
+  }
+  html[data-theme="dark"] .img-editor-quality-row strong{ color: var(--dark-text); }
+  html[data-theme="dark"] .img-editor-files .file-row.selected{
+    background: rgba(179,55,44,0.16);
+  }
+  html[data-theme="dark"] .switch-track{ background: var(--dark-line); }
   html[data-theme="dark"] .install-banner{
     background: var(--dark-card);
     border-color: var(--dark-line);
@@ -1124,7 +1293,52 @@
           <input type="file" id="fileInput-jpg" accept="image/jpeg,image/png,image/webp" multiple>
         </div>
 
-        <ul class="filelist" id="fileList-jpg"></ul>
+        <div class="img-editor" id="imgEditor-jpg" style="display:none;">
+          <div class="img-editor-col img-editor-files">
+            <p class="img-editor-heading" id="filesHeading-jpg">Yüklenen Dosyalar</p>
+            <ul class="filelist" id="fileListEditor-jpg"></ul>
+          </div>
+
+          <div class="img-editor-col img-editor-preview">
+            <p class="img-editor-heading" id="previewHeading-jpg">Canlı Önizleme</p>
+            <div class="img-editor-canvas-wrap" id="previewCanvasWrap-jpg">
+              <div class="img-editor-page-frame" id="previewFrame-jpg">
+                <img id="previewImg-jpg" alt="" style="display:none;">
+              </div>
+              <span class="img-editor-empty" id="previewEmpty-jpg">Önizlemek için soldan bir dosya seç</span>
+            </div>
+            <div class="img-editor-quality">
+              <div class="img-editor-quality-row">
+                <span id="qualityCurrentLabel-jpg">Kalite: <strong>100%</strong> (Orijinal)</span>
+                <span id="qualityNewSizeLabel-jpg">Tahmini boyut: —</span>
+              </div>
+              <input type="range" id="qualitySlider-jpg" min="30" max="100" step="5" value="100">
+            </div>
+            <label class="img-editor-page-toggle" for="pageModeToggle-jpg">
+              <span id="pageModeLabel-jpg">PDF sayfa önizlemesini göster</span>
+              <span class="switch">
+                <input type="checkbox" id="pageModeToggle-jpg">
+                <span class="switch-track"></span>
+              </span>
+            </label>
+          </div>
+
+          <div class="img-editor-col img-editor-tools">
+            <p class="img-editor-heading" id="toolsHeading-jpg">Önizleme Araçları</p>
+            <button class="img-editor-tool-btn" id="zoomBtn-jpg" type="button">
+              <span id="zoomBtnLabel-jpg">Yakınlaştır</span>
+              <span class="tool-value" id="zoomBtnValue-jpg">100%</span>
+            </button>
+            <button class="img-editor-tool-btn" id="rotateBtn-jpg" type="button">
+              <span id="rotateBtnLabel-jpg">Döndür</span>
+              <span class="tool-value" id="rotateBtnValue-jpg">0°</span>
+            </button>
+            <button class="img-editor-tool-btn" id="grayscaleBtn-jpg" type="button">
+              <span id="grayscaleBtnLabel-jpg">Siyah-Beyaz</span>
+              <span class="tool-value" id="grayscaleBtnValue-jpg">Kapalı</span>
+            </button>
+          </div>
+        </div>
 
         <div class="actions" id="actionsRow-jpg" style="display:none;">
           <span class="count-label" id="countLabel-jpg">0 dosya seçildi</span>
@@ -1985,7 +2199,22 @@ const LANG = {
       privacyNote: "Dosyaların hiçbir sunucuya yüklenmez. Dönüştürme işlemi tamamen kendi tarayıcında, cihazında gerçekleşir.",
       howToTitle: "Nasıl çalışır",
       steps: ["Bir veya birden fazla resim seç ya da sürükle bırak.", 'Sırayı istersen düzenle, "PDF Oluştur"a bas.', "Hazır olan PDF'i tek tıkla indir, kullanmaya başla."],
-      errGeneric: "Bir şeyler ters gitti, lütfen tekrar dene."
+      errGeneric: "Bir şeyler ters gitti, lütfen tekrar dene.",
+      filesHeading: "Yüklenen Dosyalar",
+      previewHeading: "Canlı Önizleme",
+      toolsHeading: "Önizleme Araçları",
+      previewEmpty: "Önizlemek için soldan bir dosya seç",
+      pageModeLabel: "PDF sayfa önizlemesini göster",
+      zoomLabel: "Yakınlaştır",
+      rotateLabel: "Döndür",
+      grayscaleLabel: "Siyah-Beyaz",
+      grayscaleOn: "Açık",
+      grayscaleOff: "Kapalı",
+      qualityOriginal: "Orijinal",
+      qGood: "İyi", qMedium: "Orta", qLow: "Düşük",
+      qualityCurrent: (pct, tag) => `Kalite: <strong>${pct}%</strong> (${tag})`,
+      estimateSize: size => `Tahmini boyut: <strong>~${size}</strong>`,
+      estimateNA: "Tahmini boyut: —"
     },
     compress: {
       dropTitle: "PDF'ini buraya bırak",
@@ -2142,7 +2371,22 @@ const LANG = {
       privacyNote: "Your files are never uploaded to a server. Conversion happens entirely in your own browser, on your device.",
       howToTitle: "How it works",
       steps: ["Choose one or more images, or drag and drop.", 'Reorder if you like, then hit "Create PDF".', "Download the finished PDF in one tap and you're set."],
-      errGeneric: "Something went wrong, please try again."
+      errGeneric: "Something went wrong, please try again.",
+      filesHeading: "Uploaded Files",
+      previewHeading: "Live Preview",
+      toolsHeading: "Preview Tools",
+      previewEmpty: "Select a file on the left to preview it",
+      pageModeLabel: "Show PDF page preview",
+      zoomLabel: "Zoom",
+      rotateLabel: "Rotate",
+      grayscaleLabel: "Grayscale",
+      grayscaleOn: "On",
+      grayscaleOff: "Off",
+      qualityOriginal: "Original",
+      qGood: "Good", qMedium: "Medium", qLow: "Low",
+      qualityCurrent: (pct, tag) => `Quality: <strong>${pct}%</strong> (${tag})`,
+      estimateSize: size => `Estimated size: <strong>~${size}</strong>`,
+      estimateNA: "Estimated size: —"
     },
     compress: {
       dropTitle: "Drop your PDF here",
@@ -2441,9 +2685,24 @@ function applyLanguage(lang){
   if(privacyLinkEl) privacyLinkEl.textContent = L.privacyLink;
 
   // JPG file-count label (dynamic, depends on current file count)
-  const jpgList = document.getElementById('fileList-jpg');
+  const jpgList = document.getElementById('fileListEditor-jpg');
   const countJpgEl = document.getElementById('countLabel-jpg');
   if(countJpgEl && jpgList) countJpgEl.textContent = L.jpg.count(jpgList.children.length);
+  const filesHeadingEl = document.getElementById('filesHeading-jpg');
+  if(filesHeadingEl) filesHeadingEl.textContent = L.jpg.filesHeading;
+  const previewHeadingEl = document.getElementById('previewHeading-jpg');
+  if(previewHeadingEl) previewHeadingEl.textContent = L.jpg.previewHeading;
+  const toolsHeadingEl = document.getElementById('toolsHeading-jpg');
+  if(toolsHeadingEl) toolsHeadingEl.textContent = L.jpg.toolsHeading;
+  const pageModeLabelEl = document.getElementById('pageModeLabel-jpg');
+  if(pageModeLabelEl) pageModeLabelEl.textContent = L.jpg.pageModeLabel;
+  const zoomBtnLabelEl = document.getElementById('zoomBtnLabel-jpg');
+  if(zoomBtnLabelEl) zoomBtnLabelEl.textContent = L.jpg.zoomLabel;
+  const rotateBtnLabelEl = document.getElementById('rotateBtnLabel-jpg');
+  if(rotateBtnLabelEl) rotateBtnLabelEl.textContent = L.jpg.rotateLabel;
+  const grayscaleBtnLabelEl = document.getElementById('grayscaleBtnLabel-jpg');
+  if(grayscaleBtnLabelEl) grayscaleBtnLabelEl.textContent = L.jpg.grayscaleLabel;
+  if(typeof refreshJpgEditorTexts === 'function') refreshJpgEditorTexts();
 
   if(typeof renderRecentOps === 'function') renderRecentOps();
   if(typeof renderInstallPrompt === 'function') renderInstallPrompt();
@@ -2491,7 +2750,8 @@ document.getElementById('langToggle').addEventListener('click', e => {
 (function(){
   const drop = document.getElementById('drop-jpg');
   const fileInput = document.getElementById('fileInput-jpg');
-  const fileListEl = document.getElementById('fileList-jpg');
+  const imgEditor = document.getElementById('imgEditor-jpg');
+  const fileListEl = document.getElementById('fileListEditor-jpg');
   const actionsRow = document.getElementById('actionsRow-jpg');
   const countLabel = document.getElementById('countLabel-jpg');
   const convertBtn = document.getElementById('convertBtn-jpg');
@@ -2499,15 +2759,136 @@ document.getElementById('langToggle').addEventListener('click', e => {
   const resultName = document.getElementById('resultName-jpg');
   const downloadBtn = document.getElementById('downloadBtn-jpg');
 
+  const previewImg = document.getElementById('previewImg-jpg');
+  const previewEmpty = document.getElementById('previewEmpty-jpg');
+  const previewFrame = document.getElementById('previewFrame-jpg');
+  const previewCanvasWrap = document.getElementById('previewCanvasWrap-jpg');
+  const qualitySlider = document.getElementById('qualitySlider-jpg');
+  const qualityCurrentLabel = document.getElementById('qualityCurrentLabel-jpg');
+  const qualityNewSizeLabel = document.getElementById('qualityNewSizeLabel-jpg');
+  const pageModeToggle = document.getElementById('pageModeToggle-jpg');
+  const zoomBtn = document.getElementById('zoomBtn-jpg');
+  const zoomBtnValue = document.getElementById('zoomBtnValue-jpg');
+  const rotateBtn = document.getElementById('rotateBtn-jpg');
+  const rotateBtnValue = document.getElementById('rotateBtnValue-jpg');
+  const grayscaleBtn = document.getElementById('grayscaleBtn-jpg');
+  const grayscaleBtnValue = document.getElementById('grayscaleBtnValue-jpg');
+
   let files = [];
+  let selectedId = null;
   let pdfBlobUrl = null;
   let idCounter = 0;
+  let previewToken = 0;
+  const ZOOM_LEVELS = [100, 150, 200];
+  let zoomIndex = 0;
 
-  function render(){
+  function getSelected(){ return files.find(f => f.id === selectedId) || null; }
+
+  /* Bir dosyanın <img> elementini bir kez yükleyip ileride tekrar kullanmak
+     üzere önbelleğe alır — döndürme/filtre/kalite her değiştiğinde yeniden
+     decode etmeye gerek kalmaz. */
+  function loadImageEl(f){
+    if(f._imgEl) return Promise.resolve(f._imgEl);
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => { f._imgEl = img; resolve(img); };
+      img.onerror = reject;
+      img.src = f.url;
+    });
+  }
+
+  /* Döndürme ve siyah-beyaz filtresi uygulanmış bir canvas üretir. */
+  async function renderEditedCanvas(f){
+    const img = await loadImageEl(f);
+    const rot = ((f.rotation % 360) + 360) % 360;
+    const swapped = rot === 90 || rot === 270;
+    const w = img.naturalWidth || img.width;
+    const h = img.naturalHeight || img.height;
+    const canvas = document.createElement('canvas');
+    canvas.width = swapped ? h : w;
+    canvas.height = swapped ? w : h;
+    const ctx = canvas.getContext('2d');
+    ctx.save();
+    ctx.translate(canvas.width/2, canvas.height/2);
+    ctx.rotate(rot * Math.PI/180);
+    if(f.grayscale) ctx.filter = 'grayscale(1)';
+    ctx.drawImage(img, -w/2, -h/2, w, h);
+    ctx.restore();
+    return canvas;
+  }
+
+  function applyZoom(){
+    const pct = ZOOM_LEVELS[zoomIndex];
+    zoomBtnValue.textContent = pct + '%';
+    previewImg.style.transform = pct === 100 ? '' : `scale(${pct/100})`;
+  }
+
+  function applyPageMode(){
+    const on = pageModeToggle.checked;
+    previewFrame.classList.toggle('is-page', on);
+    previewCanvasWrap.classList.toggle('page-mode', on);
+  }
+
+  function syncToolButtons(f){
+    rotateBtnValue.textContent = (f ? f.rotation : 0) + '°';
+    rotateBtn.classList.toggle('active', !!f && f.rotation !== 0);
+    const t = LANG[window.currentLang].jpg;
+    const gsOn = !!f && f.grayscale;
+    grayscaleBtnValue.textContent = gsOn ? t.grayscaleOn : t.grayscaleOff;
+    grayscaleBtn.classList.toggle('active', gsOn);
+  }
+
+  /* Seçili görseli, güncel kalite/döndürme/filtre ayarlarıyla yeniden
+     render edip önizlemeyi ve tahmini boyutu günceller. */
+  async function updatePreview(){
+    const t = LANG[window.currentLang].jpg;
+    const f = getSelected();
+    syncToolButtons(f);
+    if(!f){
+      previewImg.style.display = 'none';
+      previewEmpty.style.display = 'block';
+      qualitySlider.disabled = true;
+      qualityCurrentLabel.innerHTML = t.qualityCurrent(100, t.qualityOriginal);
+      qualityNewSizeLabel.innerHTML = t.estimateNA;
+      return;
+    }
+    previewEmpty.style.display = 'none';
+    qualitySlider.disabled = false;
+    qualitySlider.value = f.quality;
+
+    const token = ++previewToken;
+    try{
+      const canvas = await renderEditedCanvas(f);
+      if(token !== previewToken) return;
+      const isEdited = f.rotation !== 0 || f.grayscale || f.quality < 100;
+      const usePng = !isEdited && f.file.type === 'image/png';
+      const q = f.quality/100;
+      const blob = await new Promise((resolve, reject) => {
+        canvas.toBlob(b => b ? resolve(b) : reject(new Error('Canvas boş döndü')), usePng ? 'image/png' : 'image/jpeg', usePng ? undefined : q);
+      });
+      canvas.width = 0; canvas.height = 0;
+      if(token !== previewToken) return;
+
+      if(f._previewBlobUrl) URL.revokeObjectURL(f._previewBlobUrl);
+      f._previewBlobUrl = URL.createObjectURL(blob);
+      previewImg.src = f._previewBlobUrl;
+      previewImg.style.display = 'block';
+      applyZoom();
+
+      const tag = f.quality >= 80 ? t.qGood : f.quality >= 50 ? t.qMedium : t.qLow;
+      qualityCurrentLabel.innerHTML = isEdited ? t.qualityCurrent(f.quality, tag) : t.qualityCurrent(100, t.qualityOriginal);
+      qualityNewSizeLabel.innerHTML = t.estimateSize(formatSize(blob.size));
+    } catch(err){
+      console.error(err);
+    }
+  }
+
+  function renderFileList(){
     fileListEl.innerHTML = '';
     files.forEach((f, i) => {
       const li = document.createElement('li');
-      li.className = 'file-row';
+      li.className = 'file-row' + (f.id === selectedId ? ' selected' : '');
+      li.dataset.id = f.id;
       li.innerHTML = `
         <span class="file-num">${String(i+1).padStart(2,'0')}</span>
         <img class="file-thumb" src="${f.url}" alt="${f.file.name} önizlemesi">
@@ -2517,18 +2898,28 @@ document.getElementById('langToggle').addEventListener('click', e => {
       `;
       fileListEl.appendChild(li);
     });
-    actionsRow.style.display = files.length ? 'flex' : 'none';
+  }
+
+  function render(){
+    const hasFiles = files.length > 0;
+    imgEditor.style.display = hasFiles ? 'grid' : 'none';
+    actionsRow.style.display = hasFiles ? 'flex' : 'none';
     countLabel.textContent = LANG[window.currentLang].jpg.count(files.length);
-    convertBtn.disabled = files.length === 0;
-    if(files.length === 0) result.classList.remove('show');
+    convertBtn.disabled = !hasFiles;
+    if(!hasFiles){ result.classList.remove('show'); selectedId = null; }
+    if(hasFiles && !files.some(f => f.id === selectedId)) selectedId = files[0].id;
+    renderFileList();
     const totalBytes = files.reduce((sum, f) => sum + f.file.size, 0);
-    updateSizeWarning(fileListEl, files.length ? { size: totalBytes } : null);
+    updateSizeWarning(fileListEl, hasFiles ? { size: totalBytes } : null);
+    updatePreview();
   }
 
   function addFiles(fileArr){
     [...fileArr].forEach(file => {
       if(!file.type.startsWith('image/')) return;
-      files.push({ file, url: URL.createObjectURL(file), id: ++idCounter });
+      const f = { file, url: URL.createObjectURL(file), id: ++idCounter, rotation: 0, quality: 100, grayscale: false };
+      files.push(f);
+      if(selectedId === null) selectedId = f.id;
     });
     result.classList.remove('show');
     render();
@@ -2542,37 +2933,78 @@ document.getElementById('langToggle').addEventListener('click', e => {
   drop.addEventListener('drop', e => addFiles(e.dataTransfer.files));
 
   fileListEl.addEventListener('click', e => {
-    const thumb = e.target.closest('.file-thumb');
-    if(thumb){ openLightbox(thumb.src, thumb.alt); return; }
-    const btn = e.target.closest('.file-remove');
-    if(!btn) return;
-    files = files.filter(f => f.id !== Number(btn.dataset.id));
-    render();
+    const removeBtn = e.target.closest('.file-remove');
+    if(removeBtn){
+      const removedId = Number(removeBtn.dataset.id);
+      const removedFile = files.find(f => f.id === removedId);
+      if(removedFile && removedFile._previewBlobUrl) URL.revokeObjectURL(removedFile._previewBlobUrl);
+      files = files.filter(f => f.id !== removedId);
+      render();
+      return;
+    }
+    const row = e.target.closest('.file-row');
+    if(!row) return;
+    selectedId = Number(row.dataset.id);
+    renderFileList();
+    updatePreview();
   });
 
-  async function imageToPdfPage(pdfDoc, file){
-    const bytes = await file.arrayBuffer();
-    const img = file.type === 'image/png' ? await pdfDoc.embedPng(bytes) : await pdfDoc.embedJpg(bytes);
+  qualitySlider.addEventListener('input', () => {
+    const f = getSelected();
+    if(!f) return;
+    f.quality = Number(qualitySlider.value);
+    updatePreview();
+  });
+
+  zoomBtn.addEventListener('click', () => {
+    zoomIndex = (zoomIndex + 1) % ZOOM_LEVELS.length;
+    applyZoom();
+  });
+
+  rotateBtn.addEventListener('click', () => {
+    const f = getSelected();
+    if(!f) return;
+    f.rotation = (f.rotation + 90) % 360;
+    updatePreview();
+  });
+
+  grayscaleBtn.addEventListener('click', () => {
+    const f = getSelected();
+    if(!f) return;
+    f.grayscale = !f.grayscale;
+    updatePreview();
+  });
+
+  pageModeToggle.addEventListener('change', applyPageMode);
+
+  /* Dil değiştiğinde önizleme etiketlerini (kalite/boyut metinleri) güncel tutar. */
+  window.refreshJpgEditorTexts = function(){ updatePreview(); };
+
+  /* Seçili görseli, düzenlemeler (döndürme/filtre/kalite) varsa yeniden
+     işleyerek, yoksa orijinal baytlarıyla PDF'e sayfa olarak ekler. */
+  async function addImagePage(pdfDoc, f){
+    const isEdited = f.rotation !== 0 || f.grayscale || f.quality < 100;
+    let embedded;
+    if(!isEdited && f.file.type !== 'image/webp'){
+      const bytes = await f.file.arrayBuffer();
+      embedded = f.file.type === 'image/png' ? await pdfDoc.embedPng(bytes) : await pdfDoc.embedJpg(bytes);
+    } else {
+      const canvas = await renderEditedCanvas(f);
+      const usePng = !isEdited && f.file.type === 'image/png';
+      const quality = f.quality/100;
+      const blob = await new Promise((resolve, reject) => {
+        canvas.toBlob(b => b ? resolve(b) : reject(new Error('Canvas boş döndü')), usePng ? 'image/png' : 'image/jpeg', usePng ? undefined : quality);
+      });
+      canvas.width = 0; canvas.height = 0;
+      const buf = await blob.arrayBuffer();
+      embedded = usePng ? await pdfDoc.embedPng(buf) : await pdfDoc.embedJpg(buf);
+    }
     const pageW = 595.28, pageH = 841.89;
     const page = pdfDoc.addPage([pageW, pageH]);
     const margin = 28;
-    const scale = Math.min((pageW-margin*2)/img.width, (pageH-margin*2)/img.height, 1);
-    const w = img.width*scale, h = img.height*scale;
-    page.drawImage(img, { x:(pageW-w)/2, y:(pageH-h)/2, width:w, height:h });
-  }
-
-  function webpToPngBytes(file){
-    return new Promise((resolve, reject) => {
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        canvas.width = img.width; canvas.height = img.height;
-        canvas.getContext('2d').drawImage(img, 0, 0);
-        canvas.toBlob(blob => { blob.arrayBuffer().then(buf => resolve(new Uint8Array(buf))); }, 'image/png');
-      };
-      img.onerror = reject;
-      img.src = URL.createObjectURL(file);
-    });
+    const scale = Math.min((pageW-margin*2)/embedded.width, (pageH-margin*2)/embedded.height, 1);
+    const w = embedded.width*scale, h = embedded.height*scale;
+    page.drawImage(embedded, { x:(pageW-w)/2, y:(pageH-h)/2, width:w, height:h });
   }
 
   convertBtn.addEventListener('click', async () => {
@@ -2587,18 +3019,7 @@ document.getElementById('langToggle').addEventListener('click', e => {
       resetBtnProgress(convertBtn);
       let processedCount = 0;
       for(const f of files){
-        if(f.file.type === 'image/webp'){
-          const pngBytes = await webpToPngBytes(f.file);
-          const img = await pdfDoc.embedPng(pngBytes);
-          const pageW = 595.28, pageH = 841.89;
-          const page = pdfDoc.addPage([pageW, pageH]);
-          const margin = 28;
-          const scale = Math.min((pageW-margin*2)/img.width, (pageH-margin*2)/img.height, 1);
-          const w = img.width*scale, h = img.height*scale;
-          page.drawImage(img, { x:(pageW-w)/2, y:(pageH-h)/2, width:w, height:h });
-        } else {
-          await imageToPdfPage(pdfDoc, f.file);
-        }
+        await addImagePage(pdfDoc, f);
         processedCount++;
         setBtnProgress(convertBtn, processedCount, files.length);
       }
