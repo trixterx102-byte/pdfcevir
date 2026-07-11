@@ -6,9 +6,11 @@
 (function(){
   try{
     var saved = localStorage.getItem('theme');
-    var theme = saved ? saved : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    var theme = saved ? saved : 'dark';
     if(theme === 'dark'){ document.documentElement.setAttribute('data-theme', 'dark'); }
-  }catch(e){}
+  }catch(e){
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }
 })();
 </script>
 <!-- Google tag (gtag.js) -->
@@ -103,11 +105,20 @@
        hem de kart içinde çift amaçlı kullanıldığından, bunları global olarak
        değiştirmek ambient alanı bozar. Bu yüzden karanlık modda sadece kart
        bağlamındaki sınıflar ayrı değişkenlerle geçersiz kılınır. */
-    --dark-card: #1E2740;
-    --dark-card-alt: #262F4C;
+    --dark-card: rgba(28,37,64,0.66);
+    --dark-card-alt: rgba(38,48,80,0.6);
     --dark-text: #F1EDE2;
     --dark-text-muted: #ACA99C;
     --dark-line: rgba(245,241,232,0.14);
+
+    /* Premium "PDF Çevir" vizyon paleti: koyu indigo zemin + parlayan altın/bronz cam kartlar */
+    --gold-2: #E8C766;
+    --glass-bg: rgba(24,32,58,0.55);
+    --glass-bg-soft: rgba(32,41,70,0.46);
+    --glass-border: rgba(201,162,39,0.28);
+    --glass-border-strong: rgba(232,199,102,0.55);
+    --glass-blur: 18px;
+    --glass-shadow: 0 24px 60px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.05);
   }
 
   *{ box-sizing: border-box; }
@@ -120,14 +131,29 @@
     margin:0;
     background: var(--ink);
     background-image:
-      radial-gradient(circle at 15% 8%, rgba(169,129,46,0.12), transparent 40%),
-      radial-gradient(circle at 85% 92%, rgba(179,55,44,0.10), transparent 45%);
+      radial-gradient(circle at 12% 6%, rgba(232,199,102,0.14), transparent 42%),
+      radial-gradient(circle at 88% 14%, rgba(169,129,46,0.12), transparent 40%),
+      radial-gradient(circle at 85% 94%, rgba(179,55,44,0.09), transparent 45%),
+      linear-gradient(180deg, #0B1120 0%, #10162C 45%, #0B1120 100%);
     color: var(--text);
     font-family: 'IBM Plex Sans', sans-serif;
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
     position: relative;
   }
+
+  /* Kurumsal fon deseni: ince ikili kod dokusu + parlayan kalkan (yalnızca geniş ekranlarda) */
+  .bg-shield{
+    position: fixed;
+    top: 0; right: -6%;
+    width: 46vw; height: 100vh;
+    max-width: 620px;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.5;
+    display: block;
+  }
+  @media (max-width: 900px){ .bg-shield{ display:none; } }
 
   /* Decorative floating background shapes */
   .bg-decor{
@@ -301,35 +327,72 @@
   }
 
   .tabs{
-    display:flex;
-    justify-content:center;
-    gap: 6px;
-    margin: 32px 0 0;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin: 36px 0 0;
+    max-width: 760px;
+    margin-left: auto;
+    margin-right: auto;
   }
+  @media (max-width: 720px){ .tabs{ grid-template-columns: repeat(2, 1fr); } }
   .tab{
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 7px;
+    text-align: center;
+    gap: 8px;
     font-family: 'IBM Plex Sans', sans-serif;
     font-size: 13.5px;
-    font-weight: 500;
-    color: rgba(245,241,232,0.6);
-    background: rgba(245,241,232,0.06);
-    border: 1px solid rgba(245,241,232,0.14);
-    padding: 10px 18px;
-    border-radius: 3px 3px 0 0;
+    font-weight: 600;
+    color: var(--dark-text-muted);
+    background: var(--glass-bg-soft);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    padding: 20px 12px 16px;
+    border-radius: 14px;
     cursor: pointer;
-    transition: background .15s ease, color .15s ease, transform .15s ease;
+    transition: background .18s ease, color .18s ease, transform .18s ease, border-color .18s ease, box-shadow .18s ease;
   }
-  .tab svg{ flex-shrink: 0; opacity: 0.75; }
-  .tab:hover{ color: var(--paper); background: rgba(245,241,232,0.1); transform: translateY(-1px); }
+  .tab-icon{
+    width: 44px; height: 44px;
+    display:flex; align-items:center; justify-content:center;
+    border-radius: 50%;
+    background: linear-gradient(155deg, rgba(232,199,102,0.16), rgba(232,199,102,0.03));
+    border: 1px solid rgba(232,199,102,0.35);
+    color: var(--gold-2);
+    transition: box-shadow .18s ease, border-color .18s ease;
+  }
+  .tab svg{ flex-shrink: 0; }
+  .tab-sub{
+    display:block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    color: rgba(245,241,232,0.42);
+    text-transform: none;
+  }
+  .tab:hover{
+    color: var(--dark-text);
+    background: var(--glass-bg);
+    border-color: var(--glass-border-strong);
+    transform: translateY(-3px);
+    box-shadow: 0 14px 30px rgba(0,0,0,0.35);
+  }
+  .tab:hover .tab-icon{ box-shadow: 0 0 0 4px rgba(232,199,102,0.08); }
   .tab.active{
-    color: var(--ink);
-    background: var(--paper-card);
-    border-color: var(--paper-card);
+    color: var(--dark-text);
+    background: linear-gradient(160deg, rgba(232,199,102,0.14), var(--glass-bg));
+    border-color: var(--glass-border-strong);
+    box-shadow: 0 0 0 1px rgba(232,199,102,0.15), 0 18px 40px rgba(0,0,0,0.4);
   }
-  .tab.active svg{ opacity: 1; }
+  .tab.active .tab-icon{
+    background: linear-gradient(155deg, rgba(232,199,102,0.35), rgba(232,199,102,0.08));
+    box-shadow: 0 0 0 5px rgba(232,199,102,0.1);
+  }
+  .tab.active .tab-icon svg{ opacity: 1; }
 
   /* Document sheet — the main card */
   .sheet{
@@ -1063,17 +1126,219 @@
     color: rgba(245,241,232,0.6);
     text-decoration: underline;
     text-underline-offset: 2px;
+    cursor: pointer;
   }
-  footer a:hover{ color: var(--paper); }
+  footer a:hover{ color: var(--gold-2); }
+  .footer-sep{ opacity:.4; margin: 0 6px; }
+
+  /* ===================== Neden PDF Çevir? bölümü ===================== */
+  .why-section{
+    margin: 12px 0 48px;
+    text-align: center;
+  }
+  .why-eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 11.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold-2);
+    margin: 0 0 10px;
+  }
+  .why-title{
+    font-family:'Newsreader', serif;
+    font-weight: 500;
+    font-size: clamp(22px, 3vw, 30px);
+    color: var(--paper);
+    margin: 0 0 32px;
+  }
+  .why-grid{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    text-align:left;
+  }
+  @media (max-width: 720px){ .why-grid{ grid-template-columns: 1fr; } }
+  .why-card{
+    background: var(--glass-bg-soft);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    border-radius: 14px;
+    padding: 26px 22px;
+  }
+  .why-icon{
+    width: 42px; height: 42px;
+    display:flex; align-items:center; justify-content:center;
+    border-radius: 50%;
+    background: linear-gradient(155deg, rgba(232,199,102,0.18), rgba(232,199,102,0.03));
+    border: 1px solid rgba(232,199,102,0.35);
+    color: var(--gold-2);
+    margin-bottom: 16px;
+  }
+  .why-card h3{
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--paper);
+    margin: 0 0 8px;
+  }
+  .why-card p{
+    font-size: 13px;
+    line-height: 1.6;
+    color: rgba(245,241,232,0.62);
+    margin: 0;
+  }
+
+  /* ===================== "Çok yakında" panel (Şifre Çöz/Koru) ===================== */
+  .soon-panel{
+    text-align: center;
+    padding: 56px 32px !important;
+  }
+  .soon-icon{
+    width: 72px; height: 72px;
+    margin: 0 auto 20px;
+    display:flex; align-items:center; justify-content:center;
+    border-radius: 50%;
+    background: linear-gradient(155deg, rgba(232,199,102,0.2), rgba(232,199,102,0.04));
+    border: 1px solid rgba(232,199,102,0.4);
+    color: var(--gold-2);
+  }
+  .soon-badge{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    color: var(--gold-2);
+    margin: 0 0 10px;
+  }
+  .soon-title{
+    font-family:'Newsreader', serif;
+    font-weight: 500;
+    font-size: 26px;
+    color: var(--dark-text);
+    margin: 0 0 12px;
+  }
+  html:not([data-theme="dark"]) .soon-title{ color: var(--ink); }
+  .soon-desc{
+    max-width: 460px;
+    margin: 0 auto 28px;
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: var(--dark-text-muted);
+  }
+  html:not([data-theme="dark"]) .soon-desc{ color: var(--text-muted); }
+  .soon-fields{
+    max-width: 380px;
+    margin: 0 auto;
+    display:flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .soon-field{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 12px;
+    font-size: 12.5px;
+    color: var(--dark-text-muted);
+  }
+  .soon-input{
+    flex: 1;
+    text-align: left;
+    padding: 10px 14px;
+    background: var(--dark-card-alt);
+    border: 1px solid var(--dark-line);
+    border-radius: 8px;
+    color: var(--dark-text-muted);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+    opacity: 0.6;
+  }
+
+  /* ===================== Yasal modallar ===================== */
+  .legal-modal-overlay{
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgba(6,9,20,0.72);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .2s ease, visibility .2s ease;
+  }
+  .legal-modal-overlay.show{ opacity: 1; visibility: visible; }
+  .legal-modal{
+    position: relative;
+    width: 100%;
+    max-width: 640px;
+    max-height: 82vh;
+    overflow-y: auto;
+    background: var(--dark-card);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border-strong);
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: var(--glass-shadow);
+    transform: translateY(16px);
+    transition: transform .2s ease;
+  }
+  .legal-modal-overlay.show .legal-modal{ transform: translateY(0); }
+  @media (max-width: 600px){ .legal-modal{ padding: 28px 22px; } }
+  .legal-modal-close{
+    position: absolute;
+    top: 16px; right: 16px;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--dark-line);
+    background: rgba(245,241,232,0.06);
+    color: var(--dark-text-muted);
+    cursor: pointer;
+    font-size: 14px;
+    transition: background .15s ease, color .15s ease;
+  }
+  .legal-modal-close:hover{ background: rgba(245,241,232,0.14); color: var(--dark-text); }
+  .legal-modal-eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold-2);
+    margin: 0 0 8px;
+  }
+  .legal-modal h2{
+    font-family:'Newsreader', serif;
+    font-weight: 500;
+    font-size: 26px;
+    color: var(--dark-text);
+    margin: 0 0 20px;
+  }
+  .legal-modal-body h3{
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--dark-text);
+    margin: 22px 0 8px;
+  }
+  .legal-modal-body p{
+    font-size: 13.5px;
+    line-height: 1.7;
+    color: var(--dark-text-muted);
+    margin: 0 0 4px;
+  }
+  .legal-modal-body a{ color: var(--gold-2); }
 
   /* ===================== Karanlık mod: kart bağlamı geçersiz kılmaları ===================== */
   html[data-theme="dark"] .sheet{
     background: var(--dark-card);
-  }
-  html[data-theme="dark"] .tab.active{
-    background: var(--dark-card);
-    border-color: var(--dark-card);
-    color: var(--dark-text);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
   }
   html[data-theme="dark"] .drop{
     border-color: var(--dark-line);
@@ -1204,6 +1469,32 @@
   <span class="s1"></span><span class="s2"></span><span class="s3"></span><span class="s4"></span><span class="s5"></span>
 </div>
 
+<svg class="bg-shield" viewBox="0 0 500 900" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <defs>
+    <linearGradient id="shieldStroke" x1="0" y1="0" x2="500" y2="900" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#E8C766"/>
+      <stop offset="1" stop-color="#8A6A22"/>
+    </linearGradient>
+    <radialGradient id="shieldGlow" cx="0.5" cy="0.42" r="0.55">
+      <stop offset="0" stop-color="#E8C766" stop-opacity="0.20"/>
+      <stop offset="1" stop-color="#E8C766" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <circle cx="250" cy="380" r="260" fill="url(#shieldGlow)"/>
+  <g opacity="0.16" font-family="IBM Plex Mono, monospace" font-size="13" fill="#E8C766">
+    <text x="10" y="60">01001 10110 00101 11010</text>
+    <text x="10" y="90">11010 00110 10101 01100</text>
+    <text x="10" y="120">00110 11001 10010 11101</text>
+    <text x="10" y="150">10101 00011 01110 10010</text>
+    <text x="10" y="640">10011 01100 11010 00101</text>
+    <text x="10" y="670">01101 10010 00111 01011</text>
+    <text x="10" y="700">11001 01010 10011 00110</text>
+    <text x="10" y="730">00101 11001 01101 00011</text>
+  </g>
+  <path d="M250 160L110 210V400C110 520 165 610 250 650C335 610 390 520 390 400V210L250 160Z" stroke="url(#shieldStroke)" stroke-width="2.5" opacity="0.55"/>
+  <path d="M186 400L228 448L322 335" stroke="url(#shieldStroke)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+</svg>
+
 <div class="brand">
   <svg width="16" height="18" viewBox="0 0 42 54" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M4 2H27L38 13V50C38 51.6569 36.6569 53 35 53H4C2.34315 53 1 51.6569 1 50V5C1 3.34315 2.34315 2 4 2Z" stroke="#B3372C" stroke-width="2.2"/>
@@ -1237,40 +1528,54 @@
 
   <div class="tabs fade-in" role="tablist" style="animation-delay:.3s">
     <button class="tab active" data-tool="jpg" role="tab" aria-selected="true">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="2" stroke="currentColor" stroke-width="1.6"/><circle cx="9" cy="10" r="1.3" fill="currentColor"/><path d="M5 16L9.5 12L13 15L16 12.5L19 16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="tab-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="2" stroke="currentColor" stroke-width="1.6"/><circle cx="9" cy="10" r="1.3" fill="currentColor"/><path d="M5 16L9.5 12L13 15L16 12.5L19 16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       <span class="tab-label">Görsel → PDF</span>
+      <span class="tab-sub">Lokal İşlem, %100 İstemci Tabanlı</span>
     </button>
     <button class="tab" data-tool="compress" role="tab" aria-selected="false">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M8 4V10M8 10L5 7.5M8 10L11 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 20V14M16 14L13 16.5M16 14L19 16.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="tab-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M8 4V10M8 10L5 7.5M8 10L11 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 20V14M16 14L13 16.5M16 14L19 16.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       <span class="tab-label">PDF Sıkıştır</span>
+      <span class="tab-sub">Lokal İşlem, %100 İstemci Tabanlı</span>
     </button>
     <button class="tab" data-tool="word" role="tab" aria-selected="false">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="4" y="3" width="16" height="18" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 9H16M8 13H16M8 17H12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <span class="tab-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="4" y="3" width="16" height="18" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 9H16M8 13H16M8 17H12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
       <span class="tab-label">PDF → Word</span>
+      <span class="tab-sub">Lokal İşlem, %100 İstemci Tabanlı</span>
     </button>
     <button class="tab" data-tool="merge" role="tab" aria-selected="false">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="10" height="13" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="11" y="7" width="10" height="13" rx="1.5" stroke="currentColor" stroke-width="1.6"/></svg>
+      <span class="tab-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="10" height="13" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="11" y="7" width="10" height="13" rx="1.5" stroke="currentColor" stroke-width="1.6"/></svg></span>
       <span class="tab-label">PDF Birleştir</span>
+      <span class="tab-sub">Lokal İşlem, %100 İstemci Tabanlı</span>
     </button>
     <button class="tab" data-tool="split" role="tab" aria-selected="false">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="4" y="3" width="7" height="18" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="13" y="3" width="7" height="18" rx="1.5" stroke="currentColor" stroke-width="1.6"/></svg>
+      <span class="tab-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="4" y="3" width="7" height="18" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="13" y="3" width="7" height="18" rx="1.5" stroke="currentColor" stroke-width="1.6"/></svg></span>
       <span class="tab-label">PDF Böl</span>
+      <span class="tab-sub">Lokal İşlem, %100 İstemci Tabanlı</span>
     </button>
     <button class="tab" data-tool="rotate" role="tab" aria-selected="false">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 12a8 8 0 1 1 3 6.2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M4 17v-5h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="tab-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 12a8 8 0 1 1 3 6.2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M4 17v-5h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       <span class="tab-label">PDF Döndür</span>
+      <span class="tab-sub">Lokal İşlem, %100 İstemci Tabanlı</span>
     </button>
     <button class="tab" data-tool="pagenum" role="tab" aria-selected="false">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="4" y="3" width="16" height="18" rx="2" stroke="currentColor" stroke-width="1.6"/><text x="12" y="16" font-size="8" fill="currentColor" text-anchor="middle" font-family="monospace">1</text></svg>
+      <span class="tab-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="4" y="3" width="16" height="18" rx="2" stroke="currentColor" stroke-width="1.6"/><text x="12" y="16" font-size="8" fill="currentColor" text-anchor="middle" font-family="monospace">1</text></svg></span>
       <span class="tab-label">Sayfa Numarası</span>
+      <span class="tab-sub">Lokal İşlem, %100 İstemci Tabanlı</span>
     </button>
     <button class="tab" data-tool="topng" role="tab" aria-selected="false">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="2" stroke="currentColor" stroke-width="1.6"/><circle cx="9" cy="10" r="1.3" fill="currentColor"/><path d="M5 16L9.5 12L13 15L16 12.5L19 16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="tab-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="2" stroke="currentColor" stroke-width="1.6"/><circle cx="9" cy="10" r="1.3" fill="currentColor"/><path d="M5 16L9.5 12L13 15L16 12.5L19 16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       <span class="tab-label">PDF → Görsel</span>
+      <span class="tab-sub">Lokal İşlem, %100 İstemci Tabanlı</span>
     </button>
     <button class="tab" data-tool="watermark" role="tab" aria-selected="false">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="4" y="3" width="16" height="18" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M7 17L17 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="1 2.2"/></svg>
+      <span class="tab-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="4" y="3" width="16" height="18" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M7 17L17 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="1 2.2"/></svg></span>
       <span class="tab-label">Filigran Ekle</span>
+      <span class="tab-sub">Lokal İşlem, %100 İstemci Tabanlı</span>
+    </button>
+    <button class="tab" data-tool="unlock" role="tab" aria-selected="false">
+      <span class="tab-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="5" y="11" width="14" height="9" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 11V7.5C8 5 9.8 3.3 12 3.3C13.9 3.3 15.5 4.6 15.9 6.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="15.2" r="1.4" fill="currentColor"/></svg></span>
+      <span class="tab-label">Şifre Çöz / Koru</span>
+      <span class="tab-sub">Lokal İşlem, %100 İstemci Tabanlı</span>
     </button>
   </div>
 
@@ -1931,11 +2236,126 @@
     </div>
   </div>
 
+  <!-- PANEL 10: Şifre Çöz / Koru (yakında) -->
+  <div class="tool-panel" id="panel-unlock" style="display:none;">
+    <div class="sheet fade-in">
+      <div class="sheet-inner soon-panel">
+        <div class="soon-icon">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none"><rect x="5" y="11" width="14" height="9" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M8 11V7.5C8 5 9.8 3.3 12 3.3C13.9 3.3 15.5 4.6 15.9 6.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="15.2" r="1.4" fill="currentColor"/></svg>
+        </div>
+        <p class="soon-badge" id="soonBadge-unlock">ÇOK YAKINDA</p>
+        <h2 class="soon-title" id="soonTitle-unlock">Şifre Çöz / Koru</h2>
+        <p class="soon-desc" id="soonDesc-unlock">PDF'lerine şifre ekleme ve mevcut şifreni kaldırma aracı üzerinde çalışıyoruz. Diğer tüm araçlarımız gibi bu özellik de tamamen tarayıcında, %100 istemci taraflı olarak çalışacak — dosyaların asla cihazından çıkmayacak.</p>
+        <div class="soon-fields" aria-hidden="true">
+          <div class="soon-field">
+            <span id="soonField1-unlock">PDF Şifresi</span>
+            <div class="soon-input">••••••••</div>
+          </div>
+          <div class="soon-field">
+            <span id="soonField2-unlock">İşlem</span>
+            <div class="soon-input" id="soonField2Value-unlock">Şifre Koru / Şifre Kaldır</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="why-section fade-in" aria-labelledby="whyTitle">
+    <p class="why-eyebrow" id="whyEyebrow">NEDEN PDF ÇEVİR?</p>
+    <h2 class="why-title" id="whyTitle">Premium Gizlilik, Sınırsız Güç.</h2>
+    <div class="why-grid">
+      <div class="why-card">
+        <div class="why-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2L4 5V11C4 16 7.5 20.5 12 22C16.5 20.5 20 16 20 11V5L12 2Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 12L11 14L15 9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3 id="why1Title">%100 İstemci Tabanlı</h3>
+        <p id="why1Desc">Dosyaların hiçbir zaman cihazından çıkmaz. Yükleme, dönüştürme ve indirme dahil tüm işlemler doğrudan tarayıcında, yerel olarak çalışır — sunucuya tek bir bayt bile gitmez.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M13 2L4 14H11L10 22L19 10H12L13 2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        </div>
+        <h3 id="why2Title">Sunucusuz & Sınırsız</h3>
+        <p id="why2Desc">Kuyruk yok, bekleme yok, dosya boyutu sınırı yok. İşlem gücü tamamen cihazından geldiği için istediğin kadar dosyayı, istediğin kadar kullan — üyelik ya da kredi kartı gerekmez.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M3 12H21M12 3C14.5 5.7 15.8 8.8 15.8 12C15.8 15.2 14.5 18.3 12 21C9.5 18.3 8.2 15.2 8.2 12C8.2 8.8 9.5 5.7 12 3Z" stroke="currentColor" stroke-width="1.4"/></svg>
+        </div>
+        <h3 id="why3Title">Çevrimdışı (PWA)</h3>
+        <p id="why3Desc">Uygulamayı bir kere ziyaret ettikten sonra cihazına ekleyebilir, internet bağlantın kesilse bile dönüştürme, sıkıştırma ve düzenleme araçlarını kullanmaya devam edebilirsin.</p>
+      </div>
+    </div>
+  </section>
+
   <footer>
     <span id="footerText">pdfcevir — kayıtsız, ücretsiz, sunucusuz.</span>
-    <span style="opacity:.5"> · </span>
-    <a href="/privacy.html" id="privacyLink">Gizlilik Politikası</a>
+    <span class="footer-sep" aria-hidden="true">·</span>
+    <a href="#" id="privacyLink" data-modal="modal-privacy">Gizlilik Politikası</a>
+    <span class="footer-sep" aria-hidden="true">·</span>
+    <a href="#" id="termsLink" data-modal="modal-terms">Kullanım Şartları</a>
+    <span class="footer-sep" aria-hidden="true">·</span>
+    <a href="#" id="contactLink" data-modal="modal-contact">İletişim</a>
   </footer>
+</div>
+
+<!-- Yasal sayfa modalları -->
+<div class="legal-modal-overlay" id="modal-privacy" aria-hidden="true">
+  <div class="legal-modal" role="dialog" aria-modal="true" aria-labelledby="modalPrivacyTitle">
+    <button class="legal-modal-close" type="button" data-close-modal aria-label="Kapat">✕</button>
+    <p class="legal-modal-eyebrow" id="modalPrivacyEyebrow">YASAL</p>
+    <h2 id="modalPrivacyTitle">Gizlilik Politikası</h2>
+    <div class="legal-modal-body" id="modalPrivacyBody">
+      <p><strong>Son güncelleme:</strong> 2026</p>
+      <p>pdfcevir olarak gizliliğine en üst düzeyde önem veriyoruz. Bu sayfadaki tüm araçlar (PDF Birleştir, PDF Sıkıştır, Görselden PDF, Sayfa Döndür, Şifre Çöz/Koru, Filigran Ekle ve diğerleri) <strong>%100 istemci taraflı (client-side)</strong> çalışır.</p>
+      <h3>Dosyalarınız sunucuya yüklenmez</h3>
+      <p>Yüklediğiniz hiçbir dosya, hiçbir zaman internete gönderilmez ya da bir sunucuda saklanmaz. Tüm dönüştürme, sıkıştırma, birleştirme ve düzenleme işlemleri tarayıcınızın kendi belleğinde, JavaScript motoru üzerinden gerçekleştirilir. Dosyalarınız sekmeyi kapattığınız anda cihazınızın belleğinden silinir.</p>
+      <h3>Topladığımız veriler</h3>
+      <p>Sitemizi daha iyi hale getirmek için Google Analytics benzeri anonim kullanım istatistikleri (sayfa görüntüleme, tarayıcı türü, yaklaşık konum) toplayabiliriz. Bu veriler kimliğinizi belirlemek için kullanılmaz.</p>
+      <h3>Çerezler ve reklamlar</h3>
+      <p>Sitemiz, hizmetlerin ücretsiz kalabilmesi için Google AdSense aracılığıyla reklam gösterebilir. Google, kişiselleştirilmiş reklamlar sunmak amacıyla çerez kullanabilir; bu çerezleri tarayıcı ayarlarınızdan yönetebilir veya devre dışı bırakabilirsiniz.</p>
+      <h3>Yerel depolama (localStorage)</h3>
+      <p>Dil ve tema tercihiniz gibi ayarlar, yalnızca sizin cihazınızda, tarayıcınızın yerel depolama alanında saklanır ve bizimle paylaşılmaz.</p>
+      <h3>İletişim</h3>
+      <p>Gizlilik politikamızla ilgili sorularınız için İletişim sayfamızdan bize ulaşabilirsiniz.</p>
+    </div>
+  </div>
+</div>
+
+<div class="legal-modal-overlay" id="modal-terms" aria-hidden="true">
+  <div class="legal-modal" role="dialog" aria-modal="true" aria-labelledby="modalTermsTitle">
+    <button class="legal-modal-close" type="button" data-close-modal aria-label="Kapat">✕</button>
+    <p class="legal-modal-eyebrow" id="modalTermsEyebrow">YASAL</p>
+    <h2 id="modalTermsTitle">Kullanım Şartları</h2>
+    <div class="legal-modal-body" id="modalTermsBody">
+      <p><strong>Son güncelleme:</strong> 2026</p>
+      <p>pdfcevir'i kullanarak aşağıdaki şartları kabul etmiş sayılırsınız.</p>
+      <h3>Hizmetin niteliği</h3>
+      <p>pdfcevir; PDF birleştirme, sıkıştırma, görselden PDF oluşturma, sayfa döndürme, şifre çözme/koruma ve filigran ekleme gibi araçları ücretsiz, üyelik gerektirmeden, tamamen tarayıcı üzerinde çalışacak şekilde sunar. Hizmet "olduğu gibi" sağlanır, kesintisiz veya hatasız çalışacağına dair herhangi bir garanti verilmez.</p>
+      <h3>Sorumluluk sınırı</h3>
+      <p>Araçların kullanımı sonucunda oluşabilecek veri kaybı, dosya bozulması veya işlem hatalarından pdfcevir sorumlu tutulamaz. Önemli belgelerinizin yedeğini almanız önerilir.</p>
+      <h3>Kabul edilebilir kullanım</h3>
+      <p>Hizmeti yasa dışı içerik üretmek, başkalarının telif haklarını ihlal etmek veya üçüncü taraflara zarar verecek şekilde kullanamazsınız.</p>
+      <h3>Değişiklikler</h3>
+      <p>Bu şartlar zaman zaman güncellenebilir; güncel sürüm her zaman bu sayfada yayınlanır.</p>
+      <h3>Uygulanacak hukuk</h3>
+      <p>Bu şartlar, hizmetin sunulduğu ülkenin yürürlükteki mevzuatına tabidir.</p>
+    </div>
+  </div>
+</div>
+
+<div class="legal-modal-overlay" id="modal-contact" aria-hidden="true">
+  <div class="legal-modal" role="dialog" aria-modal="true" aria-labelledby="modalContactTitle">
+    <button class="legal-modal-close" type="button" data-close-modal aria-label="Kapat">✕</button>
+    <p class="legal-modal-eyebrow" id="modalContactEyebrow">İLETİŞİM</p>
+    <h2 id="modalContactTitle">Bize Ulaşın</h2>
+    <div class="legal-modal-body" id="modalContactBody">
+      <p>Sorularınız, geri bildirimleriniz veya iş birliği teklifleriniz için bize e-posta yoluyla ulaşabilirsiniz.</p>
+      <p><strong>E-posta:</strong> <a href="mailto:destek@pdfcevir.vercel.app">destek@pdfcevir.vercel.app</a></p>
+      <p>Hata bildirimleri ve özellik istekleri için lütfen kullandığınız aracı, tarayıcınızı ve cihazınızı da belirtin — bu, sorunu daha hızlı çözmemize yardımcı olur.</p>
+      <p>Genellikle 2-3 iş günü içinde geri dönüş yapmaya çalışıyoruz.</p>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -2167,7 +2587,36 @@ document.addEventListener('keydown', e => {
 /* ===================== Dil sistemi ===================== */
 const LANG = {
   tr: {
-    tabs: { jpg: "Görsel → PDF", compress: "PDF Sıkıştır", word: "PDF → Word", merge: "PDF Birleştir", split: "PDF Böl", rotate: "PDF Döndür", pagenum: "Sayfa Numarası", topng: "PDF → Görsel", watermark: "Filigran Ekle" },
+    tabs: { jpg: "Görsel → PDF", compress: "PDF Sıkıştır", word: "PDF → Word", merge: "PDF Birleştir", split: "PDF Böl", rotate: "PDF Döndür", pagenum: "Sayfa Numarası", topng: "PDF → Görsel", watermark: "Filigran Ekle", unlock: "Şifre Çöz / Koru" },
+    site: {
+      cardSubtitle: "Lokal İşlem, %100 İstemci Tabanlı",
+      whyEyebrow: "NEDEN PDF ÇEVİR?",
+      whyTitle: "Premium Gizlilik, Sınırsız Güç.",
+      why1Title: "%100 İstemci Tabanlı",
+      why1Desc: "Dosyaların hiçbir zaman cihazından çıkmaz. Yükleme, dönüştürme ve indirme dahil tüm işlemler doğrudan tarayıcında, yerel olarak çalışır — sunucuya tek bir bayt bile gitmez.",
+      why2Title: "Sunucusuz & Sınırsız",
+      why2Desc: "Kuyruk yok, bekleme yok, dosya boyutu sınırı yok. İşlem gücü tamamen cihazından geldiği için istediğin kadar dosyayı, istediğin kadar kullan — üyelik ya da kredi kartı gerekmez.",
+      why3Title: "Çevrimdışı (PWA)",
+      why3Desc: "Uygulamayı bir kere ziyaret ettikten sonra cihazına ekleyebilir, internet bağlantın kesilse bile dönüştürme, sıkıştırma ve düzenleme araçlarını kullanmaya devam edebilirsin.",
+      footerText: "pdfcevir — kayıtsız, ücretsiz, sunucusuz.",
+      privacyLink: "Gizlilik Politikası",
+      termsLink: "Kullanım Şartları",
+      contactLink: "İletişim",
+      modalEyebrowLegal: "YASAL",
+      modalEyebrowContact: "İLETİŞİM",
+      privacyTitle: "Gizlilik Politikası",
+      privacyBody: `<p><strong>Son güncelleme:</strong> 2026</p><p>pdfcevir olarak gizliliğine en üst düzeyde önem veriyoruz. Bu sayfadaki tüm araçlar (PDF Birleştir, PDF Sıkıştır, Görselden PDF, Sayfa Döndür, Şifre Çöz/Koru, Filigran Ekle ve diğerleri) <strong>%100 istemci taraflı (client-side)</strong> çalışır.</p><h3>Dosyalarınız sunucuya yüklenmez</h3><p>Yüklediğiniz hiçbir dosya, hiçbir zaman internete gönderilmez ya da bir sunucuda saklanmaz. Tüm dönüştürme, sıkıştırma, birleştirme ve düzenleme işlemleri tarayıcınızın kendi belleğinde, JavaScript motoru üzerinden gerçekleştirilir. Dosyalarınız sekmeyi kapattığınız anda cihazınızın belleğinden silinir.</p><h3>Topladığımız veriler</h3><p>Sitemizi daha iyi hale getirmek için anonim kullanım istatistikleri (sayfa görüntüleme, tarayıcı türü, yaklaşık konum) toplayabiliriz. Bu veriler kimliğinizi belirlemek için kullanılmaz.</p><h3>Çerezler ve reklamlar</h3><p>Sitemiz, hizmetlerin ücretsiz kalabilmesi için Google AdSense aracılığıyla reklam gösterebilir. Google, kişiselleştirilmiş reklamlar sunmak amacıyla çerez kullanabilir; bu çerezleri tarayıcı ayarlarınızdan yönetebilir veya devre dışı bırakabilirsiniz.</p><h3>Yerel depolama (localStorage)</h3><p>Dil ve tema tercihiniz gibi ayarlar, yalnızca sizin cihazınızda, tarayıcınızın yerel depolama alanında saklanır ve bizimle paylaşılmaz.</p><h3>İletişim</h3><p>Gizlilik politikamızla ilgili sorularınız için İletişim sayfamızdan bize ulaşabilirsiniz.</p>`,
+      termsTitle: "Kullanım Şartları",
+      termsBody: `<p><strong>Son güncelleme:</strong> 2026</p><p>pdfcevir'i kullanarak aşağıdaki şartları kabul etmiş sayılırsınız.</p><h3>Hizmetin niteliği</h3><p>pdfcevir; PDF birleştirme, sıkıştırma, görselden PDF oluşturma, sayfa döndürme, şifre çözme/koruma ve filigran ekleme gibi araçları ücretsiz, üyelik gerektirmeden, tamamen tarayıcı üzerinde çalışacak şekilde sunar. Hizmet "olduğu gibi" sağlanır, kesintisiz veya hatasız çalışacağına dair herhangi bir garanti verilmez.</p><h3>Sorumluluk sınırı</h3><p>Araçların kullanımı sonucunda oluşabilecek veri kaybı, dosya bozulması veya işlem hatalarından pdfcevir sorumlu tutulamaz. Önemli belgelerinizin yedeğini almanız önerilir.</p><h3>Kabul edilebilir kullanım</h3><p>Hizmeti yasa dışı içerik üretmek, başkalarının telif haklarını ihlal etmek veya üçüncü taraflara zarar verecek şekilde kullanamazsınız.</p><h3>Değişiklikler</h3><p>Bu şartlar zaman zaman güncellenebilir; güncel sürüm her zaman bu sayfada yayınlanır.</p><h3>Uygulanacak hukuk</h3><p>Bu şartlar, hizmetin sunulduğu ülkenin yürürlükteki mevzuatına tabidir.</p>`,
+      contactTitle: "Bize Ulaşın",
+      contactBody: `<p>Sorularınız, geri bildirimleriniz veya iş birliği teklifleriniz için bize e-posta yoluyla ulaşabilirsiniz.</p><p><strong>E-posta:</strong> <a href="mailto:destek@pdfcevir.vercel.app">destek@pdfcevir.vercel.app</a></p><p>Hata bildirimleri ve özellik istekleri için lütfen kullandığınız aracı, tarayıcınızı ve cihazınızı da belirtin — bu, sorunu daha hızlı çözmemize yardımcı olur.</p><p>Genellikle 2-3 iş günü içinde geri dönüş yapmaya çalışıyoruz.</p>`,
+      soonBadge: "ÇOK YAKINDA",
+      soonTitle: "Şifre Çöz / Koru",
+      soonDesc: "PDF'lerine şifre ekleme ve mevcut şifreni kaldırma aracı üzerinde çalışıyoruz. Diğer tüm araçlarımız gibi bu özellik de tamamen tarayıcında, %100 istemci taraflı olarak çalışacak — dosyaların asla cihazından çıkmayacak.",
+      soonField1: "PDF Şifresi",
+      soonField2: "İşlem",
+      soonField2Value: "Şifre Koru / Şifre Kaldır"
+    },
     common: {
       largeFileWarning: "Bu dosya büyük, işlem tarayıcında biraz sürebilir. Sekmeyi kapatma.",
       errEncrypted: "Bu PDF şifreli/korumalı görünüyor, önce şifresini kaldırman gerekiyor.",
@@ -2188,7 +2637,8 @@ const LANG = {
       rotate: { eyebrow: "Belge Masası", heading: "PDF'ini <em>döndür</em>,<br>doğru yöne çevir.", sub: "Ters taranmış sayfaları tek tıkla düzelt. Kayıt yok, sunucu yok." },
       pagenum: { eyebrow: "Belge Masası", heading: "Sayfalarına <em>numara</em><br>ekle.", sub: "Belgeni düzenli göster, her sayfaya otomatik numara bas. Kayıt yok, sunucu yok." },
       topng: { eyebrow: "Belge Masası", heading: "PDF'ini <em>görsele</em><br>çevir.", sub: "Her sayfayı yüksek kaliteli PNG ya da JPG olarak dışa aktar. Kayıt yok, sunucu yok." },
-      watermark: { eyebrow: "Belge Masası", heading: "PDF'ine <em>filigran</em><br>ekle.", sub: "Belgeni kendi metninle işaretle, izinsiz kullanımı zorlaştır. Kayıt yok, sunucu yok." }
+      watermark: { eyebrow: "Belge Masası", heading: "PDF'ine <em>filigran</em><br>ekle.", sub: "Belgeni kendi metninle işaretle, izinsiz kullanımı zorlaştır. Kayıt yok, sunucu yok." },
+      unlock: { eyebrow: "Belge Masası", heading: "PDF'ini <em>şifrele</em><br>ya da koru.", sub: "Şifre ekle ya da mevcut şifreni kaldır. Bu araç yakında %100 istemci taraflı olarak yayında." }
     },
     jpg: {
       dropTitle: "Resimleri buraya bırak",
@@ -2339,7 +2789,36 @@ const LANG = {
     privacyLink: "Gizlilik Politikası"
   },
   en: {
-    tabs: { jpg: "Image → PDF", compress: "Compress PDF", word: "PDF → Word", merge: "Merge PDF", split: "Split PDF", rotate: "Rotate PDF", pagenum: "Page Numbers", topng: "PDF → Image", watermark: "Add Watermark" },
+    tabs: { jpg: "Image → PDF", compress: "Compress PDF", word: "PDF → Word", merge: "Merge PDF", split: "Split PDF", rotate: "Rotate PDF", pagenum: "Page Numbers", topng: "PDF → Image", watermark: "Add Watermark", unlock: "Unlock / Protect" },
+    site: {
+      cardSubtitle: "Local Processing, 100% Client-Side",
+      whyEyebrow: "WHY PDF ÇEVİR?",
+      whyTitle: "Premium Privacy, Unlimited Power.",
+      why1Title: "100% Client-Side",
+      why1Desc: "Your files never leave your device. Uploading, converting, and downloading all happen locally in your browser — not a single byte is sent to a server.",
+      why2Title: "Serverless & Unlimited",
+      why2Desc: "No queues, no waiting, no file-size limits. Because the processing power comes entirely from your own device, use as many files as you like — no account or credit card required.",
+      why3Title: "Works Offline (PWA)",
+      why3Desc: "Once you've visited the app, you can install it on your device and keep converting, compressing, and editing even if your internet connection drops.",
+      footerText: "pdfcevir — no sign-up, free, serverless.",
+      privacyLink: "Privacy Policy",
+      termsLink: "Terms of Service",
+      contactLink: "Contact",
+      modalEyebrowLegal: "LEGAL",
+      modalEyebrowContact: "CONTACT",
+      privacyTitle: "Privacy Policy",
+      privacyBody: `<p><strong>Last updated:</strong> 2026</p><p>At pdfcevir, we take your privacy seriously. Every tool on this site (Merge PDF, Compress PDF, Image to PDF, Rotate Pages, Unlock/Protect PDF, Add Watermark, and more) runs <strong>100% client-side</strong>.</p><h3>Your files are never uploaded</h3><p>Nothing you upload is ever sent over the internet or stored on a server. All converting, compressing, merging, and editing happens inside your own browser's JavaScript engine. Your files are cleared from memory the moment you close the tab.</p><h3>Data we collect</h3><p>We may collect anonymous usage statistics (page views, browser type, approximate location) to improve the site. This data cannot be used to identify you.</p><h3>Cookies & advertising</h3><p>To keep the service free, we may display ads through Google AdSense. Google may use cookies to serve personalized ads; you can manage or disable these through your browser settings.</p><h3>Local storage</h3><p>Preferences like language and theme are stored only in your browser's local storage and are never shared with us.</p><h3>Contact</h3><p>If you have questions about this policy, reach out via our Contact page.</p>`,
+      termsTitle: "Terms of Service",
+      termsBody: `<p><strong>Last updated:</strong> 2026</p><p>By using pdfcevir, you agree to the following terms.</p><h3>Nature of the service</h3><p>pdfcevir provides tools such as PDF merging, compression, image-to-PDF conversion, page rotation, unlock/protect, and watermarking — free of charge, without an account, running entirely in your browser. The service is provided "as is," with no guarantee of uninterrupted or error-free operation.</p><h3>Limitation of liability</h3><p>pdfcevir is not liable for any data loss, file corruption, or processing errors that may result from using these tools. We recommend keeping backups of important documents.</p><h3>Acceptable use</h3><p>You may not use the service to produce unlawful content, infringe on others' copyrights, or cause harm to third parties.</p><h3>Changes</h3><p>These terms may be updated from time to time; the current version is always published on this page.</p><h3>Governing law</h3><p>These terms are governed by the applicable laws of the jurisdiction in which the service is offered.</p>`,
+      contactTitle: "Get in Touch",
+      contactBody: `<p>For questions, feedback, or partnership inquiries, feel free to reach us by email.</p><p><strong>Email:</strong> <a href="mailto:destek@pdfcevir.vercel.app">destek@pdfcevir.vercel.app</a></p><p>For bug reports and feature requests, please include the tool, browser, and device you were using — it helps us resolve issues faster.</p><p>We typically respond within 2-3 business days.</p>`,
+      soonBadge: "COMING SOON",
+      soonTitle: "Unlock / Protect PDF",
+      soonDesc: "We're building a tool to add a password to your PDFs or remove an existing one. Like every other tool here, it will run 100% client-side in your browser — your files will never leave your device.",
+      soonField1: "PDF Password",
+      soonField2: "Action",
+      soonField2Value: "Protect / Remove Password"
+    },
     common: {
       largeFileWarning: "This file is large, processing may take a moment in your browser. Don't close the tab.",
       errEncrypted: "This PDF appears to be encrypted/protected — remove the password first.",
@@ -2360,7 +2839,8 @@ const LANG = {
       rotate: { eyebrow: "Document Desk", heading: "<em>Rotate</em> your PDF,<br>face the right way.", sub: "Fix upside-down or sideways scans in one click. No sign-up, no server." },
       pagenum: { eyebrow: "Document Desk", heading: "Add <em>page numbers</em><br>to your pages.", sub: "Keep your document organized with automatic numbering on every page. No sign-up, no server." },
       topng: { eyebrow: "Document Desk", heading: "Turn your PDF into <em>images</em>,<br>page by page.", sub: "Export every page as a high-quality PNG or JPG. No sign-up, no server." },
-      watermark: { eyebrow: "Document Desk", heading: "Add a <em>watermark</em><br>to your PDF.", sub: "Mark your document with your own text to discourage unauthorized use. No sign-up, no server." }
+      watermark: { eyebrow: "Document Desk", heading: "Add a <em>watermark</em><br>to your PDF.", sub: "Mark your document with your own text to discourage unauthorized use. No sign-up, no server." },
+      unlock: { eyebrow: "Document Desk", heading: "<em>Encrypt</em> or protect<br>your PDF.", sub: "Add a password or remove an existing one. This tool is coming soon, 100% client-side like the rest." }
     },
     jpg: {
       dropTitle: "Drop your images here",
@@ -2523,7 +3003,45 @@ function applyLanguage(lang){
   document.querySelectorAll('#langToggle button').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
 
   const tabButtons = document.querySelectorAll('.tab');
-  tabButtons.forEach(t => { const lbl = t.querySelector('.tab-label'); if(lbl) lbl.textContent = L.tabs[t.dataset.tool]; });
+  tabButtons.forEach(t => {
+    const lbl = t.querySelector('.tab-label'); if(lbl) lbl.textContent = L.tabs[t.dataset.tool];
+    const sub = t.querySelector('.tab-sub'); if(sub) sub.textContent = L.site.cardSubtitle;
+  });
+
+  // Neden PDF Çevir? bölümü
+  document.getElementById('whyEyebrow').textContent = L.site.whyEyebrow;
+  document.getElementById('whyTitle').textContent = L.site.whyTitle;
+  document.getElementById('why1Title').textContent = L.site.why1Title;
+  document.getElementById('why1Desc').textContent = L.site.why1Desc;
+  document.getElementById('why2Title').textContent = L.site.why2Title;
+  document.getElementById('why2Desc').textContent = L.site.why2Desc;
+  document.getElementById('why3Title').textContent = L.site.why3Title;
+  document.getElementById('why3Desc').textContent = L.site.why3Desc;
+
+  // Footer
+  document.getElementById('footerText').textContent = L.site.footerText;
+  document.getElementById('privacyLink').textContent = L.site.privacyLink;
+  document.getElementById('termsLink').textContent = L.site.termsLink;
+  document.getElementById('contactLink').textContent = L.site.contactLink;
+
+  // Yasal modallar
+  document.getElementById('modalPrivacyEyebrow').textContent = L.site.modalEyebrowLegal;
+  document.getElementById('modalPrivacyTitle').textContent = L.site.privacyTitle;
+  document.getElementById('modalPrivacyBody').innerHTML = L.site.privacyBody;
+  document.getElementById('modalTermsEyebrow').textContent = L.site.modalEyebrowLegal;
+  document.getElementById('modalTermsTitle').textContent = L.site.termsTitle;
+  document.getElementById('modalTermsBody').innerHTML = L.site.termsBody;
+  document.getElementById('modalContactEyebrow').textContent = L.site.modalEyebrowContact;
+  document.getElementById('modalContactTitle').textContent = L.site.contactTitle;
+  document.getElementById('modalContactBody').innerHTML = L.site.contactBody;
+
+  // Şifre Çöz/Koru — yakında paneli
+  document.getElementById('soonBadge-unlock').textContent = L.site.soonBadge;
+  document.getElementById('soonTitle-unlock').textContent = L.site.soonTitle;
+  document.getElementById('soonDesc-unlock').textContent = L.site.soonDesc;
+  document.getElementById('soonField1-unlock').textContent = L.site.soonField1;
+  document.getElementById('soonField2-unlock').textContent = L.site.soonField2;
+  document.getElementById('soonField2Value-unlock').textContent = L.site.soonField2Value;
 
   const h = L.header[window.currentTool];
   document.getElementById('eyebrow').textContent = h.eyebrow;
@@ -2726,7 +3244,8 @@ document.getElementById('langToggle').addEventListener('click', e => {
     rotate: document.getElementById('panel-rotate'),
     pagenum: document.getElementById('panel-pagenum'),
     topng: document.getElementById('panel-topng'),
-    watermark: document.getElementById('panel-watermark')
+    watermark: document.getElementById('panel-watermark'),
+    unlock: document.getElementById('panel-unlock')
   };
 
   tabs.forEach(tab => {
@@ -4158,6 +4677,41 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('installBanner').style.display = 'none';
     });
   }
+
+  /* Yasal sayfa modalları — aç/kapa */
+  let lastFocusedEl = null;
+  function openModal(id){
+    const overlay = document.getElementById(id);
+    if(!overlay) return;
+    lastFocusedEl = document.activeElement;
+    overlay.classList.add('show');
+    overlay.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    const closeBtn = overlay.querySelector('.legal-modal-close');
+    if(closeBtn) closeBtn.focus();
+  }
+  function closeModal(overlay){
+    overlay.classList.remove('show');
+    overlay.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    if(lastFocusedEl) lastFocusedEl.focus();
+  }
+  document.querySelectorAll('footer a[data-modal]').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      openModal(link.dataset.modal);
+    });
+  });
+  document.querySelectorAll('.legal-modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', e => { if(e.target === overlay) closeModal(overlay); });
+    const closeBtn = overlay.querySelector('[data-close-modal]');
+    if(closeBtn) closeBtn.addEventListener('click', () => closeModal(overlay));
+  });
+  document.addEventListener('keydown', e => {
+    if(e.key !== 'Escape') return;
+    const openOverlay = document.querySelector('.legal-modal-overlay.show');
+    if(openOverlay) closeModal(openOverlay);
+  });
 });
 </script>
 
