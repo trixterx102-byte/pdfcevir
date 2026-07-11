@@ -85,6 +85,7 @@
 <script defer src="js/pdf-lib.min.js"></script>
 <script defer src="js/pdf.min.js"></script>
 <script defer src="js/jszip.min.js"></script>
+<script defer src="js/heic2any.min.js"></script>
 
 <style>
   :root{
@@ -1682,6 +1683,11 @@
       <span class="tab-label">Filigran Ekle</span>
       <span class="tab-sub">Lokal İşlem, %100 İstemci Tabanlı</span>
     </button>
+    <button class="tab" data-tool="heic" role="tab" aria-selected="false">
+      <span class="tab-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="15" rx="2" stroke="currentColor" stroke-width="1.6"/><circle cx="8.5" cy="9.5" r="1.4" fill="currentColor"/><path d="M4 16L9 11L13 14.5L16.5 11.5L20 15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><text x="12" y="24" font-size="0"></text></svg></span>
+      <span class="tab-label">HEIC → PDF/JPG</span>
+      <span class="tab-sub">Lokal İşlem, %100 İstemci Tabanlı</span>
+    </button>
     <button class="tab" data-tool="unlock" role="tab" aria-selected="false">
       <span class="tab-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="5" y="11" width="14" height="9" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 11V7.5C8 5 9.8 3.3 12 3.3C13.9 3.3 15.5 4.6 15.9 6.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="15.2" r="1.4" fill="currentColor"/></svg></span>
       <span class="tab-label">Şifre Çöz / Koru</span>
@@ -2409,6 +2415,73 @@
     </div>
   </div>
 
+  <!-- PANEL: HEIC → PDF/JPG -->
+  <div class="tool-panel" id="panel-heic" style="display:none;">
+    <div class="sheet fade-in">
+      <div class="sheet-inner">
+
+        <div class="drop" id="drop-heic" tabindex="0" role="button" aria-label="HEIC yüklemek için tıkla veya sürükle bırak">
+          <div class="drop-icon">
+            <svg viewBox="0 0 42 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 2H27L38 13V50C38 51.6569 36.6569 53 35 53H4C2.34315 53 1 51.6569 1 50V5C1 3.34315 2.34315 2 4 2Z" stroke="#B3372C" stroke-width="1.6"/>
+              <path d="M27 2V11C27 12.1046 27.8954 13 29 13H38" stroke="#B3372C" stroke-width="1.6"/>
+            </svg>
+          </div>
+          <p class="drop-title" id="dropTitle-heic">HEIC dosyalarını buraya bırak</p>
+          <p class="drop-hint" id="dropHint-heic">ya da <b>cihazından seç</b> — iPhone fotoğrafları, birden fazla seçebilirsin</p>
+          <input type="file" id="fileInput-heic" accept=".heic,.heif,image/heic,image/heif" multiple>
+        </div>
+
+        <ul class="filelist" id="fileList-heic"></ul>
+
+        <div id="fmtBlock-heic" style="display:none;">
+          <p class="quality-label" id="fmtLabel-heic">Çıktı biçimi</p>
+          <div class="quality-options">
+            <div class="quality-option selected" data-outfmt="jpg">
+              <strong id="outJpgTitle-heic">Ayrı JPG (ZIP)</strong>
+              <span id="outJpgDesc-heic">Her fotoğraf kendi dosyası olarak</span>
+            </div>
+            <div class="quality-option" data-outfmt="pdf">
+              <strong id="outPdfTitle-heic">Tek PDF</strong>
+              <span id="outPdfDesc-heic">Hepsi tek belgede birleşir</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions" id="actionsRow-heic" style="display:none;">
+          <span class="count-label" id="countLabel-heic">0 dosya seçildi</span>
+          <button class="btn btn-primary" id="convertBtn-heic" disabled>Dönüştür</button>
+        </div>
+
+        <div class="result" id="result-heic">
+          <span class="stamp-badge" id="stampBadge-heic">✓ HAZIR</span>
+          <span class="result-name" id="resultName-heic">fotograflar.zip</span>
+          <button class="btn btn-download" id="downloadBtn-heic">İndir</button>
+        </div>
+
+        <div class="note-box">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 9V13M12 17H12.01M10.29 3.86L1.82 18A2 2 0 003.54 21H20.46A2 2 0 0022.18 18L13.71 3.86A2 2 0 0010.29 3.86Z" stroke="#A9812E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span id="noteBox-heic">HEIC, iPhone'ların varsayılan fotoğraf biçimidir ve çoğu Windows/Android uygulaması tarafından açılamaz. Bu araç fotoğraflarını herkesin açabileceği JPG ya da PDF'e çevirir.</span>
+        </div>
+
+        <div class="privacy-note">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 2L4 5V11C4 16 7.5 20.5 12 22C16.5 20.5 20 16 20 11V5L12 2Z" stroke="#5B5B52" stroke-width="1.5"/><path d="M9 12L11 14L15 10" stroke="#5B5B52" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span id="privacyNote-heic">Dosyaların hiçbir sunucuya yüklenmez. Dönüştürme işlemi tamamen kendi tarayıcında, cihazında gerçekleşir.</span>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="how-to fade-in">
+      <h2 id="howToTitle-heic">Nasıl çalışır</h2>
+      <ul class="steps">
+        <li><span class="step-num">01</span><p id="step1-heic">HEIC fotoğraflarını seç ya da sürükle bırak.</p></li>
+        <li><span class="step-num">02</span><p id="step2-heic">JPG mi PDF mi istediğini seç.</p></li>
+        <li><span class="step-num">03</span><p id="step3-heic">"Dönüştür"e bas, sonucu indir.</p></li>
+      </ul>
+    </div>
+  </div>
+
   <!-- PANEL 10: Şifre Çöz / Koru (yakında) -->
   <div class="tool-panel" id="panel-unlock" style="display:none;">
     <div class="sheet fade-in">
@@ -2760,7 +2833,7 @@ document.addEventListener('keydown', e => {
 /* ===================== Dil sistemi ===================== */
 const LANG = {
   tr: {
-    tabs: { jpg: "Görsel → PDF", compress: "PDF Sıkıştır", word: "PDF → Word", merge: "PDF Birleştir", split: "PDF Böl", pages: "Sayfa Sil/Sırala", rotate: "PDF Döndür", pagenum: "Sayfa Numarası", topng: "PDF → Görsel", watermark: "Filigran Ekle", unlock: "Şifre Çöz / Koru" },
+    tabs: { jpg: "Görsel → PDF", compress: "PDF Sıkıştır", word: "PDF → Word", merge: "PDF Birleştir", split: "PDF Böl", pages: "Sayfa Sil/Sırala", rotate: "PDF Döndür", pagenum: "Sayfa Numarası", topng: "PDF → Görsel", watermark: "Filigran Ekle", heic: "HEIC → PDF/JPG", unlock: "Şifre Çöz / Koru" },
     site: {
       cardSubtitle: "Lokal İşlem, %100 İstemci Tabanlı",
       whyEyebrow: "NEDEN PDF ÇEVİR?",
@@ -2813,6 +2886,7 @@ const LANG = {
       pagenum: { eyebrow: "Belge Masası", heading: "Sayfalarına <em>numara</em><br>ekle.", sub: "Belgeni düzenli göster, her sayfaya otomatik numara bas. Kayıt yok, sunucu yok." },
       topng: { eyebrow: "Belge Masası", heading: "PDF'ini <em>görsele</em><br>çevir.", sub: "Her sayfayı yüksek kaliteli PNG ya da JPG olarak dışa aktar. Kayıt yok, sunucu yok." },
       watermark: { eyebrow: "Belge Masası", heading: "PDF'ine <em>filigran</em><br>ekle.", sub: "Belgeni kendi metninle işaretle, izinsiz kullanımı zorlaştır. Kayıt yok, sunucu yok." },
+      heic: { eyebrow: "Belge Masası", heading: "iPhone fotoğraflarını <em>çevir</em>,<br>her yerde aç.", sub: "HEIC fotoğraflarını JPG'ye ya da tek bir PDF'e dönüştür. Kayıt yok, sunucu yok." },
       unlock: { eyebrow: "Belge Masası", heading: "PDF'ini <em>şifrele</em><br>ya da koru.", sub: "Şifre ekle ya da mevcut şifreni kaldır. Bu araç yakında %100 istemci taraflı olarak yayında." }
     },
     jpg: {
@@ -2974,12 +3048,28 @@ const LANG = {
       errEmptyText: "Lütfen bir filigran metni yaz.",
       errGeneric: "Filigran eklerken bir şeyler ters gitti."
     },
+    heic: {
+      dropTitle: "HEIC dosyalarını buraya bırak",
+      dropHint: 'ya da <b>cihazından seç</b> — iPhone fotoğrafları, birden fazla seçebilirsin',
+      count: n => `${n} dosya seçildi`,
+      fmtLabel: "Çıktı biçimi",
+      outJpgTitle: "Ayrı JPG (ZIP)", outJpgDesc: "Her fotoğraf kendi dosyası olarak",
+      outPdfTitle: "Tek PDF", outPdfDesc: "Hepsi tek belgede birleşir",
+      convertBtn: "Dönüştür", convertBtnLoading: "Dönüştürülüyor...",
+      stampBadge: "✓ HAZIR", downloadBtn: "İndir",
+      noteBox: "HEIC, iPhone'ların varsayılan fotoğraf biçimidir ve çoğu Windows/Android uygulaması tarafından açılamaz. Bu araç fotoğraflarını herkesin açabileceği JPG ya da PDF'e çevirir.",
+      privacyNote: "Dosyaların hiçbir sunucuya yüklenmez. Dönüştürme işlemi tamamen kendi tarayıcında, cihazında gerçekleşir.",
+      howToTitle: "Nasıl çalışır",
+      steps: ["HEIC fotoğraflarını seç ya da sürükle bırak.", "JPG mi PDF mi istediğini seç.", '"Dönüştür"e bas, sonucu indir.'],
+      errPickHeic: "Lütfen HEIC ya da HEIF dosyası seç.",
+      errGeneric: "Dönüştürürken bir şeyler ters gitti."
+    },
     footer: "pdfcevir — kayıtsız, ücretsiz, sunucusuz.",
     trust: ["100% Gizli", "Kayıt Yok", "Anında Çalışır", "Sonsuza Kadar Ücretsiz"],
     privacyLink: "Gizlilik Politikası"
   },
   en: {
-    tabs: { jpg: "Image → PDF", compress: "Compress PDF", word: "PDF → Word", merge: "Merge PDF", split: "Split PDF", pages: "Delete/Reorder Pages", rotate: "Rotate PDF", pagenum: "Page Numbers", topng: "PDF → Image", watermark: "Add Watermark", unlock: "Unlock / Protect" },
+    tabs: { jpg: "Image → PDF", compress: "Compress PDF", word: "PDF → Word", merge: "Merge PDF", split: "Split PDF", pages: "Delete/Reorder Pages", rotate: "Rotate PDF", pagenum: "Page Numbers", topng: "PDF → Image", watermark: "Add Watermark", heic: "HEIC → PDF/JPG", unlock: "Unlock / Protect" },
     site: {
       cardSubtitle: "Local Processing, 100% Client-Side",
       whyEyebrow: "WHY PDF ÇEVİR?",
@@ -3032,6 +3122,7 @@ const LANG = {
       pagenum: { eyebrow: "Document Desk", heading: "Add <em>page numbers</em><br>to your pages.", sub: "Keep your document organized with automatic numbering on every page. No sign-up, no server." },
       topng: { eyebrow: "Document Desk", heading: "Turn your PDF into <em>images</em>,<br>page by page.", sub: "Export every page as a high-quality PNG or JPG. No sign-up, no server." },
       watermark: { eyebrow: "Document Desk", heading: "Add a <em>watermark</em><br>to your PDF.", sub: "Mark your document with your own text to discourage unauthorized use. No sign-up, no server." },
+      heic: { eyebrow: "Document Desk", heading: "<em>Convert</em> iPhone photos,<br>open them anywhere.", sub: "Turn HEIC photos into JPG or a single PDF. No sign-up, no server." },
       unlock: { eyebrow: "Document Desk", heading: "<em>Encrypt</em> or protect<br>your PDF.", sub: "Add a password or remove an existing one. This tool is coming soon, 100% client-side like the rest." }
     },
     jpg: {
@@ -3192,6 +3283,22 @@ const LANG = {
       errPickPdf: "Please choose a PDF file.",
       errEmptyText: "Please enter a watermark text.",
       errGeneric: "Something went wrong while adding the watermark."
+    },
+    heic: {
+      dropTitle: "Drop your HEIC files here",
+      dropHint: 'or <b>choose from your device</b> — iPhone photos, you can pick more than one',
+      count: n => `${n} files selected`,
+      fmtLabel: "Output format",
+      outJpgTitle: "Separate JPGs (ZIP)", outJpgDesc: "Each photo as its own file",
+      outPdfTitle: "Single PDF", outPdfDesc: "All combined into one document",
+      convertBtn: "Convert", convertBtnLoading: "Converting...",
+      stampBadge: "✓ READY", downloadBtn: "Download",
+      noteBox: "HEIC is the default photo format on iPhones and can't be opened by most Windows/Android apps. This tool turns your photos into JPG or PDF that anyone can open.",
+      privacyNote: "Your files are never uploaded to a server. Conversion happens entirely in your own browser, on your device.",
+      howToTitle: "How it works",
+      steps: ["Choose your HEIC photos or drag and drop.", "Pick JPG or PDF as the output.", 'Hit "Convert" and download the result.'],
+      errPickHeic: "Please choose a HEIC or HEIF file.",
+      errGeneric: "Something went wrong while converting."
     },
     footer: "pdfcevir — no sign-up, free, serverless.",
     trust: ["100% Private", "No Sign-up", "Instant", "Free Forever"],
@@ -3416,6 +3523,27 @@ function applyLanguage(lang){
   document.getElementById('step2-watermark').textContent = L.watermark.steps[1];
   document.getElementById('step3-watermark').textContent = L.watermark.steps[2];
 
+  // HEIC → PDF/JPG
+  document.getElementById('dropTitle-heic').textContent = L.heic.dropTitle;
+  document.getElementById('dropHint-heic').innerHTML = L.heic.dropHint;
+  document.getElementById('fmtLabel-heic').textContent = L.heic.fmtLabel;
+  document.getElementById('outJpgTitle-heic').textContent = L.heic.outJpgTitle;
+  document.getElementById('outJpgDesc-heic').textContent = L.heic.outJpgDesc;
+  document.getElementById('outPdfTitle-heic').textContent = L.heic.outPdfTitle;
+  document.getElementById('outPdfDesc-heic').textContent = L.heic.outPdfDesc;
+  document.getElementById('convertBtn-heic').textContent = L.heic.convertBtn;
+  document.getElementById('stampBadge-heic').textContent = L.heic.stampBadge;
+  document.getElementById('downloadBtn-heic').textContent = L.heic.downloadBtn;
+  document.getElementById('noteBox-heic').textContent = L.heic.noteBox;
+  document.getElementById('privacyNote-heic').textContent = L.heic.privacyNote;
+  document.getElementById('howToTitle-heic').textContent = L.heic.howToTitle;
+  document.getElementById('step1-heic').textContent = L.heic.steps[0];
+  document.getElementById('step2-heic').textContent = L.heic.steps[1];
+  document.getElementById('step3-heic').textContent = L.heic.steps[2];
+  const heicList = document.getElementById('fileList-heic');
+  const countHeicEl = document.getElementById('countLabel-heic');
+  if(countHeicEl && heicList) countHeicEl.textContent = L.heic.count(heicList.children.length);
+
   document.getElementById('footerText').textContent = L.footer;
   const sealCaptionEl = document.getElementById('sealCaption');
   if(sealCaptionEl) sealCaptionEl.innerHTML = L.common.sealCaption;
@@ -3470,6 +3598,7 @@ document.getElementById('langToggle').addEventListener('click', e => {
     pagenum: document.getElementById('panel-pagenum'),
     topng: document.getElementById('panel-topng'),
     watermark: document.getElementById('panel-watermark'),
+    heic: document.getElementById('panel-heic'),
     unlock: document.getElementById('panel-unlock')
   };
 
@@ -5047,6 +5176,161 @@ document.getElementById('langToggle').addEventListener('click', e => {
     } finally {
       convertBtn.disabled = false;
       convertBtn.textContent = t.convertBtn;
+    }
+  });
+})();
+</script>
+
+<script>
+/* ===================== ARAÇ: HEIC → PDF/JPG ===================== */
+(function(){
+  const drop = document.getElementById('drop-heic');
+  const fileInput = document.getElementById('fileInput-heic');
+  const fileListEl = document.getElementById('fileList-heic');
+  const fmtBlock = document.getElementById('fmtBlock-heic');
+  const fmtOptions = fmtBlock.querySelectorAll('.quality-option');
+  const actionsRow = document.getElementById('actionsRow-heic');
+  const countLabel = document.getElementById('countLabel-heic');
+  const convertBtn = document.getElementById('convertBtn-heic');
+  const result = document.getElementById('result-heic');
+  const resultName = document.getElementById('resultName-heic');
+  const downloadBtn = document.getElementById('downloadBtn-heic');
+
+  let files = [];
+  let blobUrl = null;
+  let idCounter = 0;
+  let selectedOutFmt = 'jpg';
+
+  function isHeicFile(file){
+    const name = (file.name || '').toLowerCase();
+    const type = (file.type || '').toLowerCase();
+    return name.endsWith('.heic') || name.endsWith('.heif') || type.includes('heic') || type.includes('heif');
+  }
+
+  function render(){
+    fileListEl.innerHTML = '';
+    files.forEach((f, i) => {
+      const li = document.createElement('li');
+      li.className = 'file-row';
+      li.innerHTML = `
+        <span class="file-num">${String(i+1).padStart(2,'0')}</span>
+        <span class="file-name">${f.file.name}</span>
+        <span class="file-size">${formatSize(f.file.size)}</span>
+        <button class="file-remove" data-id="${f.id}" aria-label="Kaldır">✕</button>
+      `;
+      fileListEl.appendChild(li);
+    });
+    fmtBlock.style.display = files.length ? 'block' : 'none';
+    actionsRow.style.display = files.length ? 'flex' : 'none';
+    countLabel.textContent = LANG[window.currentLang].heic.count(files.length);
+    convertBtn.disabled = files.length < 1;
+    if(files.length === 0) result.classList.remove('show');
+    const totalBytes = files.reduce((sum, f) => sum + f.file.size, 0);
+    updateSizeWarning(fileListEl, files.length ? { size: totalBytes } : null);
+  }
+
+  function addFiles(fileArr){
+    const t = LANG[window.currentLang].heic;
+    let rejected = false;
+    [...fileArr].forEach(file => {
+      if(!isHeicFile(file)){ rejected = true; return; }
+      files.push({ file, id: ++idCounter });
+    });
+    if(rejected) alert(t.errPickHeic);
+    result.classList.remove('show');
+    render();
+  }
+
+  drop.addEventListener('click', () => fileInput.click());
+  drop.addEventListener('keydown', e => { if(e.key === 'Enter' || e.key === ' ') fileInput.click(); });
+  fileInput.addEventListener('change', e => { addFiles(e.target.files); fileInput.value = ''; });
+  ['dragenter','dragover'].forEach(evt => drop.addEventListener(evt, e => { e.preventDefault(); drop.classList.add('dragover'); }));
+  ['dragleave','drop'].forEach(evt => drop.addEventListener(evt, e => { e.preventDefault(); drop.classList.remove('dragover'); }));
+  drop.addEventListener('drop', e => addFiles(e.dataTransfer.files));
+
+  fileListEl.addEventListener('click', e => {
+    const btn = e.target.closest('.file-remove');
+    if(!btn) return;
+    files = files.filter(f => f.id !== Number(btn.dataset.id));
+    render();
+  });
+
+  fmtOptions.forEach(opt => {
+    opt.addEventListener('click', () => {
+      fmtOptions.forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      selectedOutFmt = opt.dataset.outfmt;
+    });
+  });
+
+  async function convertOneToJpeg(file){
+    await libReady('heic2any');
+    const out = await heic2any({ blob: file, toType: 'image/jpeg', quality: 0.85 });
+    return Array.isArray(out) ? out[0] : out;
+  }
+
+  convertBtn.addEventListener('click', async () => {
+    if(files.length < 1) return;
+    const t = LANG[window.currentLang].heic;
+    convertBtn.disabled = true;
+    convertBtn.textContent = t.convertBtnLoading;
+    try{
+      resetBtnProgress(convertBtn);
+      const jpegs = [];
+      for(let i = 0; i < files.length; i++){
+        const jpegBlob = await convertOneToJpeg(files[i].file);
+        const baseName = files[i].file.name.replace(/\.(heic|heif)$/i, '');
+        jpegs.push({ name: `${baseName}.jpg`, blob: jpegBlob });
+        setBtnProgress(convertBtn, i + 1, files.length);
+      }
+
+      if(blobUrl) URL.revokeObjectURL(blobUrl);
+
+      if(selectedOutFmt === 'pdf'){
+        await libReady('PDFLib');
+        const { PDFDocument } = PDFLib;
+        const pdfDoc = await PDFDocument.create();
+        const pageW = 595.28, pageH = 841.89;
+        const margin = 28;
+        for(const jp of jpegs){
+          const buf = await jp.blob.arrayBuffer();
+          const embedded = await pdfDoc.embedJpg(buf);
+          const page = pdfDoc.addPage([pageW, pageH]);
+          const scale = Math.min((pageW-margin*2)/embedded.width, (pageH-margin*2)/embedded.height, 1);
+          const w = embedded.width*scale, h = embedded.height*scale;
+          page.drawImage(embedded, { x:(pageW-w)/2, y:(pageH-h)/2, width:w, height:h });
+        }
+        const outBytes = await pdfDoc.save();
+        const blob = new Blob([outBytes], { type: 'application/pdf' });
+        blobUrl = URL.createObjectURL(blob);
+        const name = files.length === 1 ? jpegs[0].name.replace(/\.jpg$/i, '.pdf') : 'fotograflar.pdf';
+        resultName.textContent = name;
+        downloadBtn.onclick = () => { const a = document.createElement('a'); a.href = blobUrl; a.download = name; a.click(); };
+      } else if(jpegs.length === 1){
+        blobUrl = URL.createObjectURL(jpegs[0].blob);
+        resultName.textContent = jpegs[0].name;
+        downloadBtn.onclick = () => { const a = document.createElement('a'); a.href = blobUrl; a.download = jpegs[0].name; a.click(); };
+      } else {
+        await libReady('JSZip');
+        const zip = new JSZip();
+        jpegs.forEach(jp => zip.file(jp.name, jp.blob));
+        const zipBlob = await zip.generateAsync({ type: 'blob' });
+        blobUrl = URL.createObjectURL(zipBlob);
+        const zipName = 'fotograflar.zip';
+        resultName.textContent = zipName;
+        downloadBtn.onclick = () => { const a = document.createElement('a'); a.href = blobUrl; a.download = zipName; a.click(); };
+      }
+
+      addRecentOperation('heic', resultName.textContent, blobUrl);
+      result.classList.add('show');
+      result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    } catch(err){
+      alert(friendlyErrorMessage(err, t.errGeneric));
+      console.error(err);
+    } finally {
+      convertBtn.disabled = false;
+      convertBtn.textContent = t.convertBtn;
+      setTimeout(() => resetBtnProgress(convertBtn), 300);
     }
   });
 })();
