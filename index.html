@@ -68,7 +68,7 @@
   "description": "Resimleri PDF'e çeviren, PDF'leri sıkıştıran ve Word'e dönüştüren, kayıt gerektirmeyen, tamamen tarayıcıda çalışan ücretsiz araç seti.",
   "applicationCategory": "UtilityApplication",
   "operatingSystem": "Any",
-  "featureList": "JPG/PNG'den PDF oluşturma, PDF sıkıştırma, PDF'den Word'e metin çevirme",
+  "featureList": "JPG/PNG'den PDF oluşturma, PDF sıkıştırma, PDF'den Word'e metin çevirme, PDF sayfalarını silme ve yeniden sıralama",
   "offers": {
     "@type": "Offer",
     "price": "0",
@@ -1065,6 +1065,46 @@
   }
   .single-file-name .file-size{ margin-left:auto; }
 
+  /* Sayfa Sil/Sırala — sayfa küçük resimleri ızgarası (sürükle-bırak + silme) */
+  .page-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(98px, 1fr));
+    gap: 12px;
+    margin-top: 20px;
+  }
+  .page-thumb{
+    position:relative;
+    border: 1.5px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--paper);
+    overflow:hidden;
+    cursor: grab;
+    transition: border-color .15s ease, opacity .15s ease, box-shadow .15s ease;
+    user-select:none;
+  }
+  .page-thumb:active{ cursor: grabbing; }
+  .page-thumb img{ display:block; width:100%; height:auto; aspect-ratio: 3/4; object-fit:contain; background:#fff; }
+  .page-thumb-num{
+    position:absolute; bottom:5px; left:6px;
+    font-family:'IBM Plex Mono', monospace; font-size: 10.5px;
+    background: rgba(20,33,61,0.72); color:#fff;
+    padding: 1px 6px; border-radius: 2px; letter-spacing:.02em;
+  }
+  .page-thumb-del{
+    position:absolute; top:5px; right:5px; width:22px; height:22px;
+    border-radius:50%; border:none; background: rgba(20,33,61,0.72); color:#fff;
+    font-size:13px; line-height:1; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition: background .15s ease;
+  }
+  .page-thumb-del:hover{ background: var(--stamp); }
+  .page-thumb.marked-delete{ opacity: .32; border-style: dashed; }
+  .page-thumb.marked-delete img{ filter: grayscale(1); }
+  .page-thumb.marked-delete .page-thumb-del{ background: var(--stamp); }
+  .page-thumb.dragging{ opacity: .35; }
+  .page-thumb.drag-over{ border-color: var(--stamp); box-shadow: 0 0 0 2px rgba(179,55,44,0.18); }
+  .page-grid-hint{ font-size: 12px; color: var(--text-muted); margin-top: 10px; }
+
   /* Sıkıştırma önizleme paneli — kalite seviyesine göre anlık güncellenir */
   .compress-preview{
     margin-top: 20px;
@@ -1449,6 +1489,13 @@
     border-color: rgba(169,129,46,0.4);
     color: #E8D9B3;
   }
+  html[data-theme="dark"] .page-thumb{
+    background: var(--dark-card-alt);
+    border-color: var(--dark-line);
+  }
+  html[data-theme="dark"] .page-grid-hint{
+    color: var(--dark-text-muted);
+  }
   html[data-theme="dark"] .img-editor-preview,
   html[data-theme="dark"] .img-editor-tool-btn{
     background: var(--dark-card-alt);
@@ -1608,6 +1655,11 @@
     <button class="tab" data-tool="split" role="tab" aria-selected="false">
       <span class="tab-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="4" y="3" width="7" height="18" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="13" y="3" width="7" height="18" rx="1.5" stroke="currentColor" stroke-width="1.6"/></svg></span>
       <span class="tab-label">PDF Böl</span>
+      <span class="tab-sub">Lokal İşlem, %100 İstemci Tabanlı</span>
+    </button>
+    <button class="tab" data-tool="pages" role="tab" aria-selected="false">
+      <span class="tab-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="8" rx="1.3" stroke="currentColor" stroke-width="1.6"/><rect x="14" y="3" width="7" height="8" rx="1.3" stroke="currentColor" stroke-width="1.6"/><rect x="3" y="14" width="7" height="7" rx="1.3" stroke="currentColor" stroke-width="1.6" stroke-dasharray="2 2"/><path d="M17 15.5V20.5M14.5 18H19.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+      <span class="tab-label">Sayfa Sil/Sırala</span>
       <span class="tab-sub">Lokal İşlem, %100 İstemci Tabanlı</span>
     </button>
     <button class="tab" data-tool="rotate" role="tab" aria-selected="false">
@@ -2008,6 +2060,69 @@
         <li><span class="step-num">01</span><p id="step1-split">PDF dosyanı seç ya da sürükle bırak.</p></li>
         <li><span class="step-num">02</span><p id="step2-split">İstersen sayfa aralığı yaz, "PDF'i Böl"e bas.</p></li>
         <li><span class="step-num">03</span><p id="step3-split">Oluşan parçaları ZIP olarak indir.</p></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PANEL: Sayfa Sil/Sırala -->
+  <div class="tool-panel" id="panel-pages" style="display:none;">
+    <div class="sheet fade-in">
+      <div class="sheet-inner">
+
+        <div class="drop" id="drop-pages" tabindex="0" role="button" aria-label="PDF yüklemek için tıkla veya sürükle bırak">
+          <div class="drop-icon">
+            <svg viewBox="0 0 42 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 2H27L38 13V50C38 51.6569 36.6569 53 35 53H4C2.34315 53 1 51.6569 1 50V5C1 3.34315 2.34315 2 4 2Z" stroke="#B3372C" stroke-width="1.6"/>
+              <path d="M27 2V11C27 12.1046 27.8954 13 29 13H38" stroke="#B3372C" stroke-width="1.6"/>
+            </svg>
+          </div>
+          <p class="drop-title" id="dropTitle-pages">PDF'ini buraya bırak</p>
+          <p class="drop-hint" id="dropHint-pages">ya da <b>cihazından seç</b> — tek PDF dosyası</p>
+          <input type="file" id="fileInput-pages" accept="application/pdf">
+        </div>
+
+        <div class="single-file-name" id="singleFile-pages" style="display:none;">
+          <img class="file-thumb" id="thumb-pages" style="display:none;" alt="">
+          <span id="singleFileName-pages">belge.pdf</span>
+          <span class="file-size" id="singleFileSize-pages"></span>
+          <button class="file-remove" id="singleFileRemove-pages" aria-label="Kaldır">✕</button>
+        </div>
+
+        <div id="gridWrap-pages" style="display:none;">
+          <p class="page-grid-hint" id="gridHint-pages">Sırasını değiştirmek için sürükle, silmek için sayfanın üzerindeki ✕'e bas.</p>
+          <div class="page-grid" id="pageGrid-pages"></div>
+        </div>
+
+        <div class="actions" id="actionsRow-pages" style="display:none;">
+          <span class="count-label" id="countLabel-pages">·</span>
+          <button class="btn btn-primary" id="convertBtn-pages">Değişiklikleri Uygula</button>
+        </div>
+
+        <div class="result" id="result-pages">
+          <span class="stamp-badge" id="stampBadge-pages">✓ PDF HAZIR</span>
+          <span class="result-name" id="resultName-pages">belge-duzenlendi.pdf</span>
+          <button class="btn btn-download" id="downloadBtn-pages">PDF'i İndir</button>
+        </div>
+
+        <div class="note-box">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 9V13M12 17H12.01M10.29 3.86L1.82 18A2 2 0 003.54 21H20.46A2 2 0 0022.18 18L13.71 3.86A2 2 0 0010.29 3.86Z" stroke="#A9812E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span id="noteBox-pages">Silinen sayfalar geri getirilemez — indirmeden önce sonucu kontrol et. Orijinal dosyan cihazında değişmeden kalır.</span>
+        </div>
+
+        <div class="privacy-note">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 2L4 5V11C4 16 7.5 20.5 12 22C16.5 20.5 20 16 20 11V5L12 2Z" stroke="#5B5B52" stroke-width="1.5"/><path d="M9 12L11 14L15 10" stroke="#5B5B52" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span id="privacyNote-pages">Dosyaların hiçbir sunucuya yüklenmez. Düzenleme işlemi tamamen kendi tarayıcında, cihazında gerçekleşir.</span>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="how-to fade-in">
+      <h2 id="howToTitle-pages">Nasıl çalışır</h2>
+      <ul class="steps">
+        <li><span class="step-num">01</span><p id="step1-pages">PDF dosyanı seç ya da sürükle bırak.</p></li>
+        <li><span class="step-num">02</span><p id="step2-pages">Sayfaları sürükleyerek sırala, gereksizleri ✕ ile işaretle.</p></li>
+        <li><span class="step-num">03</span><p id="step3-pages">"Değişiklikleri Uygula"ya bas, yeni PDF'ini indir.</p></li>
       </ul>
     </div>
   </div>
@@ -2645,7 +2760,7 @@ document.addEventListener('keydown', e => {
 /* ===================== Dil sistemi ===================== */
 const LANG = {
   tr: {
-    tabs: { jpg: "Görsel → PDF", compress: "PDF Sıkıştır", word: "PDF → Word", merge: "PDF Birleştir", split: "PDF Böl", rotate: "PDF Döndür", pagenum: "Sayfa Numarası", topng: "PDF → Görsel", watermark: "Filigran Ekle", unlock: "Şifre Çöz / Koru" },
+    tabs: { jpg: "Görsel → PDF", compress: "PDF Sıkıştır", word: "PDF → Word", merge: "PDF Birleştir", split: "PDF Böl", pages: "Sayfa Sil/Sırala", rotate: "PDF Döndür", pagenum: "Sayfa Numarası", topng: "PDF → Görsel", watermark: "Filigran Ekle", unlock: "Şifre Çöz / Koru" },
     site: {
       cardSubtitle: "Lokal İşlem, %100 İstemci Tabanlı",
       whyEyebrow: "NEDEN PDF ÇEVİR?",
@@ -2693,6 +2808,7 @@ const LANG = {
       word: { eyebrow: "Belge Masası", heading: "PDF'ini <em>Word'e</em><br>aktar, düzenle.", sub: "Metni PDF'in içinden çıkar, düzenlenebilir bir belgeye dönüştür. Kayıt yok, sunucu yok." },
       merge: { eyebrow: "Belge Masası", heading: "PDF'lerini <em>birleştir</em>,<br>tek parça yap.", sub: "Birden fazla PDF'i istediğin sırayla tek dosyada topla. Kayıt yok, sunucu yok." },
       split: { eyebrow: "Belge Masası", heading: "PDF'ini <em>böl</em>,<br>parçalara ayır.", sub: "Sayfaları tek tek ya da aralıklarla ayrı dosyalara böl. Kayıt yok, sunucu yok." },
+      pages: { eyebrow: "Belge Masası", heading: "Sayfalarını <em>sil</em>,<br>ya da yeniden sırala.", sub: "Gereksiz sayfaları kaldır, sürükle-bırakla sırasını değiştir. Kayıt yok, sunucu yok." },
       rotate: { eyebrow: "Belge Masası", heading: "PDF'ini <em>döndür</em>,<br>doğru yöne çevir.", sub: "Ters taranmış sayfaları tek tıkla düzelt. Kayıt yok, sunucu yok." },
       pagenum: { eyebrow: "Belge Masası", heading: "Sayfalarına <em>numara</em><br>ekle.", sub: "Belgeni düzenli göster, her sayfaya otomatik numara bas. Kayıt yok, sunucu yok." },
       topng: { eyebrow: "Belge Masası", heading: "PDF'ini <em>görsele</em><br>çevir.", sub: "Her sayfayı yüksek kaliteli PNG ya da JPG olarak dışa aktar. Kayıt yok, sunucu yok." },
@@ -2791,6 +2907,21 @@ const LANG = {
       errRange: "Sayfa aralığı geçersiz. Örnek: 1-3, 4, 5-8",
       errGeneric: "Bölerken bir şeyler ters gitti."
     },
+    pages: {
+      dropTitle: "PDF'ini buraya bırak",
+      dropHint: 'ya da <b>cihazından seç</b> — tek PDF dosyası',
+      gridHint: "Sırasını değiştirmek için sürükle, silmek için sayfanın üzerindeki ✕'e bas.",
+      count: (total, del) => del > 0 ? `${total} sayfa · ${del} silinecek` : `${total} sayfa`,
+      convertBtn: "Değişiklikleri Uygula", convertBtnLoading: "Uygulanıyor...",
+      stampBadge: "✓ PDF HAZIR", downloadBtn: "PDF'i İndir",
+      noteBox: "Silinen sayfalar geri getirilemez — indirmeden önce sonucu kontrol et. Orijinal dosyan cihazında değişmeden kalır.",
+      privacyNote: "Dosyaların hiçbir sunucuya yüklenmez. Düzenleme işlemi tamamen kendi tarayıcında, cihazında gerçekleşir.",
+      howToTitle: "Nasıl çalışır",
+      steps: ["PDF dosyanı seç ya da sürükle bırak.", "Sayfaları sürükleyerek sırala, gereksizleri ✕ ile işaretle.", '"Değişiklikleri Uygula"ya bas, yeni PDF\'ini indir.'],
+      errPickPdf: "Lütfen bir PDF dosyası seç.",
+      errAllDeleted: "En az bir sayfa kalmalı — hepsini silemezsin.",
+      errGeneric: "Düzenlerken bir şeyler ters gitti."
+    },
     rotate: {
       dropTitle: "PDF'ini buraya bırak",
       dropHint: 'ya da <b>cihazından seç</b> — tek PDF dosyası',
@@ -2848,7 +2979,7 @@ const LANG = {
     privacyLink: "Gizlilik Politikası"
   },
   en: {
-    tabs: { jpg: "Image → PDF", compress: "Compress PDF", word: "PDF → Word", merge: "Merge PDF", split: "Split PDF", rotate: "Rotate PDF", pagenum: "Page Numbers", topng: "PDF → Image", watermark: "Add Watermark", unlock: "Unlock / Protect" },
+    tabs: { jpg: "Image → PDF", compress: "Compress PDF", word: "PDF → Word", merge: "Merge PDF", split: "Split PDF", pages: "Delete/Reorder Pages", rotate: "Rotate PDF", pagenum: "Page Numbers", topng: "PDF → Image", watermark: "Add Watermark", unlock: "Unlock / Protect" },
     site: {
       cardSubtitle: "Local Processing, 100% Client-Side",
       whyEyebrow: "WHY PDF ÇEVİR?",
@@ -2896,6 +3027,7 @@ const LANG = {
       word: { eyebrow: "Document Desk", heading: "Turn your PDF into <em>Word</em>,<br>edit it.", sub: "Pull the text out of your PDF into an editable document. No sign-up, no server." },
       merge: { eyebrow: "Document Desk", heading: "<em>Merge</em> your PDFs,<br>into one.", sub: "Combine several PDFs into a single file, in the order you choose. No sign-up, no server." },
       split: { eyebrow: "Document Desk", heading: "<em>Split</em> your PDF,<br>into pieces.", sub: "Break pages apart individually or by range into separate files. No sign-up, no server." },
+      pages: { eyebrow: "Document Desk", heading: "<em>Delete</em> pages,<br>or reorder them.", sub: "Remove pages you don't need and drag-and-drop the rest into order. No sign-up, no server." },
       rotate: { eyebrow: "Document Desk", heading: "<em>Rotate</em> your PDF,<br>face the right way.", sub: "Fix upside-down or sideways scans in one click. No sign-up, no server." },
       pagenum: { eyebrow: "Document Desk", heading: "Add <em>page numbers</em><br>to your pages.", sub: "Keep your document organized with automatic numbering on every page. No sign-up, no server." },
       topng: { eyebrow: "Document Desk", heading: "Turn your PDF into <em>images</em>,<br>page by page.", sub: "Export every page as a high-quality PNG or JPG. No sign-up, no server." },
@@ -2993,6 +3125,21 @@ const LANG = {
       errPickPdf: "Please choose a PDF file.",
       errRange: "Invalid page range. Example: 1-3, 4, 5-8",
       errGeneric: "Something went wrong while splitting."
+    },
+    pages: {
+      dropTitle: "Drop your PDF here",
+      dropHint: 'or <b>choose from your device</b> — a single PDF file',
+      gridHint: "Drag to reorder pages, tap the ✕ on a page to delete it.",
+      count: (total, del) => del > 0 ? `${total} pages · ${del} to delete` : `${total} pages`,
+      convertBtn: "Apply Changes", convertBtnLoading: "Applying...",
+      stampBadge: "✓ READY", downloadBtn: "Download PDF",
+      noteBox: "Deleted pages can't be recovered — check the result before downloading. Your original file stays untouched on your device.",
+      privacyNote: "Your files are never uploaded to a server. Editing happens entirely in your own browser, on your device.",
+      howToTitle: "How it works",
+      steps: ["Choose your PDF or drag and drop.", "Drag pages to reorder them, mark unwanted ones with ✕.", 'Hit "Apply Changes" and download your new PDF.'],
+      errPickPdf: "Please choose a PDF file.",
+      errAllDeleted: "At least one page must remain — you can't delete them all.",
+      errGeneric: "Something went wrong while editing."
     },
     rotate: {
       dropTitle: "Drop your PDF here",
@@ -3190,6 +3337,21 @@ function applyLanguage(lang){
   document.getElementById('step2-split').textContent = L.split.steps[1];
   document.getElementById('step3-split').textContent = L.split.steps[2];
 
+  // Pages (Sayfa Sil/Sırala)
+  document.getElementById('dropTitle-pages').textContent = L.pages.dropTitle;
+  document.getElementById('dropHint-pages').innerHTML = L.pages.dropHint;
+  document.getElementById('gridHint-pages').textContent = L.pages.gridHint;
+  document.getElementById('convertBtn-pages').textContent = L.pages.convertBtn;
+  document.getElementById('stampBadge-pages').textContent = L.pages.stampBadge;
+  document.getElementById('downloadBtn-pages').textContent = L.pages.downloadBtn;
+  document.getElementById('noteBox-pages').textContent = L.pages.noteBox;
+  document.getElementById('privacyNote-pages').textContent = L.pages.privacyNote;
+  document.getElementById('howToTitle-pages').textContent = L.pages.howToTitle;
+  document.getElementById('step1-pages').textContent = L.pages.steps[0];
+  document.getElementById('step2-pages').textContent = L.pages.steps[1];
+  document.getElementById('step3-pages').textContent = L.pages.steps[2];
+  if(typeof refreshPagesCountLabel === 'function') refreshPagesCountLabel();
+
   // Rotate
   document.getElementById('dropTitle-rotate').textContent = L.rotate.dropTitle;
   document.getElementById('dropHint-rotate').innerHTML = L.rotate.dropHint;
@@ -3303,6 +3465,7 @@ document.getElementById('langToggle').addEventListener('click', e => {
     word: document.getElementById('panel-word'),
     merge: document.getElementById('panel-merge'),
     split: document.getElementById('panel-split'),
+    pages: document.getElementById('panel-pages'),
     rotate: document.getElementById('panel-rotate'),
     pagenum: document.getElementById('panel-pagenum'),
     topng: document.getElementById('panel-topng'),
@@ -4252,6 +4415,203 @@ document.getElementById('langToggle').addEventListener('click', e => {
       }
 
       addRecentOperation('split', resultName.textContent, blobUrl);
+      result.classList.add('show');
+      result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    } catch(err){
+      alert(friendlyErrorMessage(err, t.errGeneric));
+      console.error(err);
+    } finally {
+      convertBtn.disabled = false;
+      convertBtn.textContent = t.convertBtn;
+      setTimeout(() => resetBtnProgress(convertBtn), 300);
+    }
+  });
+})();
+
+/* ===================== ARAÇ: Sayfa Sil/Sırala ===================== */
+(function(){
+  const drop = document.getElementById('drop-pages');
+  const fileInput = document.getElementById('fileInput-pages');
+  const singleFile = document.getElementById('singleFile-pages');
+  const singleFileName = document.getElementById('singleFileName-pages');
+  const singleFileSize = document.getElementById('singleFileSize-pages');
+  const singleFileRemove = document.getElementById('singleFileRemove-pages');
+  const gridWrap = document.getElementById('gridWrap-pages');
+  const pageGrid = document.getElementById('pageGrid-pages');
+  const actionsRow = document.getElementById('actionsRow-pages');
+  const countLabel = document.getElementById('countLabel-pages');
+  const convertBtn = document.getElementById('convertBtn-pages');
+  const result = document.getElementById('result-pages');
+  const resultName = document.getElementById('resultName-pages');
+  const downloadBtn = document.getElementById('downloadBtn-pages');
+
+  let currentFile = null;
+  let blobUrl = null;
+  let pageEntries = []; // { id, originalIndex, dataUrl, deleted }
+  let nextId = 1;
+  let draggedId = null;
+
+  function reset(){
+    currentFile = null;
+    pageEntries = [];
+    clearPdfCardThumb(document.getElementById('thumb-pages'));
+    singleFile.style.display = 'none';
+    gridWrap.style.display = 'none';
+    pageGrid.innerHTML = '';
+    actionsRow.style.display = 'none';
+    result.classList.remove('show');
+  }
+
+  function updateCountLabel(){
+    const t = LANG[window.currentLang].pages;
+    const delCount = pageEntries.filter(p => p.deleted).length;
+    countLabel.textContent = t.count(pageEntries.length, delCount);
+    const remaining = pageEntries.length - delCount;
+    convertBtn.disabled = remaining < 1;
+  }
+  window.refreshPagesCountLabel = function(){
+    if(pageEntries.length) updateCountLabel();
+  };
+
+  function renderGrid(){
+    pageGrid.innerHTML = '';
+    pageEntries.forEach(entry => {
+      const cell = document.createElement('div');
+      cell.className = 'page-thumb' + (entry.deleted ? ' marked-delete' : '');
+      cell.draggable = true;
+      cell.dataset.id = entry.id;
+
+      const img = document.createElement('img');
+      img.src = entry.dataUrl;
+      img.alt = '';
+      cell.appendChild(img);
+
+      const num = document.createElement('span');
+      num.className = 'page-thumb-num';
+      num.textContent = String(entry.originalIndex + 1);
+      cell.appendChild(num);
+
+      const delBtn = document.createElement('button');
+      delBtn.className = 'page-thumb-del';
+      delBtn.type = 'button';
+      delBtn.setAttribute('aria-label', 'Sayfayı sil');
+      delBtn.textContent = '✕';
+      delBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        entry.deleted = !entry.deleted;
+        cell.classList.toggle('marked-delete', entry.deleted);
+        updateCountLabel();
+      });
+      cell.appendChild(delBtn);
+
+      cell.addEventListener('dragstart', () => {
+        draggedId = entry.id;
+        setTimeout(() => cell.classList.add('dragging'), 0);
+      });
+      cell.addEventListener('dragend', () => {
+        cell.classList.remove('dragging');
+        pageGrid.querySelectorAll('.page-thumb').forEach(c => c.classList.remove('drag-over'));
+      });
+      cell.addEventListener('dragover', e => {
+        e.preventDefault();
+        if(entry.id !== draggedId) cell.classList.add('drag-over');
+      });
+      cell.addEventListener('dragleave', () => cell.classList.remove('drag-over'));
+      cell.addEventListener('drop', e => {
+        e.preventDefault();
+        cell.classList.remove('drag-over');
+        if(draggedId === null || draggedId === entry.id) return;
+        const fromIdx = pageEntries.findIndex(p => p.id === draggedId);
+        const toIdx = pageEntries.findIndex(p => p.id === entry.id);
+        if(fromIdx === -1 || toIdx === -1) return;
+        const [moved] = pageEntries.splice(fromIdx, 1);
+        pageEntries.splice(toIdx, 0, moved);
+        draggedId = null;
+        renderGrid();
+      });
+
+      pageGrid.appendChild(cell);
+    });
+  }
+
+  async function setFile(file){
+    if(file.type !== 'application/pdf'){ alert(LANG[window.currentLang].pages.errPickPdf); return; }
+    currentFile = file;
+    singleFileName.textContent = file.name;
+    singleFileSize.textContent = formatSize(file.size);
+    updateSizeWarning(singleFile, file);
+    singleFile.style.display = 'flex';
+    renderPdfCardThumb(file, document.getElementById('thumb-pages'));
+    result.classList.remove('show');
+
+    gridWrap.style.display = 'none';
+    pageGrid.innerHTML = '';
+    actionsRow.style.display = 'none';
+    pageEntries = [];
+
+    try{
+      await pdfjsReady();
+      const bytes = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: bytes }).promise;
+      for(let i = 1; i <= pdf.numPages; i++){
+        const page = await pdf.getPage(i);
+        const base = page.getViewport({ scale: 1 });
+        const scale = 160 / Math.max(base.width, base.height);
+        const viewport = page.getViewport({ scale });
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.max(1, Math.round(viewport.width));
+        canvas.height = Math.max(1, Math.round(viewport.height));
+        const ctx = canvas.getContext('2d');
+        await page.render({ canvasContext: ctx, viewport }).promise;
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.75);
+        canvas.width = 0; canvas.height = 0;
+        pageEntries.push({ id: nextId++, originalIndex: i - 1, dataUrl, deleted: false });
+      }
+      renderGrid();
+      gridWrap.style.display = 'block';
+      actionsRow.style.display = 'flex';
+      updateCountLabel();
+    } catch(err){
+      alert(friendlyErrorMessage(err, LANG[window.currentLang].pages.errGeneric));
+      console.error(err);
+      reset();
+    }
+  }
+
+  drop.addEventListener('click', () => fileInput.click());
+  drop.addEventListener('keydown', e => { if(e.key === 'Enter' || e.key === ' ') fileInput.click(); });
+  fileInput.addEventListener('change', e => { if(e.target.files[0]) setFile(e.target.files[0]); });
+  ['dragenter','dragover'].forEach(evt => drop.addEventListener(evt, e => { e.preventDefault(); drop.classList.add('dragover'); }));
+  ['dragleave','drop'].forEach(evt => drop.addEventListener(evt, e => { e.preventDefault(); drop.classList.remove('dragover'); }));
+  drop.addEventListener('drop', e => { if(e.dataTransfer.files[0]) setFile(e.dataTransfer.files[0]); });
+  singleFileRemove.addEventListener('click', reset);
+
+  convertBtn.addEventListener('click', async () => {
+    if(!currentFile || !pageEntries.length) return;
+    const t = LANG[window.currentLang].pages;
+    const kept = pageEntries.filter(p => !p.deleted);
+    if(kept.length < 1){ alert(t.errAllDeleted); return; }
+    convertBtn.disabled = true;
+    convertBtn.textContent = t.convertBtnLoading;
+    try{
+      await libReady('PDFLib');
+      const { PDFDocument } = PDFLib;
+      const bytes = await currentFile.arrayBuffer();
+      const srcDoc = await PDFDocument.load(bytes);
+      const outDoc = await PDFDocument.create();
+      resetBtnProgress(convertBtn);
+      const indices = kept.map(p => p.originalIndex);
+      const copied = await outDoc.copyPages(srcDoc, indices);
+      copied.forEach((p, i) => { outDoc.addPage(p); setBtnProgress(convertBtn, i + 1, copied.length); });
+
+      const outBytes = await outDoc.save();
+      const blob = new Blob([outBytes], { type: 'application/pdf' });
+      if(blobUrl) URL.revokeObjectURL(blobUrl);
+      blobUrl = URL.createObjectURL(blob);
+      const name = currentFile.name.replace(/\.pdf$/i, '') + '-duzenlendi.pdf';
+      resultName.textContent = name;
+      downloadBtn.onclick = () => { const a = document.createElement('a'); a.href = blobUrl; a.download = name; a.click(); };
+      addRecentOperation('pages', name, blobUrl);
       result.classList.add('show');
       result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     } catch(err){
