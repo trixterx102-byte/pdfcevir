@@ -3617,6 +3617,19 @@ document.getElementById('langToggle').addEventListener('click', e => {
   });
 
   applyLanguage(window.currentLang);
+
+  /* URL parametresiyle doğrudan bir aracı açma desteği (SEO açılış sayfalarından gelen linkler için).
+     Örnek: index.html?tool=compress sayfa açılır açılmaz "PDF Sıkıştır" sekmesini aktif eder. */
+  (function openToolFromUrl(){
+    try{
+      const params = new URLSearchParams(window.location.search);
+      const requestedTool = params.get('tool');
+      if(requestedTool && panels.hasOwnProperty(requestedTool)){
+        const targetTab = Array.from(tabs).find(t => t.dataset.tool === requestedTool);
+        if(targetTab){ targetTab.click(); }
+      }
+    }catch(e){ /* URL parametresi okunamazsa sessizce ana sekmede kal */ }
+  })();
 })();
 
 /* ===================== ARAÇ 1: Görsel -> PDF ===================== */
