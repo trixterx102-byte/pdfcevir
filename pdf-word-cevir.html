@@ -27,7 +27,7 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "WebApplication",
+  "@type": "SoftwareApplication",
   "name": "pdfcevir - PDF'ini Word'e Çevir",
   "url": "https://pdfcevir.vercel.app/pdf-word-cevir",
   "description": "PDF dosyanızdaki metni ücretsiz olarak düzenlenebilir Word (.docx) dosyasına çevirin. Kayıt gerekmez, tamamen tarayıcınızda çalışır.",
@@ -35,6 +35,38 @@
   "operatingSystem": "Any",
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "TRY" },
   "inLanguage": "tr"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Tablo ve görseller Word dosyasına aktarılıyor mu?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Hayır, bu araç sadece düz metni çıkarır. Sayfa tasarımı, tablo ve görseller korunmaz."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Taranmış (resim) PDF'lerde çalışır mı?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Şu an sadece seçilebilir metin içeren PDF'lerde çalışır, OCR (taranmış metin tanıma) desteği henüz yoktur."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Çıkan .docx dosyasını nerede düzenleyebilirim?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Microsoft Word, Google Dokümanlar veya LibreOffice gibi herhangi bir Word uyumlu programda açıp düzenleyebilirsiniz."
+      }
+    }
+  ]
 }
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -54,36 +86,62 @@ body{
     linear-gradient(180deg, #0B1120 0%, #10162C 45%, #0B1120 100%);
   display:flex; align-items:center; justify-content:center; padding:24px;
 }
-.wrap{max-width:640px; text-align:center;}
+.wrap{max-width:680px; text-align:left; width:100%;}
 .eyebrow{
   font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em;
-  text-transform:uppercase; color:var(--gold-2); margin:0 0 18px;
+  text-transform:uppercase; color:var(--gold-2); margin:0 0 18px; text-align:center;
 }
 h1{
   font-family:'Newsreader',serif; font-weight:500; font-size:clamp(30px,5vw,46px);
-  line-height:1.1; margin:0 0 20px;
+  line-height:1.1; margin:0 0 20px; text-align:center;
 }
 p{ font-size:16px; line-height:1.6; color:rgba(245,241,232,0.75); margin:0 0 16px; }
+.intro p{ text-align:center; }
+.cta-wrap{ text-align:center; }
 .cta{
   display:inline-block; margin-top:24px; background:var(--stamp); color:#FFFDF8;
   font-weight:600; font-size:16px; text-decoration:none; padding:15px 32px;
   border-radius:4px; box-shadow:0 2px 0 #8F2B22; transition:transform .12s ease;
 }
 .cta:hover{ transform:translateY(-1px); }
-.back{ display:block; margin-top:28px; color:rgba(245,241,232,0.5); font-size:13px; text-decoration:none; }
+.back{ display:block; margin-top:28px; color:rgba(245,241,232,0.5); font-size:13px; text-decoration:none; text-align:center; }
 .back:hover{ color:var(--paper); }
-.badges{ margin-top:32px; font-family:'IBM Plex Mono',monospace; font-size:11px; color:rgba(245,241,232,0.45); }
+.badges{ margin-top:32px; font-family:'IBM Plex Mono',monospace; font-size:11px; color:rgba(245,241,232,0.45); text-align:center; }
+.faq-section{ margin-top:48px; border-top:1px solid rgba(232,199,102,0.2); padding-top:32px; }
+.faq-section h2{ font-family:'Newsreader',serif; font-weight:500; font-size:24px; margin:0 0 20px; text-align:center; }
+.faq-item{ margin-bottom:20px; }
+.faq-item h3{ font-size:16px; color:var(--gold-2); margin:0 0 6px; font-weight:600; }
+.faq-item p{ margin:0; font-size:15px; }
 </style>
 </head>
 <body>
 <div class="wrap">
   <p class="eyebrow">pdfcevir · ücretsiz &amp; sunucusuz</p>
-  <h1>PDF'ini Word'e Çevir</h1>
-  <p>PDF içindeki metni çıkarıp düzenlenebilir bir Word belgesine aktarın. Sözleşmeleri, raporları veya notlarınızı tekrar düzenlemek artık çok kolay.</p>
-  <p>Bu araç metni çıkarır; tablo, görsel ve sayfa tasarımı korunmaz, sade düz metin elde edersiniz. Dosyanız hiçbir zaman sunucuya yüklenmez.</p>
-  <a class="cta" href="https://pdfcevir.vercel.app/?tool=word">Aracı Şimdi Kullan →</a>
-  <a class="back" href="https://pdfcevir.vercel.app/">← Tüm PDF araçlarını gör</a>
-  <p class="badges">%100 İSTEMCİ TABANLI · KAYIT YOK · ÜCRETSIZ</p>
+  <div class="intro">
+    <h1>PDF'ini Word'e Çevir</h1>
+    <p>PDF içindeki metni çıkarıp düzenlenebilir bir Word belgesine aktarın. Sözleşmeleri, raporları veya notlarınızı tekrar düzenlemek artık çok kolay.</p>
+    <p>Bu araç metni çıkarır; tablo, görsel ve sayfa tasarımı korunmaz, sade düz metin elde edersiniz. Dosyanız hiçbir zaman sunucuya yüklenmez.</p>
+  </div>
+  <div class="cta-wrap">
+    <a class="cta" href="https://pdfcevir.vercel.app/?tool=word">Aracı Şimdi Kullan →</a>
+    <a class="back" href="https://pdfcevir.vercel.app/">← Tüm PDF araçlarını gör</a>
+    <p class="badges">%100 İSTEMCİ TABANLI · KAYIT YOK · ÜCRETSIZ</p>
+  </div>
+  <div class="faq-section">
+    <h2>Sıkça Sorulan Sorular</h2>
+  <div class="faq-item">
+    <h3>Tablo ve görseller Word dosyasına aktarılıyor mu?</h3>
+    <p>Hayır, bu araç sadece düz metni çıkarır. Sayfa tasarımı, tablo ve görseller korunmaz.</p>
+  </div>
+  <div class="faq-item">
+    <h3>Taranmış (resim) PDF'lerde çalışır mı?</h3>
+    <p>Şu an sadece seçilebilir metin içeren PDF'lerde çalışır, OCR (taranmış metin tanıma) desteği henüz yoktur.</p>
+  </div>
+  <div class="faq-item">
+    <h3>Çıkan .docx dosyasını nerede düzenleyebilirim?</h3>
+    <p>Microsoft Word, Google Dokümanlar veya LibreOffice gibi herhangi bir Word uyumlu programda açıp düzenleyebilirsiniz.</p>
+  </div>
+  </div>
 </div>
 </body>
 </html>

@@ -27,7 +27,7 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "WebApplication",
+  "@type": "SoftwareApplication",
   "name": "pdfcevir - HEIC Fotoğraflarını Dönüştür",
   "url": "https://pdfcevir.vercel.app/heic-to-pdf",
   "description": "iPhone HEIC fotoğraflarınızı ücretsiz JPG veya PDF'e çevirin. Windows ve Android'de sorunsuz açılır. Kayıt gerekmez, tamamen tarayıcınızda çalışır.",
@@ -35,6 +35,38 @@
   "operatingSystem": "Any",
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "TRY" },
   "inLanguage": "tr"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "HEIC dosyası neden Windows'ta açılmıyor?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "HEIC, Apple'ın geliştirdiği bir fotoğraf formatıdır ve çoğu Windows/Android uygulaması bu formatı desteklemez. Bu yüzden JPG gibi evrensel bir formata çevirmeniz gerekir."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Birden fazla HEIC dosyasını aynı anda çevirebilir miyim?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Evet, istediğiniz sayıda HEIC fotoğrafını aynı anda seçip toplu olarak dönüştürebilirsiniz."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Çıktı olarak JPG mi PDF mi seçmeliyim?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Fotoğrafları ayrı ayrı kullanacaksanız JPG (ZIP), tek bir belge halinde saklamak istiyorsanız PDF seçeneğini tercih edin."
+      }
+    }
+  ]
 }
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -54,36 +86,62 @@ body{
     linear-gradient(180deg, #0B1120 0%, #10162C 45%, #0B1120 100%);
   display:flex; align-items:center; justify-content:center; padding:24px;
 }
-.wrap{max-width:640px; text-align:center;}
+.wrap{max-width:680px; text-align:left; width:100%;}
 .eyebrow{
   font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em;
-  text-transform:uppercase; color:var(--gold-2); margin:0 0 18px;
+  text-transform:uppercase; color:var(--gold-2); margin:0 0 18px; text-align:center;
 }
 h1{
   font-family:'Newsreader',serif; font-weight:500; font-size:clamp(30px,5vw,46px);
-  line-height:1.1; margin:0 0 20px;
+  line-height:1.1; margin:0 0 20px; text-align:center;
 }
 p{ font-size:16px; line-height:1.6; color:rgba(245,241,232,0.75); margin:0 0 16px; }
+.intro p{ text-align:center; }
+.cta-wrap{ text-align:center; }
 .cta{
   display:inline-block; margin-top:24px; background:var(--stamp); color:#FFFDF8;
   font-weight:600; font-size:16px; text-decoration:none; padding:15px 32px;
   border-radius:4px; box-shadow:0 2px 0 #8F2B22; transition:transform .12s ease;
 }
 .cta:hover{ transform:translateY(-1px); }
-.back{ display:block; margin-top:28px; color:rgba(245,241,232,0.5); font-size:13px; text-decoration:none; }
+.back{ display:block; margin-top:28px; color:rgba(245,241,232,0.5); font-size:13px; text-decoration:none; text-align:center; }
 .back:hover{ color:var(--paper); }
-.badges{ margin-top:32px; font-family:'IBM Plex Mono',monospace; font-size:11px; color:rgba(245,241,232,0.45); }
+.badges{ margin-top:32px; font-family:'IBM Plex Mono',monospace; font-size:11px; color:rgba(245,241,232,0.45); text-align:center; }
+.faq-section{ margin-top:48px; border-top:1px solid rgba(232,199,102,0.2); padding-top:32px; }
+.faq-section h2{ font-family:'Newsreader',serif; font-weight:500; font-size:24px; margin:0 0 20px; text-align:center; }
+.faq-item{ margin-bottom:20px; }
+.faq-item h3{ font-size:16px; color:var(--gold-2); margin:0 0 6px; font-weight:600; }
+.faq-item p{ margin:0; font-size:15px; }
 </style>
 </head>
 <body>
 <div class="wrap">
   <p class="eyebrow">pdfcevir · ücretsiz &amp; sunucusuz</p>
-  <h1>HEIC Fotoğraflarını Dönüştür</h1>
-  <p>iPhone'unuzun varsayılan fotoğraf formatı olan HEIC, çoğu Windows ve Android uygulaması tarafından açılamaz. Fotoğraflarınızı herkesin açabileceği JPG'ye ya da tek bir PDF belgesine dönüştürün.</p>
-  <p>Birden fazla fotoğrafı aynı anda seçebilir, çıktı olarak ayrı JPG dosyaları (ZIP) ya da tek bir PDF elde edebilirsiniz. İşlem tamamen tarayıcınızda gerçekleşir.</p>
-  <a class="cta" href="https://pdfcevir.vercel.app/?tool=heic">Aracı Şimdi Kullan →</a>
-  <a class="back" href="https://pdfcevir.vercel.app/">← Tüm PDF araçlarını gör</a>
-  <p class="badges">%100 İSTEMCİ TABANLI · KAYIT YOK · ÜCRETSIZ</p>
+  <div class="intro">
+    <h1>HEIC Fotoğraflarını Dönüştür</h1>
+    <p>iPhone'unuzun varsayılan fotoğraf formatı olan HEIC, çoğu Windows ve Android uygulaması tarafından açılamaz. Fotoğraflarınızı herkesin açabileceği JPG'ye ya da tek bir PDF belgesine dönüştürün.</p>
+    <p>Birden fazla fotoğrafı aynı anda seçebilir, çıktı olarak ayrı JPG dosyaları (ZIP) ya da tek bir PDF elde edebilirsiniz. İşlem tamamen tarayıcınızda gerçekleşir.</p>
+  </div>
+  <div class="cta-wrap">
+    <a class="cta" href="https://pdfcevir.vercel.app/?tool=heic">Aracı Şimdi Kullan →</a>
+    <a class="back" href="https://pdfcevir.vercel.app/">← Tüm PDF araçlarını gör</a>
+    <p class="badges">%100 İSTEMCİ TABANLI · KAYIT YOK · ÜCRETSIZ</p>
+  </div>
+  <div class="faq-section">
+    <h2>Sıkça Sorulan Sorular</h2>
+  <div class="faq-item">
+    <h3>HEIC dosyası neden Windows'ta açılmıyor?</h3>
+    <p>HEIC, Apple'ın geliştirdiği bir fotoğraf formatıdır ve çoğu Windows/Android uygulaması bu formatı desteklemez. Bu yüzden JPG gibi evrensel bir formata çevirmeniz gerekir.</p>
+  </div>
+  <div class="faq-item">
+    <h3>Birden fazla HEIC dosyasını aynı anda çevirebilir miyim?</h3>
+    <p>Evet, istediğiniz sayıda HEIC fotoğrafını aynı anda seçip toplu olarak dönüştürebilirsiniz.</p>
+  </div>
+  <div class="faq-item">
+    <h3>Çıktı olarak JPG mi PDF mi seçmeliyim?</h3>
+    <p>Fotoğrafları ayrı ayrı kullanacaksanız JPG (ZIP), tek bir belge halinde saklamak istiyorsanız PDF seçeneğini tercih edin.</p>
+  </div>
+  </div>
 </div>
 </body>
 </html>
