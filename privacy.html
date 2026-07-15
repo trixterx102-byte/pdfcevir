@@ -63,52 +63,73 @@
   .back-link:hover{ color: var(--paper); }
 </style>
 
-<!-- Otomatik Global Dil Destegi -->
-<script type="text/javascript">
-  (function(){
-    var userLang = (navigator.language || navigator.userLanguage).split('-')[0];
-    if (userLang === 'zh') userLang = 'zh-CN';
-    var supported = ['en','es','fr','de','pt','ar','ru','it','ja','ko','zh-CN','hi','nl','pl'];
-    if(userLang !== 'tr' && supported.indexOf(userLang) !== -1){
-      if(document.cookie.indexOf('googtrans=') === -1){
-        document.cookie = "googtrans=/tr/" + userLang + "; path=/";
-        if (window.location.hostname !== 'localhost' && window.location.hostname !== '') {
-          document.cookie = "googtrans=/tr/" + userLang + "; domain=." + window.location.hostname + "; path=/";
-        }
-      }
-    }
-  })();
-  function googleTranslateElementInit() {
-    new google.translate.TranslateElement({
-      pageLanguage: 'tr',
-      includedLanguages: 'en,es,fr,de,pt,ar,ru,it,ja,ko,zh-CN,hi,nl,pl,tr',
-      layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-      autoDisplay: false,
-      multilanguagePage: true
-    }, 'google_translate_element');
-  }
-</script>
-<script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" defer></script>
+<!-- Global Dil Secici -->
 <style>
-  #google_translate_element { position: fixed; top: 16px; right: 100px; z-index: 999; }
-  .goog-te-gadget { font-family: 'IBM Plex Sans', sans-serif !important; }
-  .goog-te-gadget span { display: none !important; }
-  .goog-te-gadget .goog-te-combo {
-    margin: 0;
-    padding: 5px 10px;
-    border-radius: 20px;
-    border: 1px solid rgba(245,241,232,0.18);
-    background: rgba(20,33,61,0.75);
-    backdrop-filter: blur(6px);
-    color: rgba(245,241,232,0.85);
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    cursor: pointer;
-    outline: none;
-  }
-  .goog-te-banner-frame { display: none !important; }
-  body { top: 0 !important; }
+  .globe-btn{position:fixed;top:16px;right:16px;z-index:999;display:flex;align-items:center;gap:6px;background:rgba(20,33,61,0.75);backdrop-filter:blur(6px);border:1px solid rgba(245,241,232,0.18);border-radius:20px;padding:6px 12px;color:rgba(245,241,232,0.85);font-family:'IBM Plex Mono',monospace;font-size:11px;cursor:pointer;border:none;}
+  .globe-btn:hover{background:rgba(20,33,61,0.95);}
+  .lang-drop{display:none;position:fixed;top:48px;right:16px;z-index:1000;background:rgba(15,25,50,0.97);border:1px solid rgba(245,241,232,0.18);border-radius:8px;padding:6px;min-width:180px;box-shadow:0 8px 32px rgba(0,0,0,0.5);}
+  .lang-drop.open{display:block;}
+  .lang-drop a,.lang-drop button{display:flex;align-items:center;gap:8px;width:100%;padding:7px 12px;color:rgba(245,241,232,0.85);font-family:'IBM Plex Sans',sans-serif;font-size:13px;text-decoration:none;background:none;border:none;cursor:pointer;border-radius:4px;text-align:left;}
+  .lang-drop a:hover,.lang-drop button:hover{background:rgba(245,241,232,0.08);}
 </style>
+<script>
+(function(){
+  var langs=[
+    {c:'tr',n:'Türkçe',f:'🇹🇷',native:true},
+    {c:'en',n:'English',f:'🇬🇧',native:true},
+    {c:'es',n:'Español',f:'🇪🇸'},
+    {c:'fr',n:'Français',f:'🇫🇷'},
+    {c:'de',n:'Deutsch',f:'🇩🇪'},
+    {c:'pt',n:'Português',f:'🇵🇹'},
+    {c:'ar',n:'العربية',f:'🇸🇦'},
+    {c:'ru',n:'Русский',f:'🇷🇺'},
+    {c:'it',n:'Italiano',f:'🇮🇹'},
+    {c:'ja',n:'日本語',f:'🇯🇵'},
+    {c:'ko',n:'한국어',f:'🇰🇷'},
+    {c:'zh-CN',n:'中文',f:'🇨🇳'},
+    {c:'hi',n:'हिन्दी',f:'🇮🇳'},
+    {c:'nl',n:'Nederlands',f:'🇳🇱'},
+    {c:'pl',n:'Polski',f:'🇵🇱'}
+  ];
+  function gUrl(code){
+    var p=window.location.pathname;
+    return 'https://pdfcevir-vercel-app.translate.goog'+p+'?_x_tr_sl=tr&_x_tr_tl='+code+'&_x_tr_hl='+code;
+  }
+  document.addEventListener('DOMContentLoaded',function(){
+    var btn=document.createElement('button');
+    btn.className='globe-btn';
+    btn.innerHTML='🌐 &nbsp;Dil';
+    btn.setAttribute('aria-label','Dil seçici');
+    var drop=document.createElement('div');
+    drop.className='lang-drop';
+    langs.forEach(function(l){
+      var el;
+      if(l.c==='tr'){
+        el=document.createElement('button');
+        el.onclick=function(){
+          var u=window.location.href.replace(/\?.*$/,'');
+          window.location.href=u;
+        };
+      } else if(l.c==='en'){
+        el=document.createElement('button');
+        el.onclick=function(){
+          if(window.LANG&&window.applyLanguage){applyLanguage('en');}
+          else{window.location.href=gUrl('en');}
+        };
+      } else {
+        el=document.createElement('a');
+        el.href=gUrl(l.c);
+      }
+      el.innerHTML=l.f+' '+l.n;
+      drop.appendChild(el);
+    });
+    btn.onclick=function(e){e.stopPropagation();drop.classList.toggle('open');};
+    document.addEventListener('click',function(){drop.classList.remove('open');});
+    document.body.appendChild(btn);
+    document.body.appendChild(drop);
+  });
+})();
+</script>
 
 </head>
 <body>
