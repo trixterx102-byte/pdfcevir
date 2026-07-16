@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="tr">
 <head>
 <!-- Erken tema tespiti: yanlÄ±ÅŸ temanÄ±n kÄ±sa sÃ¼reliÄŸine gÃ¶rÃ¼nmesini (FOUC) Ã¶nler -->
@@ -1550,21 +1550,21 @@
 <script>
 (function(){
   var langs=[
-    {c:'tr',n:'TÃ¼rkÃ§e',f:'ğŸ‡¹ğŸ‡·',native:true},
-    {c:'en',n:'English',f:'ğŸ‡¬ğŸ‡§',native:true},
-    {c:'es',n:'EspaÃ±ol',f:'ğŸ‡ªğŸ‡¸'},
-    {c:'fr',n:'FranÃ§ais',f:'ğŸ‡«ğŸ‡·'},
-    {c:'de',n:'Deutsch',f:'ğŸ‡©ğŸ‡ª'},
-    {c:'pt',n:'PortuguÃªs',f:'ğŸ‡µğŸ‡¹'},
-    {c:'ar',n:'Ø§Ù„Ø¹Ø±Ø¨ÙŠØ©',f:'ğŸ‡¸ğŸ‡¦'},
-    {c:'ru',n:'Ğ ÑƒÑÑĞºĞ¸Ğ¹',f:'ğŸ‡·ğŸ‡º'},
-    {c:'it',n:'Italiano',f:'ğŸ‡®ğŸ‡¹'},
-    {c:'ja',n:'æ—¥æœ¬èª',f:'ğŸ‡¯ğŸ‡µ'},
-    {c:'ko',n:'í•œêµ­ì–´',f:'ğŸ‡°ğŸ‡·'},
-    {c:'zh-CN',n:'ä¸­æ–‡',f:'ğŸ‡¨ğŸ‡³'},
-    {c:'hi',n:'à¤¹à¤¿à¤¨à¥à¤¦à¥€',f:'ğŸ‡®ğŸ‡³'},
-    {c:'nl',n:'Nederlands',f:'ğŸ‡³ğŸ‡±'},
-    {c:'pl',n:'Polski',f:'ğŸ‡µğŸ‡±'}
+    {c:'tr',n:'T\u00FCrk\u00E7e',f:'\uD83C\uDDF9\uD83C\uDDF7',native:true},
+    {c:'en',n:'English',f:'\uD83C\uDDEC\uD83C\uDDE7',native:true},
+    {c:'es',n:'Espa\u00F1ol',f:'\uD83C\uDDEA\uD83C\uDDF8'},
+    {c:'fr',n:'Fran\u00E7ais',f:'\uD83C\uDDEB\uD83C\uDDF7'},
+    {c:'de',n:'Deutsch',f:'\uD83C\uDDE9\uD83C\uDDEA'},
+    {c:'pt',n:'Portugu\u00EAs',f:'\uD83C\uDDF5\uD83C\uDDF9'},
+    {c:'ar',n:'\u0627\u0644\u0639\u0631\u0628\u064A\u0629',f:'\uD83C\uDDF8\uD83C\uDDE6'},
+    {c:'ru',n:'\u0420\u0443\u0441\u0441\u043A\u0438\u0439',f:'\uD83C\uDDF7\uD83C\uDDFA'},
+    {c:'it',n:'Italiano',f:'\uD83C\uDDEE\uD83C\uDDF9'},
+    {c:'ja',n:'\u65E5\u672C\u8A9E',f:'\uD83C\uDDEF\uD83C\uDDF5'},
+    {c:'ko',n:'\uD55C\uAD6D\uC5B4',f:'\uD83C\uDDF0\uD83C\uDDF7'},
+    {c:'zh-CN',n:'\u4E2D\u6587',f:'\uD83C\uDDE8\uD83C\uDDF3'},
+    {c:'hi',n:'\u0939\u093F\u0928\u094D\u0926\u0940',f:'\uD83C\uDDEE\uD83C\uDDF3'},
+    {c:'nl',n:'Nederlands',f:'\uD83C\uDDF3\uD83C\uDDF1'},
+    {c:'pl',n:'Polski',f:'\uD83C\uDDF5\uD83C\uDDF1'}
   ];
   function gUrl(code){
     var p=window.location.pathname;
@@ -1573,8 +1573,8 @@
   document.addEventListener('DOMContentLoaded',function(){
     var btn=document.createElement('button');
     btn.className='globe-btn';
-    btn.innerHTML='ğŸŒ &nbsp;Dil';
-    btn.setAttribute('aria-label','Dil seÃ§ici');
+    btn.innerHTML='\uD83C\uDF10&nbsp;Dil';
+    btn.setAttribute('aria-label','Dil se\u00E7ici');
     var drop=document.createElement('div');
     drop.className='lang-drop';
     langs.forEach(function(l){
