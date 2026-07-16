@@ -3517,14 +3517,244 @@ const LANG = {
     footer: "pdfcevir — no sign-up, free, serverless.",
     trust: ["100% Private", "No Sign-up", "Instant", "Free Forever"],
     privacyLink: "Privacy Policy"
+  },
+  es: {
+    tabs: { jpg: "Imagen → PDF", compress: "Comprimir PDF", word: "PDF → Word", merge: "Unir PDF", split: "Dividir PDF", pages: "Páginas", rotate: "Rotar PDF", pagenum: "Números", topng: "PDF → Imagen", watermark: "Marca de Agua", heic: "HEIC → PDF/JPG", unlock: "Desbloquear" },
+    site: {
+      cardSubtitle: "Procesamiento Local",
+      whyEyebrow: "¿POR QUÉ PDF ÇEVİR?",
+      whyTitle: "Privacidad Premium, Poder Ilimitado.",
+      why1Title: "100% del lado del Cliente",
+      why1Desc: "Tus archivos nunca salen de tu dispositivo.",
+      why2Title: "Sin Servidor e Ilimitado",
+      why2Desc: "Sin esperas, sin límites de tamaño.",
+      why3Title: "Funciona Sin Conexión",
+      why3Desc: "Usa la web app sin internet.",
+      footerText: "pdfcevir — sin registro, gratis, sin servidor.",
+      privacyLink: "Privacidad",
+      termsLink: "Términos",
+      contactLink: "Contacto",
+      modalEyebrowLegal: "LEGAL",
+      modalEyebrowContact: "CONTACTO",
+      privacyTitle: "Privacidad",
+      privacyBody: "<p>Todo el procesamiento se realiza localmente.</p>",
+      termsTitle: "Términos",
+      termsBody: "<p>El servicio se proporciona tal cual.</p>",
+      contactTitle: "Contacto",
+      contactBody: "<p>Email: destek@pdfcevir.vercel.app</p>",
+      soonBadge: "PRONTO",
+      soonTitle: "Desbloquear PDF",
+      soonDesc: "Próximamente disponible 100% local.",
+      soonField1: "Contraseña",
+      soonField2: "Acción",
+      soonField2Value: "Proteger / Eliminar"
+    },
+    common: {
+      largeFileWarning: "Archivo grande, por favor espera.",
+      errEncrypted: "PDF protegido con contraseña.",
+      errCorrupt: "Archivo dañado.",
+      recentTitle: "Recientes",
+      sealCaption: "Procesado localmente.",
+      recentEmpty: "Sin operaciones.",
+      recentDownload: "Descargar",
+      installTitle: "Instalar app",
+      installDesc: "Añadir a tu dispositivo.",
+      installBtn: "Instalar"
+    },
+    header: {
+      jpg: { eyebrow: "Herramienta", heading: "Imágenes a <em>PDF</em>.", sub: "Rápido y local." },
+      compress: { eyebrow: "Herramienta", heading: "<em>Comprime</em> PDF.", sub: "Reduce el tamaño." },
+      word: { eyebrow: "Herramienta", heading: "PDF a <em>Word</em>.", sub: "Extrae el texto." },
+      merge: { eyebrow: "Herramienta", heading: "<em>Une</em> PDFs.", sub: "Combina archivos." },
+      split: { eyebrow: "Herramienta", heading: "<em>Divide</em> PDF.", sub: "Separa páginas." },
+      pages: { eyebrow: "Herramienta", heading: "<em>Elimina</em> páginas.", sub: "Organiza el PDF." },
+      rotate: { eyebrow: "Herramienta", heading: "<em>Rota</em> PDF.", sub: "Gira las páginas." },
+      pagenum: { eyebrow: "Herramienta", heading: "Añade <em>números</em>.", sub: "Numera las páginas." },
+      topng: { eyebrow: "Herramienta", heading: "PDF a <em>imágenes</em>.", sub: "Exporta como PNG/JPG." },
+      watermark: { eyebrow: "Herramienta", heading: "Añade <em>marca de agua</em>.", sub: "Protege tu documento." },
+      heic: { eyebrow: "Herramienta", heading: "Convierte <em>HEIC</em>.", sub: "Fotos iPhone a JPG." },
+      unlock: { eyebrow: "Herramienta", heading: "<em>Protege</em> PDF.", sub: "Próximamente." }
+    },
+    jpg: { dropTitle: "Suelta imágenes", dropHint: "o elige", count: n => `${n} archivo(s)`, convertBtn: "Crear PDF", convertBtnLoading: "Creando...", stampBadge: "✓ LISTO", downloadBtn: "Descargar PDF", privacyNote: "Local.", howToTitle: "Pasos", steps: ["1", "2", "3"], errGeneric: "Error.", filesHeading: "Archivos", previewHeading: "Vista", toolsHeading: "Herramientas", previewEmpty: "Elige", pageModeLabel: "Página", zoomLabel: "Zoom", rotateLabel: "Rotar", grayscaleLabel: "B/N", grayscaleOn: "Sí", grayscaleOff: "No", qualityOriginal: "Original", qGood: "Buena", qMedium: "Media", qLow: "Baja", qualityCurrent: (pct, tag) => `Calidad: ${pct}% (${tag})`, estimateSize: size => `Tamaño: ~${size}`, estimateNA: "Tamaño: —" },
+    compress: { dropTitle: "Suelta PDF", dropHint: "o elige", qualityLabel: "Nivel", qHigh: {"t":"Ligero", "d":""}, qMedium: {"t":"Medio", "d":""}, qMax: {"t":"Max", "d":""}, previewLabel: "Vista Previa", previewOrigTag: "ORIGINAL", previewCompTag: "COMPRIMIDO", previewLoading: "Cargando...", previewEstimate: pct => `Se reduce un ${pct}%`, count: () => `1 archivo`, convertBtn: "Comprimir", convertBtnLoading: "Comprimiendo...", stampBadge: "✓ LISTO", downloadBtn: "Descargar", saved: pct => `${pct}% menor`, noteBox: "Imágenes.", privacyNote: "Local.", howToTitle: "Pasos", steps: ["1", "2", "3"], errPickPdf: "PDF", errGeneric: "Error" },
+    word: { dropTitle: "Suelta PDF", dropHint: "o elige", count: () => `1 archivo`, convertBtn: "Convertir", convertBtnLoading: "...", stampBadge: "✓ LISTO", downloadBtn: "Descargar", noteBox: "Texto.", privacyNote: "Local.", howToTitle: "Pasos", steps: ["1", "2", "3"], errPickPdf: "PDF", errNoText: "Sin texto", errGeneric: "Error" },
+    merge: { dropTitle: "Suelta PDFs", dropHint: "varios", count: n => `${n} archivos`, convertBtn: "Unir", convertBtnLoading: "...", stampBadge: "✓ LISTO", downloadBtn: "Descargar", noteBox: "Se unen.", privacyNote: "Local.", howToTitle: "Pasos", steps: ["1", "2", "3"], errPickPdf: "PDF", errNeedTwo: "Min 2", errGeneric: "Error" },
+    split: { dropTitle: "Suelta PDF", dropHint: "uno", rangeLabel: "Rango", rangePlaceholder: "ej. 1-3", convertBtn: "Dividir", convertBtnLoading: "...", stampBadge: "✓ LISTO", downloadBtn: "ZIP", downloadBtnSingle: "PDF", noteBox: "ZIP.", privacyNote: "Local.", howToTitle: "Pasos", steps: ["1", "2", "3"], errPickPdf: "PDF", errRange: "Error", errGeneric: "Error" },
+    pages: { dropTitle: "Suelta PDF", dropHint: "uno", gridHint: "Arrastra", count: (t, d) => `${t} páginas`, convertBtn: "Aplicar", convertBtnLoading: "...", stampBadge: "✓ LISTO", downloadBtn: "Descargar", noteBox: "Permanente.", privacyNote: "Local.", howToTitle: "Pasos", steps: ["1", "2", "3"], errPickPdf: "PDF", errAllDeleted: "Error", errGeneric: "Error" },
+    rotate: { dropTitle: "Suelta PDF", dropHint: "uno", angleLabel: "Dirección", angleRightDesc: "Derecha", angleFlipDesc: "Voltear", angleLeftDesc: "Izquierda", convertBtn: "Rotar", convertBtnLoading: "...", stampBadge: "✓ LISTO", downloadBtn: "Descargar", privacyNote: "Local.", howToTitle: "Pasos", steps: ["1", "2", "3"], errPickPdf: "PDF", errGeneric: "Error" },
+    pagenum: { dropTitle: "Suelta PDF", dropHint: "uno", posLabel: "Posición", posLeft: "Izq", posCenter: "Centro", posRight: "Der", convertBtn: "Añadir", convertBtnLoading: "...", stampBadge: "✓ LISTO", downloadBtn: "Descargar", privacyNote: "Local.", howToTitle: "Pasos", steps: ["1", "2", "3"], errPickPdf: "PDF", errGeneric: "Error" },
+    topng: { dropTitle: "Suelta PDF", dropHint: "uno", fmtLabel: "Formato", fmtPngDesc: "PNG", fmtJpgDesc: "JPG", convertBtn: "Convertir", convertBtnLoading: "...", stampBadge: "✓ LISTO", downloadBtn: "Descargar", noteBox: "ZIP.", privacyNote: "Local.", howToTitle: "Pasos", steps: ["1", "2", "3"], errPickPdf: "PDF", errGeneric: "Error" },
+    watermark: { dropTitle: "Suelta PDF", dropHint: "uno", textLabel: "Texto", opacityLabel: "Opacidad", opLight: "Claro", opMedium: "Medio", opStrong: "Fuerte", convertBtn: "Añadir", convertBtnLoading: "...", stampBadge: "✓ LISTO", downloadBtn: "Descargar", privacyNote: "Local.", howToTitle: "Pasos", steps: ["1", "2", "3"], errPickPdf: "PDF", errEmptyText: "Texto", errGeneric: "Error" },
+    heic: { dropTitle: "Suelta HEIC", dropHint: "varios", count: n => `${n} fotos`, fmtLabel: "Formato", outJpgTitle: "JPG", outJpgDesc: "JPG", outPdfTitle: "PDF", outPdfDesc: "PDF", convertBtn: "Convertir", convertBtnLoading: "...", stampBadge: "✓ LISTO", downloadBtn: "Descargar", noteBox: "HEIC.", privacyNote: "Local.", howToTitle: "Pasos", steps: ["1", "2", "3"], errPickHeic: "HEIC", errGeneric: "Error" },
+    footer: "pdfcevir — sin registro.", trust: ["Privado", "Gratis", "Rápido", "Local"], privacyLink: "Privacidad"
+  },
+  fr: {
+    tabs: { jpg: "Image → PDF", compress: "Compresser PDF", word: "PDF → Word", merge: "Fusionner PDF", split: "Diviser PDF", pages: "Trier Pages", rotate: "Pivoter PDF", pagenum: "Numéros", topng: "PDF → Image", watermark: "Filigrane", heic: "HEIC → PDF/JPG", unlock: "Déverrouiller" },
+    site: {
+      cardSubtitle: "Traitement Local",
+      whyEyebrow: "POURQUOI PDF ÇEVİR?",
+      whyTitle: "Confidentialité Premium.",
+      why1Title: "100% Client",
+      why1Desc: "Vos fichiers ne quittent pas votre appareil.",
+      why2Title: "Sans Serveur",
+      why2Desc: "Aucune limite.",
+      why3Title: "Hors Ligne",
+      why3Desc: "Sans internet.",
+      footerText: "pdfcevir — sans inscription.",
+      privacyLink: "Confidentialité",
+      termsLink: "Conditions",
+      contactLink: "Contact",
+      modalEyebrowLegal: "LÉGAL",
+      modalEyebrowContact: "CONTACT",
+      privacyTitle: "Confidentialité",
+      privacyBody: "<p>Traitement local.</p>",
+      termsTitle: "Conditions",
+      termsBody: "<p>Tel quel.</p>",
+      contactTitle: "Contact",
+      contactBody: "<p>Email: destek@pdfcevir.vercel.app</p>",
+      soonBadge: "BIENTÔT",
+      soonTitle: "Déverrouiller",
+      soonDesc: "Bientôt disponible.",
+      soonField1: "Mot de passe",
+      soonField2: "Action",
+      soonField2Value: "Protéger"
+    },
+    common: {
+      largeFileWarning: "Patientez.",
+      errEncrypted: "PDF protégé.",
+      errCorrupt: "Fichier corrompu.",
+      recentTitle: "Opérations",
+      sealCaption: "Signé localement.",
+      recentEmpty: "Aucune.",
+      recentDownload: "Télécharger",
+      installTitle: "Installer",
+      installDesc: "Ajouter.",
+      installBtn: "Installer"
+    },
+    header: {
+      jpg: { eyebrow: "Bureau", heading: "Images en <em>PDF</em>.", sub: "Local." },
+      compress: { eyebrow: "Bureau", heading: "<em>Compresser</em> PDF.", sub: "Réduire." },
+      word: { eyebrow: "Bureau", heading: "PDF en <em>Word</em>.", sub: "Texte." },
+      merge: { eyebrow: "Bureau", heading: "<em>Fusionner</em> PDFs.", sub: "Combiner." },
+      split: { eyebrow: "Bureau", heading: "<em>Diviser</em> PDF.", sub: "Séparer." },
+      pages: { eyebrow: "Bureau", heading: "<em>Supprimer</em> pages.", sub: "Trier." },
+      rotate: { eyebrow: "Bureau", heading: "<em>Pivoter</em> PDF.", sub: "Tourner." },
+      pagenum: { eyebrow: "Bureau", heading: "Ajouter <em>numéros</em>.", sub: "Numéroter." },
+      topng: { eyebrow: "Bureau", heading: "PDF en <em>images</em>.", sub: "PNG." },
+      watermark: { eyebrow: "Bureau", heading: "Ajouter <em>filigrane</em>.", sub: "Protéger." },
+      heic: { eyebrow: "Bureau", heading: "Convertir <em>HEIC</em>.", sub: "JPG." },
+      unlock: { eyebrow: "Bureau", heading: "<em>Protéger</em> PDF.", sub: "Bientôt." }
+    },
+    jpg: { dropTitle: "Déposer", dropHint: "choisir", count: n => `${n} fichiers`, convertBtn: "Créer", convertBtnLoading: "...", stampBadge: "✓ PRÊT", downloadBtn: "Télécharger", privacyNote: "Local.", howToTitle: "Étapes", steps: ["1", "2", "3"], errGeneric: "Erreur", filesHeading: "Fichiers", previewHeading: "Aperçu", toolsHeading: "Outils", previewEmpty: "Sélectionner", pageModeLabel: "Page", zoomLabel: "Zoom", rotateLabel: "Pivoter", grayscaleLabel: "B/W", grayscaleOn: "Oui", grayscaleOff: "Non", qualityOriginal: "Original", qGood: "Bon", qMedium: "Moyen", qLow: "Bas", qualityCurrent: (pct, tag) => `Qualité: ${pct}%`, estimateSize: size => `Taille: ~${size}`, estimateNA: "Taille: —" },
+    compress: { dropTitle: "Déposer", dropHint: "choisir", qualityLabel: "Niveau", qHigh: {"t":"Léger", "d":""}, qMedium: {"t":"Moyen", "d":""}, qMax: {"t":"Max", "d":""}, previewLabel: "Aperçu", previewOrigTag: "ORIGINAL", previewCompTag: "COMPRESSÉ", previewLoading: "...", previewEstimate: pct => `Réduction ${pct}%`, count: () => `1 fichier`, convertBtn: "Compresser", convertBtnLoading: "...", stampBadge: "✓ PRÊT", downloadBtn: "Télécharger", saved: pct => `-${pct}%`, noteBox: "Local.", privacyNote: "Local.", howToTitle: "Étapes", steps: ["1", "2", "3"], errPickPdf: "PDF", errGeneric: "Erreur" },
+    word: { dropTitle: "Déposer", dropHint: "choisir", count: () => `1 fichier`, convertBtn: "Convertir", convertBtnLoading: "...", stampBadge: "✓ PRÊT", downloadBtn: "Télécharger", noteBox: "Texte.", privacyNote: "Local.", howToTitle: "Étapes", steps: ["1", "2", "3"], errPickPdf: "PDF", errNoText: "Pas de texte", errGeneric: "Erreur" },
+    merge: { dropTitle: "Déposer", dropHint: "choisir", count: n => `${n} fichiers`, convertBtn: "Fusionner", convertBtnLoading: "...", stampBadge: "✓ PRÊT", downloadBtn: "Télécharger", noteBox: "Local.", privacyNote: "Local.", howToTitle: "Étapes", steps: ["1", "2", "3"], errPickPdf: "PDF", errNeedTwo: "2 min", errGeneric: "Erreur" },
+    split: { dropTitle: "Déposer", dropHint: "choisir", rangeLabel: "Plage", rangePlaceholder: "1-3", convertBtn: "Diviser", convertBtnLoading: "...", stampBadge: "✓ PRÊT", downloadBtn: "ZIP", downloadBtnSingle: "PDF", noteBox: "Local.", privacyNote: "Local.", howToTitle: "Étapes", steps: ["1", "2", "3"], errPickPdf: "PDF", errRange: "Erreur", errGeneric: "Erreur" },
+    pages: { dropTitle: "Déposer", dropHint: "choisir", gridHint: "Glisser", count: (t, d) => `${t} pages`, convertBtn: "Appliquer", convertBtnLoading: "...", stampBadge: "✓ PRÊT", downloadBtn: "Télécharger", noteBox: "Local.", privacyNote: "Local.", howToTitle: "Étapes", steps: ["1", "2", "3"], errPickPdf: "PDF", errAllDeleted: "Erreur", errGeneric: "Erreur" },
+    rotate: { dropTitle: "Déposer", dropHint: "choisir", angleLabel: "Direction", angleRightDesc: "Droite", angleFlipDesc: "Retourner", angleLeftDesc: "Gauche", convertBtn: "Pivoter", convertBtnLoading: "...", stampBadge: "✓ PRÊT", downloadBtn: "Télécharger", privacyNote: "Local.", howToTitle: "Étapes", steps: ["1", "2", "3"], errPickPdf: "PDF", errGeneric: "Erreur" },
+    pagenum: { dropTitle: "Déposer", dropHint: "choisir", posLabel: "Position", posLeft: "Gauche", posCenter: "Centre", posRight: "Droite", convertBtn: "Ajouter", convertBtnLoading: "...", stampBadge: "✓ PRÊT", downloadBtn: "Télécharger", privacyNote: "Local.", howToTitle: "Étapes", steps: ["1", "2", "3"], errPickPdf: "PDF", errGeneric: "Erreur" },
+    topng: { dropTitle: "Déposer", dropHint: "choisir", fmtLabel: "Format", fmtPngDesc: "PNG", fmtJpgDesc: "JPG", convertBtn: "Convertir", convertBtnLoading: "...", stampBadge: "✓ PRÊT", downloadBtn: "Télécharger", noteBox: "Local.", privacyNote: "Local.", howToTitle: "Étapes", steps: ["1", "2", "3"], errPickPdf: "PDF", errGeneric: "Erreur" },
+    watermark: { dropTitle: "Déposer", dropHint: "choisir", textLabel: "Texte", opacityLabel: "Opacité", opLight: "Clair", opMedium: "Moyen", opStrong: "Fort", convertBtn: "Ajouter", convertBtnLoading: "...", stampBadge: "✓ PRÊT", downloadBtn: "Télécharger", privacyNote: "Local.", howToTitle: "Étapes", steps: ["1", "2", "3"], errPickPdf: "PDF", errEmptyText: "Texte", errGeneric: "Erreur" },
+    heic: { dropTitle: "Déposer", dropHint: "choisir", count: n => `${n} fichiers`, fmtLabel: "Format", outJpgTitle: "JPG", outJpgDesc: "JPG", outPdfTitle: "PDF", outPdfDesc: "PDF", convertBtn: "Convertir", convertBtnLoading: "...", stampBadge: "✓ PRÊT", downloadBtn: "Télécharger", noteBox: "Local.", privacyNote: "Local.", howToTitle: "Étapes", steps: ["1", "2", "3"], errPickHeic: "HEIC", errGeneric: "Erreur" },
+    footer: "pdfcevir — gratuit.", trust: ["Privé", "Gratuit", "Rapide", "Local"], privacyLink: "Confidentialité"
+  },
+  de: {
+    tabs: { jpg: "Bild → PDF", compress: "PDF Komprimieren", word: "PDF → Word", merge: "PDF Zusammenfügen", split: "PDF Teilen", pages: "Seiten Löschen", rotate: "PDF Drehen", pagenum: "Seitenzahlen", topng: "PDF → Bild", watermark: "Wasserzeichen", heic: "HEIC → PDF", unlock: "Entsperren" },
+    site: {
+      cardSubtitle: "Lokale Verarbeitung",
+      whyEyebrow: "WARUM PDF ÇEVİR?",
+      whyTitle: "Datenschutz Premium.",
+      why1Title: "100% Client",
+      why1Desc: "Dateien bleiben lokal.",
+      why2Title: "Serverlos",
+      why2Desc: "Keine Limits.",
+      why3Title: "Offline",
+      why3Desc: "Ohne Internet.",
+      footerText: "pdfcevir — kostenlos.",
+      privacyLink: "Datenschutz",
+      termsLink: "AGB",
+      contactLink: "Kontakt",
+      modalEyebrowLegal: "RECHTLICHES",
+      modalEyebrowContact: "KONTAKT",
+      privacyTitle: "Datenschutz",
+      privacyBody: "<p>Lokal.</p>",
+      termsTitle: "AGB",
+      termsBody: "<p>Lokal.</p>",
+      contactTitle: "Kontakt",
+      contactBody: "<p>Email: destek@pdfcevir.vercel.app</p>",
+      soonBadge: "BALD",
+      soonTitle: "PDF Entsperren",
+      soonDesc: "Bald verfügbar.",
+      soonField1: "Passwort",
+      soonField2: "Aktion",
+      soonField2Value: "Schützen"
+    },
+    common: {
+      largeFileWarning: "Bitte warten.",
+      errEncrypted: "PDF geschützt.",
+      errCorrupt: "Beschädigt.",
+      recentTitle: "Vorgänge",
+      sealCaption: "Lokal.",
+      recentEmpty: "Keine.",
+      recentDownload: "Herunterladen",
+      installTitle: "App installieren",
+      installDesc: "Hinzufügen.",
+      installBtn: "Installieren"
+    },
+    header: {
+      jpg: { eyebrow: "Schreibtisch", heading: "Bilder in <em>PDF</em>.", sub: "Lokal." },
+      compress: { eyebrow: "Schreibtisch", heading: "PDF <em>komprimieren</em>.", sub: "Reduzieren." },
+      word: { eyebrow: "Schreibtisch", heading: "PDF in <em>Word</em>.", sub: "Text." },
+      merge: { eyebrow: "Schreibtisch", heading: "PDFs <em>zusammenfügen</em>.", sub: "Kombinieren." },
+      split: { eyebrow: "Schreibtisch", heading: "PDF <em>teilen</em>.", sub: "Trennen." },
+      pages: { eyebrow: "Schreibtisch", heading: "Seiten <em>löschen</em>.", sub: "Sortieren." },
+      rotate: { eyebrow: "Schreibtisch", heading: "PDF <em>drehen</em>.", sub: "Rotieren." },
+      pagenum: { eyebrow: "Schreibtisch", heading: "<em>Seitenzahlen</em>.", sub: "Nummerieren." },
+      topng: { eyebrow: "Schreibtisch", heading: "PDF zu <em>Bildern</em>.", sub: "PNG." },
+      watermark: { eyebrow: "Schreibtisch", heading: "<em>Wasserzeichen</em>.", sub: "Schützen." },
+      heic: { eyebrow: "Schreibtisch", heading: "<em>HEIC</em> umwandeln.", sub: "JPG." },
+      unlock: { eyebrow: "Schreibtisch", heading: "PDF <em>schützen</em>.", sub: "Bald." }
+    },
+    jpg: { dropTitle: "Ablegen", dropHint: "wählen", count: n => `${n} Dateien`, convertBtn: "Erstellen", convertBtnLoading: "...", stampBadge: "✓ FERTIG", downloadBtn: "Herunterladen", privacyNote: "Lokal.", howToTitle: "Schritte", steps: ["1", "2", "3"], errGeneric: "Fehler.", filesHeading: "Dateien", previewHeading: "Vorschau", toolsHeading: "Werkzeuge", previewEmpty: "Auswählen", pageModeLabel: "Seite", zoomLabel: "Zoom", rotateLabel: "Drehen", grayscaleLabel: "S/W", grayscaleOn: "An", grayscaleOff: "Aus", qualityOriginal: "Original", qGood: "Gut", qMedium: "Mittel", qLow: "Niedrig", qualityCurrent: (pct, tag) => `Qualität: ${pct}%`, estimateSize: size => `Größe: ~${size}`, estimateNA: "Größe: —" },
+    compress: { dropTitle: "Ablegen", dropHint: "wählen", qualityLabel: "Niveau", qHigh: {"t":"Leicht", "d":""}, qMedium: {"t":"Mittel", "d":""}, qMax: {"t":"Max", "d":""}, previewLabel: "Vorschau", previewOrigTag: "ORIGINAL", previewCompTag: "KOMPRIMIERT", previewLoading: "...", previewEstimate: pct => `Reduzierung ${pct}%`, count: () => `1 Datei`, convertBtn: "Komprimieren", convertBtnLoading: "...", stampBadge: "✓ FERTIG", downloadBtn: "Herunterladen", saved: pct => `-${pct}%`, noteBox: "Lokal.", privacyNote: "Lokal.", howToTitle: "Schritte", steps: ["1", "2", "3"], errPickPdf: "PDF", errGeneric: "Fehler" },
+    word: { dropTitle: "Ablegen", dropHint: "wählen", count: () => `1 Datei`, convertBtn: "Konvertieren", convertBtnLoading: "...", stampBadge: "✓ FERTIG", downloadBtn: "Herunterladen", noteBox: "Text.", privacyNote: "Lokal.", howToTitle: "Schritte", steps: ["1", "2", "3"], errPickPdf: "PDF", errNoText: "Kein Text", errGeneric: "Fehler" },
+    merge: { dropTitle: "Ablegen", dropHint: "wählen", count: n => `${n} Dateien`, convertBtn: "Zusammenfügen", convertBtnLoading: "...", stampBadge: "✓ FERTIG", downloadBtn: "Herunterladen", noteBox: "Lokal.", privacyNote: "Lokal.", howToTitle: "Schritte", steps: ["1", "2", "3"], errPickPdf: "PDF", errNeedTwo: "Min 2", errGeneric: "Fehler" },
+    split: { dropTitle: "Ablegen", dropHint: "wählen", rangeLabel: "Bereich", rangePlaceholder: "1-3", convertBtn: "Teilen", convertBtnLoading: "...", stampBadge: "✓ FERTIG", downloadBtn: "ZIP", downloadBtnSingle: "PDF", noteBox: "Lokal.", privacyNote: "Lokal.", howToTitle: "Schritte", steps: ["1", "2", "3"], errPickPdf: "PDF", errRange: "Fehler", errGeneric: "Fehler" },
+    pages: { dropTitle: "Ablegen", dropHint: "wählen", gridHint: "Ziehen", count: (t, d) => `${t} Seiten`, convertBtn: "Anwenden", convertBtnLoading: "...", stampBadge: "✓ FERTIG", downloadBtn: "Herunterladen", noteBox: "Lokal.", privacyNote: "Lokal.", howToTitle: "Schritte", steps: ["1", "2", "3"], errPickPdf: "PDF", errAllDeleted: "Fehler", errGeneric: "Fehler" },
+    rotate: { dropTitle: "Ablegen", dropHint: "wählen", angleLabel: "Richtung", angleRightDesc: "Rechts", angleFlipDesc: "Spiegeln", angleLeftDesc: "Links", convertBtn: "Drehen", convertBtnLoading: "...", stampBadge: "✓ FERTIG", downloadBtn: "Herunterladen", privacyNote: "Lokal.", howToTitle: "Schritte", steps: ["1", "2", "3"], errPickPdf: "PDF", errGeneric: "Fehler" },
+    pagenum: { dropTitle: "Ablegen", dropHint: "wählen", posLabel: "Position", posLeft: "Links", posCenter: "Mitte", posRight: "Rechts", convertBtn: "Hinzufügen", convertBtnLoading: "...", stampBadge: "✓ FERTIG", downloadBtn: "Herunterladen", privacyNote: "Lokal.", howToTitle: "Schritte", steps: ["1", "2", "3"], errPickPdf: "PDF", errGeneric: "Fehler" },
+    topng: { dropTitle: "Ablegen", dropHint: "wählen", fmtLabel: "Format", fmtPngDesc: "PNG", fmtJpgDesc: "JPG", convertBtn: "Konvertieren", convertBtnLoading: "...", stampBadge: "✓ FERTIG", downloadBtn: "Herunterladen", noteBox: "Lokal.", privacyNote: "Lokal.", howToTitle: "Schritte", steps: ["1", "2", "3"], errPickPdf: "PDF", errGeneric: "Fehler" },
+    watermark: { dropTitle: "Ablegen", dropHint: "wählen", textLabel: "Text", opacityLabel: "Deckkraft", opLight: "Leicht", opMedium: "Mittel", opStrong: "Stark", convertBtn: "Hinzufügen", convertBtnLoading: "...", stampBadge: "✓ FERTIG", downloadBtn: "Herunterladen", privacyNote: "Lokal.", howToTitle: "Schritte", steps: ["1", "2", "3"], errPickPdf: "PDF", errEmptyText: "Text", errGeneric: "Fehler" },
+    heic: { dropTitle: "Ablegen", dropHint: "wählen", count: n => `${n} Dateien`, fmtLabel: "Format", outJpgTitle: "JPG", outJpgDesc: "JPG", outPdfTitle: "PDF", outPdfDesc: "PDF", convertBtn: "Konvertieren", convertBtnLoading: "...", stampBadge: "✓ FERTIG", downloadBtn: "Herunterladen", noteBox: "Lokal.", privacyNote: "Lokal.", howToTitle: "Schritte", steps: ["1", "2", "3"], errPickHeic: "HEIC", errGeneric: "Fehler" },
+    footer: "pdfcevir — kostenlos.", trust: ["Privat", "Kostenlos", "Schnell", "Lokal"], privacyLink: "Datenschutz"
   }
+
 };
 
-window.currentLang = (navigator.language || 'tr').toLowerCase().startsWith('tr') ? 'tr' : 'en';
+const urlParams = new URLSearchParams(window.location.search);
+const urlLang = urlParams.get('lang');
+const savedLang = localStorage.getItem('pdfcevir_lang');
+const browserLang = (navigator.language || 'en').toLowerCase().substring(0,2);
+const supportedLangs = ['tr', 'en', 'es', 'fr', 'de'];
+
+let detectedLang = 'en';
+if (urlLang && supportedLangs.includes(urlLang)) {
+  detectedLang = urlLang;
+} else if (savedLang && supportedLangs.includes(savedLang)) {
+  detectedLang = savedLang;
+} else if (supportedLangs.includes(browserLang)) {
+  detectedLang = browserLang;
+}
+
+window.currentLang = detectedLang;
 window.currentTool = 'jpg';
 
 function applyLanguage(lang){
   window.currentLang = lang;
+  localStorage.setItem('pdfcevir_lang', lang);
+  const url = new URL(window.location);
+  url.searchParams.set('lang', lang);
+  window.history.replaceState({}, '', url);
   const L = LANG[lang];
   document.documentElement.lang = lang;
 
