@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDF Şifre Çöz / Koru - Yakında | pdfcevir</title>
+<meta name="description" content="PDF dosyalarınıza şifre ekleyin ya da mevcut şifreyi kaldırın. Kayıt gerekmez, tamamen tarayıcınızda çalışacak — yakında yayında.">
+<meta name="robots" content="index, follow">
+<meta name="language" content="Turkish">
+<meta name="author" content="pdfcevir">
+<link rel="canonical" href="https://pdfcevir.vercel.app/pdf-sifre-coz">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/icon-180.png">
+<meta name="theme-color" content="#14213D">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://pdfcevir.vercel.app/pdf-sifre-coz">
+<meta property="og:title" content="PDF Şifre Çöz / Koru - Yakında">
+<meta property="og:description" content="PDF dosyalarınıza şifre ekleyin ya da mevcut şifreyi kaldırın. Kayıt gerekmez, tamamen tarayıcınızda çalışacak — yakında yayında.">
+<meta property="og:image" content="https://pdfcevir.vercel.app/og-image.png">
+<meta property="og:locale" content="tr_TR">
+<meta property="og:site_name" content="pdfcevir">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="PDF Şifre Çöz / Koru - Yakında">
+<meta name="twitter:description" content="PDF dosyalarınıza şifre ekleyin ya da mevcut şifreyi kaldırın. Kayıt gerekmez, tamamen tarayıcınızda çalışacak — yakında yayında.">
+<meta name="twitter:image" content="https://pdfcevir.vercel.app/og-image.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "pdfcevir - PDF Şifre Çöz / Koru",
+  "url": "https://pdfcevir.vercel.app/pdf-sifre-coz",
+  "description": "PDF dosyalarınıza şifre ekleyin ya da mevcut şifreyi kaldırın. Kayıt gerekmez, tamamen tarayıcınızda çalışır.",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "TRY" },
+  "inLanguage": "tr"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "PDF dosyama nasıl şifre koyarım?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Bu araç şu anda geliştirme aşamasında. Yayına girdiğinde PDF'inizi seçip bir şifre belirlemeniz yeterli olacak, işlem tamamen tarayıcınızda gerçekleşecek."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Mevcut bir PDF'in şifresini kaldırabilir miyim?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Evet, araç yayına girdiğinde şifreli bir PDF'in şifresini bildiğiniz sürece kaldırmanıza da imkan tanıyacak."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Dosyam bir sunucuya yüklenecek mi?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Hayır. pdfcevir'deki diğer tüm araçlar gibi bu araç da %100 istemci taraflı çalışacak — dosyanız hiçbir zaman cihazınızdan çıkmayacak."
+      }
+    }
+  ]
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#14213D; --paper:#F5F1E8; --gold:#A9812E; --gold-2:#E8C766; --stamp:#B3372C;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0; min-height:100vh; font-family:'IBM Plex Sans',sans-serif; color:var(--paper);
+  background: var(--ink);
+  background-image:
+    radial-gradient(circle at 12% 6%, rgba(232,199,102,0.14), transparent 42%),
+    radial-gradient(circle at 88% 14%, rgba(169,129,46,0.12), transparent 40%),
+    linear-gradient(180deg, #0B1120 0%, #10162C 45%, #0B1120 100%);
+  display:flex; align-items:center; justify-content:center; padding:24px;
+}
+.wrap{max-width:680px; text-align:left; width:100%;}
+.eyebrow{
+  font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--gold-2); margin:0 0 18px; text-align:center;
+}
+h1{
+  font-family:'Newsreader',serif; font-weight:500; font-size:clamp(30px,5vw,46px);
+  line-height:1.1; margin:0 0 20px; text-align:center;
+}
+p{ font-size:16px; line-height:1.6; color:rgba(245,241,232,0.75); margin:0 0 16px; }
+.intro p{ text-align:center; }
+.cta-wrap{ text-align:center; }
+.soon-tag{
+  display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--stamp); border:1px solid var(--stamp); border-radius:20px;
+  padding:6px 14px; margin-bottom:8px;
+}
+.cta{
+  display:inline-block; margin-top:24px; background:var(--stamp); color:#FFFDF8;
+  font-weight:600; font-size:16px; text-decoration:none; padding:15px 32px;
+  border-radius:4px; box-shadow:0 2px 0 #8F2B22; transition:transform .12s ease;
+}
+.cta:hover{ transform:translateY(-1px); }
+.back{ display:block; margin-top:28px; color:rgba(245,241,232,0.5); font-size:13px; text-decoration:none; text-align:center; }
+.back:hover{ color:var(--paper); }
+.badges{ margin-top:32px; font-family:'IBM Plex Mono',monospace; font-size:11px; color:rgba(245,241,232,0.45); text-align:center; }
+.faq-section{ margin-top:48px; border-top:1px solid rgba(232,199,102,0.2); padding-top:32px; }
+.faq-section h2{ font-family:'Newsreader',serif; font-weight:500; font-size:24px; margin:0 0 20px; text-align:center; }
+.faq-item{ margin-bottom:20px; }
+.faq-item h3{ font-size:16px; color:var(--gold-2); margin:0 0 6px; font-weight:600; }
+.faq-item p{ margin:0; font-size:15px; }
+</style>
+
+<!-- Global Dil Secici -->
+<style>
+  .globe-btn{position:fixed;top:16px;right:16px;z-index:999;display:flex;align-items:center;gap:6px;background:rgba(20,33,61,0.75);backdrop-filter:blur(6px);border:1px solid rgba(245,241,232,0.18);border-radius:20px;padding:6px 12px;color:rgba(245,241,232,0.85);font-family:'IBM Plex Mono',monospace;font-size:11px;cursor:pointer;border:none;}
+  .globe-btn:hover{background:rgba(20,33,61,0.95);}
+  .lang-drop{display:none;position:fixed;top:48px;right:16px;z-index:1000;background:rgba(15,25,50,0.97);border:1px solid rgba(245,241,232,0.18);border-radius:8px;padding:6px;min-width:180px;box-shadow:0 8px 32px rgba(0,0,0,0.5);}
+  .lang-drop.open{display:block;}
+  .lang-drop a,.lang-drop button{display:flex;align-items:center;gap:8px;width:100%;padding:7px 12px;color:rgba(245,241,232,0.85);font-family:'IBM Plex Sans',sans-serif;font-size:13px;text-decoration:none;background:none;border:none;cursor:pointer;border-radius:4px;text-align:left;}
+  .lang-drop a:hover,.lang-drop button:hover{background:rgba(245,241,232,0.08);}
+</style>
+<script>
+(function(){
+  var langs=[
+    {c:'tr',n:'Türkçe',f:'🇹🇷',native:true},
+    {c:'en',n:'English',f:'🇬🇧',native:true},
+    {c:'es',n:'Español',f:'🇪🇸'},
+    {c:'fr',n:'Français',f:'🇫🇷'},
+    {c:'de',n:'Deutsch',f:'🇩🇪'},
+    {c:'pt',n:'Português',f:'🇵🇹'},
+    {c:'ar',n:'العربية',f:'🇸🇦'},
+    {c:'ru',n:'Русский',f:'🇷🇺'},
+    {c:'it',n:'Italiano',f:'🇮🇹'},
+    {c:'ja',n:'日本語',f:'🇯🇵'},
+    {c:'ko',n:'한국어',f:'🇰🇷'},
+    {c:'zh-CN',n:'中文',f:'🇨🇳'},
+    {c:'hi',n:'हिन्दी',f:'🇮🇳'},
+    {c:'nl',n:'Nederlands',f:'🇳🇱'},
+    {c:'pl',n:'Polski',f:'🇵🇱'}
+  ];
+  function gUrl(code){
+    var p=window.location.pathname;
+    return 'https://pdfcevir-vercel-app.translate.goog'+p+'?_x_tr_sl=tr&_x_tr_tl='+code+'&_x_tr_hl='+code;
+  }
+  document.addEventListener('DOMContentLoaded',function(){
+    var btn=document.createElement('button');
+    btn.className='globe-btn';
+    btn.innerHTML='🌐 &nbsp;Dil';
+    btn.setAttribute('aria-label','Dil seçici');
+    var drop=document.createElement('div');
+    drop.className='lang-drop';
+    langs.forEach(function(l){
+      var el;
+      if(l.c==='tr'){
+        el=document.createElement('button');
+        el.onclick=function(){
+          var u=window.location.href.replace(/\?.*$/,'');
+          window.location.href=u;
+        };
+      } else if(l.c==='en'){
+        el=document.createElement('button');
+        el.onclick=function(){
+          if(window.LANG&&window.applyLanguage){applyLanguage('en');}
+          else{window.location.href=gUrl('en');}
+        };
+      } else {
+        el=document.createElement('a');
+        el.href=gUrl(l.c);
+      }
+      el.innerHTML=l.f+' '+l.n;
+      drop.appendChild(el);
+    });
+    btn.onclick=function(e){e.stopPropagation();drop.classList.toggle('open');};
+    document.addEventListener('click',function(){drop.classList.remove('open');});
+    document.body.appendChild(btn);
+    document.body.appendChild(drop);
+  });
+})();
+</script>
+
+</head>
+<body>
+<div class="wrap">
+  <p class="eyebrow">pdfcevir · ücretsiz &amp; sunucusuz</p>
+  <div class="intro">
+    <p class="soon-tag" style="display:block; text-align:center; margin-left:auto; margin-right:auto; width:fit-content;">Çok Yakında</p>
+    <h1>PDF'ini <em>Şifrele</em> ya da Koru</h1>
+    <p>PDF dosyalarınıza şifre ekleyin ya da mevcut bir şifreyi kaldırın. Sözleşmeleriniz, fatura veya kişisel belgeleriniz için hızlı ve güvenli bir çözüm.</p>
+    <p>Diğer tüm araçlarımız gibi bu özellik de tamamen tarayıcınızda, %100 istemci taraflı olarak çalışacak — dosyanız asla cihazınızdan çıkmayacak.</p>
+  </div>
+  <div class="cta-wrap">
+    <a class="cta" href="https://pdfcevir.vercel.app/?tool=unlock">Diğer Araçları Gör →</a>
+    <a class="back" href="https://pdfcevir.vercel.app/">← Tüm PDF araçlarını gör</a>
+    <p class="badges">%100 İSTEMCİ TABANLI · KAYIT YOK · ÜCRETSIZ</p>
+  </div>
+  <div class="faq-section">
+    <h2>Sıkça Sorulan Sorular</h2>
+  <div class="faq-item">
+    <h3>PDF dosyama nasıl şifre koyarım?</h3>
+    <p>Bu araç şu anda geliştirme aşamasında. Yayına girdiğinde PDF'inizi seçip bir şifre belirlemeniz yeterli olacak, işlem tamamen tarayıcınızda gerçekleşecek.</p>
+  </div>
+  <div class="faq-item">
+    <h3>Mevcut bir PDF'in şifresini kaldırabilir miyim?</h3>
+    <p>Evet, araç yayına girdiğinde şifreli bir PDF'in şifresini bildiğiniz sürece kaldırmanıza da imkan tanıyacak.</p>
+  </div>
+  <div class="faq-item">
+    <h3>Dosyam bir sunucuya yüklenecek mi?</h3>
+    <p>Hayır. pdfcevir'deki diğer tüm araçlar gibi bu araç da %100 istemci taraflı çalışacak — dosyanız hiçbir zaman cihazınızdan çıkmayacak.</p>
+  </div>
+  </div>
+</div>
+
+<div id="google_translate_element"></div>
+
+</body>
+</html>
